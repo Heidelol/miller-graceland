@@ -1,8 +1,10 @@
 import type { ServiceItem, Stylist } from '../types/salon';
 
 export const SALON_INFO = {
-  name: 'Miller Greiseland',
-  slogan: 'Alta Peluquería, Colorimetría de Autor & Cuidado Capilar',
+  name: 'Miller Greiseland Studio',
+  tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS',
+  mission: 'Una experiencia de belleza diseñada para preservar la salud del cabello, perfeccionar el color y crear resultados personalizados.',
+  signatureManifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello. El resultado comienza con un cabello sano. El lujo está en cada detalle.',
   phone: '+52 55 8432 9910',
   whatsapp: '525584329910',
   address: 'Av. Presidente Masaryk 420, Polanco, CDMX',
@@ -12,252 +14,253 @@ export const SALON_INFO = {
 };
 
 export const SERVICES: ServiceItem[] = [
-  // --- COLORIMETRÍA ---
+  // ==========================================
+  // COLOR
+  // ==========================================
   {
-    id: 'balayage-signature',
-    name: 'Balayage Signature Miller Greiseland',
-    category: 'colorimetria',
-    tagline: 'Difuminado artesanal con luminosidad tridimensional',
-    description: 'Nuestra técnica insignia de degradado a mano alzada. Incluye diagnóstico capilar, decoloración con plex protector, matiz personalizado y nutrición selladora.',
-    durationMinutes: 210,
-    priceMXN: 3850,
-    depositMXN: 500,
+    id: 'retoque-color',
+    name: 'Retoque de Color',
+    category: 'color',
+    tagline: 'Perfeccionamiento del crecimiento con hidratación personalizada',
+    description: 'Perfeccionamiento del crecimiento con hidratación personalizada y preparación profesional de la fibra capilar. Finalizamos con protector térmico y estilizado para un cabello pulido, luminoso y perfectamente terminado.',
+    durationMinutes: 90,
+    priceMXN: 650,
+    priceDisplay: 'Desde $650',
+    depositMXN: 200,
     popular: true,
     image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=1000&q=80',
+    tiers: [
+      { label: '1 cm', priceMXN: 650 },
+      { label: '2 cm', priceMXN: 750 },
+      { label: '3 cm', priceMXN: 850 },
+      { label: '4 cm o más', priceMXN: 900 }
+    ],
     includes: [
-      'Diagnóstico capilar previo con microcámara',
-      'Protector de enlaces Olaplex / Metal Detox',
-      'Matiz tonalizador con brillo espejo',
-      'Lavado sensorial y Brushing de pasarela'
+      'Perfeccionamiento del crecimiento (desde 1 cm)',
+      'Hidratación personalizada de la fibra capilar',
+      'Preparación profesional pre-color',
+      'Protector térmico y estilizado pulido y luminoso'
     ]
   },
   {
-    id: 'babylights-blonding',
-    name: 'Babylights & Full Blonding',
-    category: 'colorimetria',
-    tagline: 'Micro-mechas ultra finas para rubios sublimes',
-    description: 'Micro-reflejos de raíz a puntas diseñados para aportar máxima luminosidad con transiciones naturales sin líneas marcadas.',
-    durationMinutes: 180,
-    priceMXN: 3400,
-    depositMXN: 500,
+    id: 'retoque-color-matiz',
+    name: 'Retoque de Color + Matiz',
+    category: 'color',
+    tagline: 'Crecimiento de 1 a 2 cm con baño de matiz perlado',
+    description: 'Retoque de crecimiento de 1 a 2 cm, seguido de un exclusivo baño de matiz sobre cabello húmedo. Ideal para mantener los tonos rubios luminosos, neutralizar reflejos amarillos y conseguir un acabado perlado, translúcido y sofisticado.',
+    durationMinutes: 105,
+    priceMXN: 850,
+    priceDisplay: '$850',
+    depositMXN: 250,
     image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
     includes: [
-      'Montaje de mechas ultra densas',
-      'Tonalización personalizada de raíz y puntas',
-      'Tratamiento de acidez para sellar cutícula',
-      'Modelado y peinado final'
+      'Retoque de crecimiento de 1 a 2 cm',
+      'Exclusivo baño de matiz sobre cabello húmedo',
+      'Neutralización de reflejos amarillos (acabado perlado)',
+      'Hidratación personalizada y preparación capilar',
+      'Protección térmica y estilizado'
     ]
   },
   {
-    id: 'correccion-color',
-    name: 'Corrección de Color & Neutralización',
-    category: 'colorimetria',
-    tagline: 'Restauración de armonía cromática y rescate de tono',
-    description: 'Servicio avanzado para retirar pigmentos no deseados, eliminar franjas desiguales o corregir trabajos previos no satisfactorios.',
-    durationMinutes: 240,
-    priceMXN: 4200,
-    depositMXN: 600,
+    id: 'color-completo',
+    name: 'Color Completo',
+    category: 'color',
+    tagline: 'Renovación o transformación total de raíz a puntas',
+    description: 'Aplicación de color de raíz a puntas para renovar, perfeccionar o transformar completamente el tono. Incluye hidratación personalizada, preparación de la fibra, protección térmica y estilizado.',
+    durationMinutes: 120,
+    priceMXN: 900,
+    priceDisplay: '$900 — $1,600',
+    depositMXN: 300,
     image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=1000&q=80',
     includes: [
-      'Test de mecha y análisis de resistencia',
-      'Decapado o limpieza suave de color',
-      'Repigmentación y matización de alta precisión',
-      'Cocktail reconstructor de aminoácidos'
-    ]
-  },
-  {
-    id: 'gloss-bano-brillo',
-    name: 'Gloss & Baño de Brillo Iluminador',
-    category: 'colorimetria',
-    tagline: 'Revitaliza tu color y aporta reflejos radiantes',
-    description: 'Ideal entre sesiones de color o para dar un brillo espectacular y reflejos sin alterar la base natural.',
-    durationMinutes: 60,
-    priceMXN: 1350,
-    depositMXN: 300,
-    image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Fórmula ácida libre de amoníaco',
-      'Reflejo de luz inmediato',
-      'Sellado de brillo por hasta 6 semanas',
-      'Brushing express'
+      'Aplicación de color de raíz a puntas',
+      'Renovación o transformación profunda del tono',
+      'Hidratación personalizada de la fibra',
+      'Preparación capilar y protección térmica',
+      'Estilizado Signature final'
     ]
   },
 
-  // --- ESTILISTAS Y EXTENSIONES ---
+  // ==========================================
+  // SIGNATURE BLONDES
+  // ==========================================
   {
-    id: 'extensiones-tape-in',
-    name: 'Extensiones Tape-In Invisibles (Colocación)',
-    category: 'extensiones',
-    tagline: 'Largo y volumen ultraligero 100% natural',
-    description: 'Colocación de extensiones adhesivas ultrafinas con cabello 100% natural Remy de grado premium. Totalmente discretas, cómodas y reutilizables.',
-    durationMinutes: 120,
-    priceMXN: 3600,
+    id: 'morena-iluminada',
+    name: 'Morena Iluminada',
+    category: 'blondes',
+    tagline: 'Luz y dimensión diseñada para brunettes sin perder profundidad',
+    description: 'Una creación de luz y dimensión diseñada para brunettes que desean luminosidad sin perder profundidad. Incluye Ritual K18 de protección molecular.',
+    durationMinutes: 210,
+    priceMXN: 2800,
+    priceDisplay: '$2,800 — $3,800',
+    depositMXN: 500,
+    popular: true,
+    image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1000&q=80',
+    note: '*Tono base con costo adicional si aplica',
+    includes: [
+      'Ritual K18 de protección molecular',
+      'Diseño de iluminación mediante decoloración',
+      'Tono base (con costo adicional si aplica)',
+      'Matiz personalizado',
+      'Hidratación intensiva y preparación post-decoloración',
+      'Protección térmica y Estilizado Signature'
+    ]
+  },
+  {
+    id: 'balayage-dorado',
+    name: 'Balayage Dorado',
+    category: 'blondes',
+    tagline: 'Profundidad, movimiento y reflejos dorados de apariencia natural',
+    description: 'Una interpretación cálida y luminosa del balayage, diseñada para crear profundidad, movimiento y reflejos dorados de apariencia natural. Respaldado por el Ritual K18.',
+    durationMinutes: 210,
+    priceMXN: 3000,
+    priceDisplay: '$3,000 — $4,000',
+    depositMXN: 500,
+    popular: true,
+    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1000&q=80',
+    note: '*Tono base con costo adicional si aplica',
+    includes: [
+      'Ritual K18 de protección molecular',
+      'Diseño personalizado de balayage',
+      'Decoloración estratégica controlada',
+      'Tono base (con costo adicional si aplica)',
+      'Matiz personalizado reflejos dorados',
+      'Hidratación intensiva y preparación capilar',
+      'Protección térmica y Estilizado Signature'
+    ]
+  },
+  {
+    id: 'balayage-rubio',
+    name: 'Balayage Rubio',
+    category: 'blondes',
+    tagline: 'Rubios más luminosos y sofisticados con acabado multidimensional',
+    description: 'Nuestra propuesta de rubios más luminosos y sofisticados, diseñada para crear una transición impecable y un acabado multidimensional de alta gama.',
+    durationMinutes: 240,
+    priceMXN: 3200,
+    priceDisplay: '$3,200 — $4,200',
     depositMXN: 600,
     popular: true,
-    image: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Preparación de cabello y diseño de zonas de colocación',
-      'Aplicación técnica invisible sin tensión',
-      'Corte de integración y degradado',
-      'Styling con ondas o alisado perfecto'
-    ]
-  },
-  {
-    id: 'extensiones-punto-queratina',
-    name: 'Extensiones de Queratina / Punto Ruso',
-    category: 'extensiones',
-    tagline: 'Movimiento libre de 360° y máxima duración',
-    description: 'Fijación mechón a mechón con micro-cápsulas de queratina vegetal, imperceptibles al tacto y aptas para peinados y recogidos altos.',
-    durationMinutes: 180,
-    priceMXN: 4800,
-    depositMXN: 800,
     image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1000&q=80',
+    note: '*Tono base con costo adicional si aplica',
     includes: [
-      'Micro-fijación con termo-fusión controlada',
-      'Respeto total a la densidad de tu hebra natural',
-      'Corte y pulido de integración',
-      'Kit de cepillo especial para extensiones'
-    ]
-  },
-  {
-    id: 'mantenimiento-extensiones',
-    name: 'Mantenimiento & Retiro / Re-ajuste de Extensiones',
-    category: 'extensiones',
-    tagline: 'Cuida tu inversión y mantén tu cabello impecable',
-    description: 'Retiro cuidadoso sin maltratar tu cabello natural, limpieza profunda, cambio de adhesivos o queratinas y recolocación.',
-    durationMinutes: 120,
-    priceMXN: 1950,
-    depositMXN: 400,
-    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Retiro con removedor orgánico hidratante',
-      'Lavado detox de cuero cabelludo',
-      'Re-encintado o re-encapsulado',
-      'Recolocación y brushing'
-    ]
-  },
-  {
-    id: 'peinado-social-editorial',
-    name: 'Peinado Social & Estilismo de Gala',
-    category: 'extensiones',
-    tagline: 'Recogidos, ondas al agua y looks de pasarela',
-    description: 'Diseño de peinado exclusivo para bodas, galas y eventos sociales de alta categoría. Fijación duradera y acabado sedoso.',
-    durationMinutes: 75,
-    priceMXN: 1250,
-    depositMXN: 300,
-    image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Preparación de textura y volumen',
-      'Fijación profesional resistente a la humedad',
-      'Aplicación de accesorios o velo si aplica',
-      'Toque final con sérum abrillantador'
+      'Ritual K18 de protección molecular',
+      'Diseño personalizado de balayage de alta gama',
+      'Decoloración estratégica de precisión',
+      'Tratamiento Plex reparador de enlaces',
+      'Tono base (con costo adicional si aplica)',
+      'Matiz personalizado rubio sofisticado',
+      'Hidratación intensiva post-aclaración',
+      'Protección térmica y Estilizado Signature'
     ]
   },
 
-  // --- TRATAMIENTOS CAPILARES ---
+  // ==========================================
+  // EXTENSIONS
+  // ==========================================
   {
-    id: 'botox-capilar-anti-frizz',
-    name: 'Botox Capilar Rejuvenecedor & Anti-Frizz',
-    category: 'tratamientos',
-    tagline: 'Relleno de fibra capilar y suavidad de terciopelo',
-    description: 'Terapia intensiva de colágeno, ácido hialurónico y extractos botánicos que devuelve elasticidad, brillo y elimina el encrespamiento hasta por 3 meses.',
-    durationMinutes: 90,
-    priceMXN: 2200,
-    depositMXN: 400,
+    id: 'bajada-recolocacion-extensiones',
+    name: 'Bajada + Recolocación de Extensiones ✨',
+    category: 'extensions',
+    tagline: '✨ La bajada de extensiones es GRATIS al adquirir este servicio',
+    description: 'Nuestro servicio especializado de mantenimiento para extensiones incluye la bajada profesional y posterior recolocación, cuidando tanto el cabello natural como las extensiones para conservar su apariencia, movimiento y acabado impecable.',
+    durationMinutes: 180,
+    priceMXN: 2500,
+    priceDisplay: 'Desde $2,500',
+    depositMXN: 500,
     popular: true,
-    image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1000&q=80',
+    note: '✨ La bajada de extensiones es GRATIS al adquirir el servicio de recolocación. El precio final puede determinarse de acuerdo con la cantidad de cabello y extensiones a trabajar.',
+    tiers: [
+      { label: '100 g o menos', priceMXN: 2500 },
+      { label: '150 — 200 g', priceMXN: 2800 },
+      { label: '200 g en adelante', priceMXN: 3200 }
+    ],
     includes: [
-      'Lavado clarificante preparador',
-      'Infusión térmica de activos botánicos termo-activos',
-      'Sellado con placa de nano-titanio',
-      'Finalizado con tacto seda'
+      'Bajada profesional de extensiones (GRATIS incluida)',
+      'Recolocación especializada cuidando el cabello natural',
+      'Conservación de apariencia y movimiento impecable',
+      'Ajuste milimétrico según gramaje de extensiones'
     ]
   },
   {
-    id: 'terapia-olaplex-molecular',
-    name: 'Terapia Olaplex Molecular Rescue',
-    category: 'tratamientos',
-    tagline: 'Reconexión de enlaces disulfuro para cabello procesado',
-    description: 'El tratamiento por excelencia para recuperar cabellos decolorados o quebradizos. Restaura la fuerza estructural desde el interior.',
-    durationMinutes: 75,
-    priceMXN: 1650,
-    depositMXN: 300,
-    image: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Paso 1 Bond Multiplier concentrado',
-      'Paso 2 Bond Perfector en húmedo',
-      'Mascarilla rica en ceramidas y lípidos',
-      'Brushing nutritivo'
-    ]
-  },
-  {
-    id: 'cauterizacion-sellado',
-    name: 'Cauterización & Reconstrucción Térmica',
-    category: 'tratamientos',
-    tagline: 'Blindaje capilar contra la humedad y el desgaste',
-    description: 'Cierra las cutículas abiertas gracias a la acción combinada de queratina hidrolizada y calor suave, dejando el cabello resistente y flexible.',
-    durationMinutes: 90,
-    priceMXN: 1950,
-    depositMXN: 400,
-    image: 'https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Aporte de proteína pura hidrolizada',
-      'Cauterizado cuticular térmico',
-      'Brillo cristalizado sin peso',
-      'Styling protector'
-    ]
-  },
-
-  // --- CORTES ---
-  {
-    id: 'corte-diseno-miller',
-    name: 'Corte de Autor Miller Greiseland + Brushing',
-    category: 'cortes',
-    tagline: 'Diseño visagista adaptado a tus facciones',
-    description: 'Corte personalizado basado en la textura de tu cabello, forma de rostro y estilo de vida. Incluye lavado relajante con aromaterapia y peinado profesional.',
+    id: 'bajada-extensiones',
+    name: 'Bajada de Extensiones ✨',
+    category: 'extensions',
+    tagline: 'Retiro profesional priorizando la integridad del cabello',
+    description: 'Retiro profesional y cuidadoso de las extensiones, priorizando la integridad del cabello natural y de las propias extensiones para futuras aplicaciones.',
     durationMinutes: 60,
     priceMXN: 850,
+    priceDisplay: '$850 — $1,000',
+    depositMXN: 250,
+    image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1000&q=80',
+    includes: [
+      'Retiro profesional y cuidadoso mechón a mechón',
+      'Prioridad absoluta en la integridad del cabello natural',
+      'Protección y conservación de las extensiones'
+    ]
+  },
+  {
+    id: 'hair-wash-extensions',
+    name: 'Hair Wash + Extensions',
+    category: 'extensions',
+    tagline: 'Ritual de limpieza e hidratación para extensiones',
+    description: 'Un ritual de limpieza e hidratación especialmente diseñado para cabello con extensiones. Para mantenerlas limpias, suaves, luminosas y perfectamente integradas al cabello natural.',
+    durationMinutes: 50,
+    priceMXN: 600,
+    priceDisplay: '$600',
     depositMXN: 200,
+    image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1000&q=80',
+    includes: [
+      'Lavado profesional especializado para extensiones',
+      'Hidratación personalizada de medios a puntas',
+      'Preparación de la fibra capilar',
+      'Protección térmica',
+      'Secado y estilizado'
+    ]
+  },
+
+  // ==========================================
+  // SIGNATURE CUTS
+  // ==========================================
+  {
+    id: 'corte-signature',
+    name: 'Corte Signature',
+    category: 'cuts',
+    tagline: 'Asesoría cosmética, visagismo y corte de diseño',
+    description: 'Una experiencia de corte completamente personalizada. Comenzamos con una asesoría capilar cosmética, analizando las características del cabello y cuero cabelludo para crear una rutina de cuidado personalizada. También estudiamos rostro, facciones, proporciones y movimiento natural del cabello para seleccionar el corte que mejor armonice con cada clienta.',
+    durationMinutes: 60,
+    priceMXN: 450,
+    priceDisplay: '$450 — $600',
+    depositMXN: 150,
     popular: true,
     image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=1000&q=80',
     includes: [
-      'Estudio visagista de corte y caída',
-      'Lavado de lujo con masaje capilar relajante',
-      'Corte de precisión en húmedo y seco',
-      'Brushing estilizado con ondas o liso pulido'
+      'Asesoría capilar cosmética personalizada',
+      'Estudio visagista de rostro, proporciones y movimiento',
+      'Lavado sensorial',
+      'Hidratación y preparación capilar',
+      'Corte en seco y perfeccionamiento de puntas',
+      'Estilizado Signature',
+      'Recomendación de Hair Care para casa'
     ]
   },
   {
-    id: 'despunte-precision',
-    name: 'Despunte de Precisión & Sellado de Puntas',
-    category: 'cortes',
-    tagline: 'Mantenimiento del largo eliminando orzuela',
-    description: 'Eliminamos milimétricamente las puntas abiertas y dañadas sin perder la longitud de tu cabello.',
+    id: 'gentlemens-cut',
+    name: 'Gentlemen’s Cut',
+    category: 'cuts',
+    tagline: 'Corte de precisión y apariencia perfectamente cuidada',
+    description: 'Un servicio diseñado para mantener un corte impecable y una apariencia perfectamente cuidada con hidratación profunda.',
     durationMinutes: 45,
-    priceMXN: 600,
-    depositMXN: 150,
+    priceMXN: 350,
+    priceDisplay: '$350',
+    depositMXN: 100,
     image: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=1000&q=80',
     includes: [
-      'Corte milimétrico en capas o bloque',
-      'Sérum sellador de puntas abiertas',
-      'Peinado rápido con secadora'
-    ]
-  },
-  {
-    id: 'corte-capas-bob-frances',
-    name: 'Corte Shag, French Bob & Capas Fluidas',
-    category: 'cortes',
-    tagline: 'Texturas contemporáneas con movimiento natural',
-    description: 'Diseño para cabellos que buscan volumen, ligereza y un acabado desenfadado pero sumamente chic y moderno.',
-    durationMinutes: 60,
-    priceMXN: 950,
-    depositMXN: 250,
-    image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=1000&q=80',
-    includes: [
-      'Técnica de navaja o tijera microdentada',
-      'Texturizado estratégico de peso',
-      'Secado al aire o con difusor/tenazas',
-      'Spray de fijación flexible'
+      'Lavado revitalizante',
+      'Hidratación profunda',
+      'Corte personalizado de precisión',
+      'Secado',
+      'Estilizado profesional'
     ]
   }
 ];
@@ -269,7 +272,7 @@ export const STYLISTS: Stylist[] = [
     role: 'Directora Creativa & Master Colorist',
     experienceYears: 12,
     photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
-    specialties: ['Balayage Rubio Frío', 'Corrección de Color', 'Visagismo'],
+    specialties: ['Balayage Rubio', 'Morena Iluminada', 'Ritual K18'],
     rating: 4.98,
     reviewsCount: 312
   },
@@ -279,7 +282,7 @@ export const STYLISTS: Stylist[] = [
     role: 'Especialista Senior en Extensiones & Estilismo',
     experienceYears: 9,
     photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-    specialties: ['Extensiones Tape-in', 'Punto Invisible', 'Peinados de Alfombra Roja'],
+    specialties: ['Bajada y Recolocación', 'Hair Wash + Extensions', 'Estilizado Signature'],
     rating: 4.95,
     reviewsCount: 248
   },
@@ -289,7 +292,7 @@ export const STYLISTS: Stylist[] = [
     role: 'Terapeuta Capilar & Especialista en Cortes',
     experienceYears: 7,
     photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80',
-    specialties: ['Botox Capilar', 'French Bob', 'Recuperación de Rulos & Texturas'],
+    specialties: ['Corte Signature Visagista', 'Retoque de Color', 'Gentlemen’s Cut'],
     rating: 4.97,
     reviewsCount: 189
   }
@@ -299,27 +302,27 @@ export const TESTIMONIALS = [
   {
     id: 't-1',
     name: 'Sofía Larrondo',
-    service: 'Balayage Signature + Olaplex',
+    service: 'Balayage Rubio + Ritual K18',
     rating: 5,
-    comment: 'Llevaba años buscando un salón que lograra el rubio platinado exacto sin quemar mi cabello. Valeria y su equipo en Miller Greiseland hicieron magia pura. La experiencia con café y atención es de otro nivel.',
+    comment: 'El Ritual K18 hizo toda la diferencia: mi cabello quedó súper suave y con un rubio perlado impecable. La atención en el estudio es una experiencia de puro lujo.',
     date: 'Hace 3 días',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80'
   },
   {
     id: 't-2',
     name: 'Mariana Elizalde',
-    service: 'Extensiones Tape-In & Brushing',
+    service: 'Bajada + Recolocación de Extensiones',
     rating: 5,
-    comment: 'Las extensiones se sienten como mi propio pelo, cero dolor ni incomodidad. Pagué mi anticipo con Mercado Pago en segundos desde la página y todo estuvo listo al llegar. ¡100% recomendado!',
+    comment: 'Aproveché la bajada gratis con la recolocación y el resultado fue perfecto. Cuidaron mi cabello natural y las extensiones se sienten como mías. Todo pagado seguro por Mercado Pago.',
     date: 'Hace 1 semana',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80'
   },
   {
     id: 't-3',
     name: 'Regina Morales',
-    service: 'Botox Capilar & Corte de Autor',
+    service: 'Corte Signature & Morena Iluminada',
     rating: 5,
-    comment: 'Mi cabello estaba opaco y con mucho frizz por la plancha. El botox lo dejó ultra sedoso con brillo espejo. El corte de autor enmarcó mis facciones perfecto. Ya tengo mi próxima cita agendada.',
+    comment: 'El estudio visagista previo al corte fue algo que nunca me habían hecho. El corte enmarcó mis facciones perfecto y los reflejos iluminados lucen ultra naturales.',
     date: 'Hace 2 semanas',
     image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80'
   }
@@ -327,23 +330,23 @@ export const TESTIMONIALS = [
 
 export const FAQS = [
   {
-    question: '¿Cómo funciona la reserva en línea y el pago con Mercado Pago?',
-    answer: 'Eliges el servicio y estilista de tu preferencia, seleccionas fecha y horario, y puedes asegurar tu lugar con un anticipo desde $150 MXN o liquidar el 100% a través de Mercado Pago (tarjetas de crédito, débito, dinero en cuenta o efectivo en OXXO). Recibirás tu confirmación inmediata con tu código de cita.'
+    question: '¿Cómo funciona la reserva en línea y el anticipo con Mercado Pago?',
+    answer: 'Eliges el servicio en nuestro catálogo, seleccionas fecha y horario, y puedes asegurar tu lugar con un anticipo accesible o liquidar el 100% mediante Mercado Pago (tarjetas de crédito, débito, transferencia o efectivo en OXXO). Recibirás tu confirmación inmediata con tu código de cita.'
   },
   {
-    question: '¿Qué pasa si necesito reprogramar o cancelar mi cita?',
-    answer: 'Puedes reprogramar sin costo avisando con al menos 24 horas de anticipación a través de nuestro WhatsApp oficial. Tu anticipo quedará guardado para tu nueva fecha sin penalización.'
+    question: '¿Qué es el Ritual K18 incluido en los servicios de Signature Blondes?',
+    answer: 'Es una biotecnología molecular patentada que reconecta las cadenas de polipéptidos rotas en la fibra capilar durante la decoloración, restaurando la fuerza, elasticidad y suavidad original del cabello.'
   },
   {
-    question: '¿Hacen diagnóstico previo antes de un trabajo de colorimetría o extensiones?',
-    answer: '¡Sí, siempre! Antes de iniciar cualquier proceso químico realizamos un diagnóstico capilar detallado (y test de mecha si es necesario) para asegurar que la salud y resistencia de tu fibra capilar estén garantizadas.'
+    question: '¿La bajada de extensiones es realmente gratis?',
+    answer: '¡Sí! Al adquirir el servicio de Bajada + Recolocación de Extensiones, el retiro previo no tiene costo adicional. El precio se ajusta de acuerdo con los gramos de cabello (100g, 150-200g o más).'
   },
   {
-    question: '¿Qué marcas y productos de cuidado utilizan en el salón?',
-    answer: 'Trabajamos exclusivamente con casas profesionales de gama alta internacional como Kérastase, Olaplex, Redken, L’Oréal Professionnel e I.C.O.N., formulaciones con tecnologías de enlace molecular.'
+    question: '¿Qué incluye la asesoría visagista en el Corte Signature?',
+    answer: 'Analizamos las facciones de tu rostro, proporciones corporales, textura y caída natural del cabello, además de evaluar la salud cosmética de tu fibra para diseñar el corte más favorecedor y recomendarte una rutina de cuidado en casa.'
   },
   {
-    question: '¿Aceptan meses sin intereses a través de Mercado Pago?',
-    answer: 'Sí, mediante la pasarela de Mercado Pago puedes diferir tu pago a 3 y 6 meses sin intereses con tarjetas de crédito participantes de bancos en México.'
+    question: '¿Qué pasa si necesito reprogramar mi cita?',
+    answer: 'Puedes reprogramar sin penalización avisando con al menos 24 horas de anticipación a través de nuestro WhatsApp oficial. Tu anticipo quedará guardado para tu nueva fecha.'
   }
 ];

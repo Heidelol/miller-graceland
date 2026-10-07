@@ -45,8 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <span className="font-serif-luxury text-xl sm:text-2xl font-bold tracking-[0.16em] text-[#231E1B] uppercase leading-none group-hover:text-[#C8933E] transition-colors">
                 Miller Greiseland
               </span>
-              <span className="text-[10px] tracking-[0.22em] text-[#68794E] uppercase font-bold mt-1">
-                Hair & Beauty Studio
+              <span className="text-[10px] tracking-[0.25em] text-[#68794E] uppercase font-bold mt-1">
+                Studio
               </span>
             </div>
           </a>

@@ -232,10 +232,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                         <div className="text-right">
                           <span className="text-sm font-black text-[#A87428]">
-                            ${s.priceMXN.toLocaleString('es-MX')} MXN
+                            {s.priceDisplay} MXN
                           </span>
                           <span className="text-[10px] text-[#736A60] block font-medium">
-                            Anticipo: ${s.depositMXN}
+                            Anticipo MP: ${s.depositMXN}
                           </span>
                         </div>
                       </div>
@@ -494,9 +494,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#7A7067] block">Precio Total</span>
+                    <span className="text-xs text-[#7A7067] block">Precio / Rango</span>
                     <span className="text-base font-black text-[#231E1B]">
-                      ${selectedService.priceMXN.toLocaleString('es-MX')} MXN
+                      {selectedService.priceDisplay} MXN
                     </span>
                   </div>
                 </div>

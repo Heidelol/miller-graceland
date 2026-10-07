@@ -1,22 +1,30 @@
 export type ServiceCategory = 
   | 'todos'
-  | 'colorimetria'
-  | 'extensiones'
-  | 'tratamientos'
-  | 'cortes';
+  | 'color'
+  | 'blondes'
+  | 'extensions'
+  | 'cuts';
+
+export interface ServicePriceTier {
+  label: string;
+  priceMXN: number;
+}
 
 export interface ServiceItem {
   id: string;
   name: string;
-  category: 'colorimetria' | 'extensiones' | 'tratamientos' | 'cortes';
+  category: 'color' | 'blondes' | 'extensions' | 'cuts';
   tagline: string;
   description: string;
   durationMinutes: number;
-  priceMXN: number;
-  depositMXN: number; // Anticipo requerido para asegurar la cita
+  priceMXN: number; // Base minimum price for booking
+  priceDisplay: string; // Official display format (e.g. "$2,800 — $3,800" or "Desde $650")
+  depositMXN: number; // Anticipo requerido para asegurar la cita con Mercado Pago
   popular?: boolean;
   image: string;
   includes: string[];
+  tiers?: ServicePriceTier[];
+  note?: string;
 }
 
 export interface Stylist {

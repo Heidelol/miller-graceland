@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#68794E]/12 border border-[#68794E]/30 backdrop-blur-md shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-[#C8933E]" />
             <span className="text-[11px] sm:text-xs font-bold tracking-[0.2em] uppercase text-[#42502E]">
-              Alta Peluquería • Colorimetría • Extensiones • Spa Capilar
+              COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS
             </span>
           </div>
         </div>
@@ -53,7 +53,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
         {/* Subtitle */}
         <p className="max-w-2xl mx-auto text-base sm:text-lg text-[#5C534B] font-normal leading-relaxed mb-10">
-          En <strong className="text-[#231E1B] font-semibold">Miller Greiseland</strong> fusionamos la ciencia del cuidado capilar con técnicas de autor en balayage, extensiones de lujo y cortes visagistas en un espacio cálido, luminoso y exclusivo.
+          Una experiencia de belleza diseñada para <strong className="text-[#231E1B] font-bold">preservar la salud del cabello</strong>, perfeccionar el color y crear resultados personalizados. El resultado comienza con un cabello sano. <span className="text-[#A87428] font-semibold">El lujo está en cada detalle.</span>
         </p>
 
         {/* CTAs */}

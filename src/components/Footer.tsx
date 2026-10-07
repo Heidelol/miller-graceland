@@ -28,12 +28,12 @@ export const Footer: React.FC = () => {
                     Miller Greiseland
                   </span>
                   <span className="text-[10px] tracking-[0.2em] text-[#68794E] uppercase font-bold mt-1">
-                    Hair & Beauty Studio
+                    Studio
                   </span>
                 </div>
               </div>
               <p className="text-xs text-[#63584F] leading-relaxed">
-                Salón de alta peluquería en México. Especialistas en colorimetría de precisión, extensiones invisibles de lujo, rescate capilar y cortes visagistas.
+                Color · Blondes · Hair Care · Extensions · Signature Cuts. Una experiencia de belleza diseñada para preservar la salud del cabello y crear resultados personalizados.
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <div className="px-3 py-1 rounded-lg bg-white border border-[#009EE3]/40 text-[#009EE3] text-[11px] font-bold flex items-center gap-1.5 shadow-xs">
