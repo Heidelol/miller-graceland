@@ -4,12 +4,26 @@
   :root {
     --font-serif: 'Cormorant Garamond', 'Playfair Display', serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    
+    /* Miller Greiseland Signature Palette */
+    --mg-gold-light: #EFD189;
+    --mg-gold: #D19745;
+    --mg-gold-dark: #926021;
+    --mg-olive: #738259;
+    --mg-olive-light: #8FA06F;
+    --mg-olive-dark: #586542;
+    --mg-mocha: #99745A;
+    --mg-mocha-light: #B58E72;
+    --mg-mocha-dark: #7A5940;
+    --mg-cream: #E7E0DA;
+    --mg-cream-light: #F7F4F0;
+    --mg-cream-muted: #C7BEB5;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #0b0b0d;
-    color: #e5e5e7;
+    background-color: #0E0E10;
+    color: #E7E0DA;
     overflow-x: hidden;
   }
 
@@ -18,81 +32,102 @@
   }
 }
 
-/* Custom luxury gradients and glow effects */
+/* Luxury Palette Utilities */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #FFF1D0 0%, #E6C875 35%, #D4AF37 70%, #997A15 100%);
+  background: linear-gradient(135deg, #FBF2D5 0%, #EFD189 30%, #D19745 70%, #926021 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-border {
-  border-color: rgba(212, 175, 55, 0.25);
-}
-
-.gold-border-glow:hover {
-  border-color: rgba(212, 175, 55, 0.6);
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
-}
-
 .gold-button {
-  background: linear-gradient(135deg, #E6C875 0%, #D4AF37 60%, #B89222 100%);
-  color: #0B0B0C;
-  font-weight: 600;
+  background: linear-gradient(135deg, #EFD189 0%, #D19745 55%, #926021 100%);
+  color: #121110;
+  font-weight: 700;
   letter-spacing: 0.05em;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gold-button:hover {
-  background: linear-gradient(135deg, #F3D98E 0%, #E0BC48 60%, #C79F29 100%);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.35);
+  background: linear-gradient(135deg, #F5DE9F 0%, #DFAB5A 55%, #A8712C 100%);
+  box-shadow: 0 10px 32px rgba(209, 151, 69, 0.35);
   transform: translateY(-2px);
 }
 
 .gold-button-outline {
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  color: #E6C875;
+  border: 1px solid rgba(209, 151, 69, 0.5);
+  color: #EFD189;
+  background-color: rgba(209, 151, 69, 0.05);
   transition: all 0.3s ease;
 }
 
 .gold-button-outline:hover {
-  border-color: #D4AF37;
-  background-color: rgba(212, 175, 55, 0.1);
-  color: #FFF;
+  border-color: #EFD189;
+  background-color: rgba(209, 151, 69, 0.15);
+  color: #FFFFFF;
 }
 
-/* Subtle glassmorphism */
+/* Olive Green luxury accents */
+.olive-badge {
+  background-color: rgba(115, 130, 89, 0.18);
+  border: 1px solid rgba(115, 130, 89, 0.45);
+  color: #C8D6AE;
+}
+
+.olive-button {
+  background: linear-gradient(135deg, #8FA06F 0%, #738259 100%);
+  color: #0E120A;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.olive-button:hover {
+  background: linear-gradient(135deg, #9DB17C 0%, #7F9063 100%);
+  box-shadow: 0 8px 24px rgba(115, 130, 89, 0.3);
+}
+
+/* Warm Mocha card borders & subtle highlights */
+.mocha-border {
+  border-color: rgba(153, 116, 90, 0.3);
+}
+
+.mocha-glow:hover {
+  border-color: rgba(153, 116, 90, 0.6);
+  box-shadow: 0 0 25px rgba(153, 116, 90, 0.2);
+}
+
+/* Glassmorphism tuned to the warm palette */
 .glass-panel {
-  background: rgba(18, 18, 22, 0.7);
+  background: rgba(18, 18, 21, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(231, 224, 218, 0.08);
 }
 
 .glass-card {
-  background: rgba(22, 22, 28, 0.65);
+  background: rgba(21, 20, 23, 0.75);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(153, 116, 90, 0.25);
   transition: all 0.35s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(212, 175, 55, 0.45);
-  background: rgba(28, 28, 36, 0.85);
+  border-color: rgba(209, 151, 69, 0.55);
+  background: rgba(26, 24, 28, 0.9);
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.1);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(209, 151, 69, 0.12);
 }
 
-/* Custom scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0B0C;
+  background: #0E0E10;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A2A32;
+  background: #2A2724;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;
+  background: #D19745;
 }

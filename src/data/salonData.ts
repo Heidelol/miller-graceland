@@ -1,24 +1,24 @@
 import type { ServiceItem, Stylist } from '../types/salon';
 
 export const SALON_INFO = {
-  name: 'Miller Graceland',
+  name: 'Miller Greiseland',
   slogan: 'Alta Peluquería, Colorimetría de Autor & Cuidado Capilar',
   phone: '+52 55 8432 9910',
   whatsapp: '525584329910',
   address: 'Av. Presidente Masaryk 420, Polanco, CDMX',
   schedule: 'Lunes a Sábado: 9:00 AM – 8:00 PM | Domingo: Previa Cita',
   currency: 'MXN',
-  instagram: '@millergraceland',
+  instagram: '@millergreiseland',
 };
 
 export const SERVICES: ServiceItem[] = [
   // --- COLORIMETRÍA ---
   {
     id: 'balayage-signature',
-    name: 'Balayage Signature Miller Graceland',
+    name: 'Balayage Signature Miller Greiseland',
     category: 'colorimetria',
-    tagline: 'Difuminado perfecto con luminosidad tridimensional',
-    description: 'Nuestra técnica insignia de degradado artesanal a mano alzada. Incluye diagnóstico capilar, decoloración con plex protector, matiz personalizado y nutrición selladora.',
+    tagline: 'Difuminado artesanal con luminosidad tridimensional',
+    description: 'Nuestra técnica insignia de degradado a mano alzada. Incluye diagnóstico capilar, decoloración con plex protector, matiz personalizado y nutrición selladora.',
     durationMinutes: 210,
     priceMXN: 3850,
     depositMXN: 500,
@@ -107,14 +107,14 @@ export const SERVICES: ServiceItem[] = [
     name: 'Extensiones de Queratina / Punto Ruso',
     category: 'extensiones',
     tagline: 'Movimiento libre de 360° y máxima duración',
-    description: 'Fijación mechón a mechón con micro-cápsulas de queratina italiana vegetal, imperceptibles al tacto y aptas para recogidos altos.',
+    description: 'Fijación mechón a mechón con micro-cápsulas de queratina vegetal, imperceptibles al tacto y aptas para peinados y recogidos altos.',
     durationMinutes: 180,
     priceMXN: 4800,
     depositMXN: 800,
     image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1000&q=80',
     includes: [
       'Micro-fijación con termo-fusión controlada',
-      'Respeto a la densidad y salud de tu hebra',
+      'Respeto total a la densidad de tu hebra natural',
       'Corte y pulido de integración',
       'Kit de cepillo especial para extensiones'
     ]
@@ -160,7 +160,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Botox Capilar Rejuvenecedor & Anti-Frizz',
     category: 'tratamientos',
     tagline: 'Relleno de fibra capilar y suavidad de terciopelo',
-    description: 'Terapia intensiva de colágeno, ácido hialurónico y caviar vegetal que devuelve elasticidad, brillo y elimina el encrespamiento por hasta 3 meses.',
+    description: 'Terapia intensiva de colágeno, ácido hialurónico y extractos botánicos que devuelve elasticidad, brillo y elimina el encrespamiento hasta por 3 meses.',
     durationMinutes: 90,
     priceMXN: 2200,
     depositMXN: 400,
@@ -168,8 +168,8 @@ export const SERVICES: ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1000&q=80',
     includes: [
       'Lavado clarificante preparador',
-      'Infusión térmica de activos termo-activos',
-      'Sellado con plancha de nano-titanio',
+      'Infusión térmica de activos botánicos termo-activos',
+      'Sellado con placa de nano-titanio',
       'Finalizado con tacto seda'
     ]
   },
@@ -178,7 +178,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Terapia Olaplex Molecular Rescue',
     category: 'tratamientos',
     tagline: 'Reconexión de enlaces disulfuro para cabello procesado',
-    description: 'El tratamiento por excelencia para recuperar cabellos sobre-decolorados, secos o quebradizos. Restaura la fuerza estructural desde el interior.',
+    description: 'El tratamiento por excelencia para recuperar cabellos decolorados o quebradizos. Restaura la fuerza estructural desde el interior.',
     durationMinutes: 75,
     priceMXN: 1650,
     depositMXN: 300,
@@ -211,7 +211,7 @@ export const SERVICES: ServiceItem[] = [
   // --- CORTES ---
   {
     id: 'corte-diseno-miller',
-    name: 'Corte de Autor Miller Graceland + Brushing',
+    name: 'Corte de Autor Miller Greiseland + Brushing',
     category: 'cortes',
     tagline: 'Diseño visagista adaptado a tus facciones',
     description: 'Corte personalizado basado en la textura de tu cabello, forma de rostro y estilo de vida. Incluye lavado relajante con aromaterapia y peinado profesional.',
@@ -222,7 +222,7 @@ export const SERVICES: ServiceItem[] = [
     image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=1000&q=80',
     includes: [
       'Estudio visagista de corte y caída',
-      'Lavado de lujo con masaje capilar shiatsu',
+      'Lavado de lujo con masaje capilar relajante',
       'Corte de precisión en húmedo y seco',
       'Brushing estilizado con ondas o liso pulido'
     ]
@@ -301,7 +301,7 @@ export const TESTIMONIALS = [
     name: 'Sofía Larrondo',
     service: 'Balayage Signature + Olaplex',
     rating: 5,
-    comment: 'Llevaba años buscando un salón que lograra el rubio platinado exacto sin quemar mi cabello. Valeria y su equipo en Miller Graceland hicieron magia pura. La experiencia con café y atención es de otro nivel.',
+    comment: 'Llevaba años buscando un salón que lograra el rubio platinado exacto sin quemar mi cabello. Valeria y su equipo en Miller Greiseland hicieron magia pura. La experiencia con café y atención es de otro nivel.',
     date: 'Hace 3 días',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80'
   },
@@ -328,7 +328,7 @@ export const TESTIMONIALS = [
 export const FAQS = [
   {
     question: '¿Cómo funciona la reserva en línea y el pago con Mercado Pago?',
-    answer: 'Eliges el servicio y estilista de tu preferencia, seleccionas fecha y horario, y puedes asegurar tu lugar con un anticipo desde $200 MXN o liquidar el 100% a través de Mercado Pago (tarjetas de crédito, débito, dinero en cuenta o efectivo en OXXO). Recibirás tu confirmación inmediata con tu código de cita.'
+    answer: 'Eliges el servicio y estilista de tu preferencia, seleccionas fecha y horario, y puedes asegurar tu lugar con un anticipo desde $150 MXN o liquidar el 100% a través de Mercado Pago (tarjetas de crédito, débito, dinero en cuenta o efectivo en OXXO). Recibirás tu confirmación inmediata con tu código de cita.'
   },
   {
     question: '¿Qué pasa si necesito reprogramar o cancelar mi cita?',
@@ -340,7 +340,7 @@ export const FAQS = [
   },
   {
     question: '¿Qué marcas y productos de cuidado utilizan en el salón?',
-    answer: 'Trabajamos exclusivamente con casas profesionales de gama alta internacional como Kérastase, Olaplex, Redken, L’Oréal Professionnel e I.C.O.N., formulaciones libres de sulfatos agresivos y con tecnologías de enlace molecular.'
+    answer: 'Trabajamos exclusivamente con casas profesionales de gama alta internacional como Kérastase, Olaplex, Redken, L’Oréal Professionnel e I.C.O.N., formulaciones con tecnologías de enlace molecular.'
   },
   {
     question: '¿Aceptan meses sin intereses a través de Mercado Pago?',
