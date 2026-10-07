@@ -29,7 +29,7 @@ export const MercadoPagoBanner: React.FC = () => {
                   <span>Tarjetas de Crédito y Débito</span>
                 </div>
                 <div className="bg-[#FFF9EE] border border-[#C8933E]/30 px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#966720] flex items-center gap-2">
-                  <span>✨ 3 y 6 Meses Sin Intereses</span>
+                  <span>3 y 6 Meses Sin Intereses</span>
                 </div>
                 <div className="bg-[#F0F6FA] border border-gray-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#009EE3] flex items-center gap-2">
                   <span>Efectivo en OXXO & 7-Eleven</span>

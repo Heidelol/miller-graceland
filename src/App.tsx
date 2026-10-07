@@ -5,19 +5,20 @@ import { ServicesSection } from './components/ServicesSection';
 import { ExperienceSection } from './components/ExperienceSection';
 import { StylistsSection } from './components/StylistsSection';
 import { MercadoPagoBanner } from './components/MercadoPagoBanner';
-import { TestimonialsSection } from './components/TestimonialsSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
-import type { ServiceItem } from './types/salon';
+import type { ServiceItem, Stylist } from './types/salon';
 import { SERVICES } from './data/salonData';
 
 export function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(null);
 
-  const handleOpenBooking = (service?: ServiceItem) => {
+  const handleOpenBooking = (service?: ServiceItem, stylist?: Stylist | null) => {
     setSelectedService(service || SERVICES[0]);
+    setSelectedStylist(stylist || null);
     setIsBookingOpen(true);
   };
 
@@ -35,9 +36,9 @@ export function App() {
         <Hero onOpenBooking={() => handleOpenBooking()} />
         <ServicesSection onSelectService={(service) => handleOpenBooking(service)} />
         <ExperienceSection />
-        <StylistsSection onBookWithStylist={() => handleOpenBooking()} />
+        <StylistsSection onBookWithStylist={(stylist) => handleOpenBooking(undefined, stylist)} />
         <MercadoPagoBanner />
-        <TestimonialsSection />
+        {/* TestimonialsSection is hidden from public site until verified real customer reviews are available */}
         <FAQSection />
       </main>
 
@@ -45,11 +46,14 @@ export function App() {
       <Footer />
 
       {/* Booking Wizard with Mercado Pago checkout */}
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={handleCloseBooking}
-        initialService={selectedService}
-      />
+      {isBookingOpen && (
+        <BookingModal
+          isOpen={isBookingOpen}
+          onClose={handleCloseBooking}
+          initialService={selectedService}
+          initialStylist={selectedStylist}
+        />
+      )}
     </div>
   );
 }

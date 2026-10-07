@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   X, Clock, User, CheckCircle2, 
   ShieldCheck, CreditCard, ChevronRight, 
@@ -12,6 +12,7 @@ interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialService?: ServiceItem | null;
+  initialStylist?: Stylist | null;
 }
 
 const generateDates = () => {
@@ -39,12 +40,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   initialService,
+  initialStylist,
 }) => {
   const [selectedService, setSelectedService] = useState<ServiceItem>(
     initialService || SERVICES[0]
   );
-  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(null);
+  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(
+    initialStylist || null
+  );
   
+  const selectedServiceRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedServiceRef.current) {
+      selectedServiceRef.current.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    }
+  }, [selectedService.id]);
+
   const datesList = DATES_LIST;
   const [selectedDate, setSelectedDate] = useState<string>(datesList[0].fullDate);
   const [selectedTime, setSelectedTime] = useState<string>('11:00 AM');
@@ -169,17 +181,17 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {!bookingCompleted && (
           <div className="px-6 py-3 bg-[#FAF7F2] border-b border-[#99745A]/10 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 1 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>1</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 1 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>1</span>
               <span className={currentStep === 1 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Servicio</span>
             </div>
             <ChevronRight className="w-3.5 h-3.5 text-black/20" />
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 2 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>2</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 2 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>2</span>
               <span className={currentStep === 2 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Horario</span>
             </div>
             <ChevronRight className="w-3.5 h-3.5 text-black/20" />
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 3 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>3</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 3 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>3</span>
               <span className={currentStep === 3 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Contacto</span>
             </div>
             <ChevronRight className="w-3.5 h-3.5 text-black/20" />
@@ -206,8 +218,17 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     return (
                       <div
                         key={s.id}
+                        ref={isSelected ? selectedServiceRef : undefined}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => setSelectedService(s)}
-                        className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedService(s);
+                          }
+                        }}
+                        className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
                           isSelected
                             ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-sm'
                             : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#5C534B] hover:border-[#C8933E]/50'
@@ -251,8 +272,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setSelectedStylist(null)}
-                    className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all ${
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedStylist(null);
+                      }
+                    }}
+                    className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
                       selectedStylist === null
                         ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
                         : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
@@ -272,8 +301,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     return (
                       <div
                         key={st.id}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => setSelectedStylist(st)}
-                        className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all ${
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedStylist(st);
+                          }
+                        }}
+                        className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
                           isSelected
                             ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
                             : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
@@ -329,10 +366,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     return (
                       <button
                         key={d.fullDate}
+                        type="button"
                         onClick={() => setSelectedDate(d.fullDate)}
-                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
                           isSelected
-                            ? 'bg-gradient-to-b from-[#DFAC58] to-[#C8933E] text-white font-bold border-[#C8933E] shadow-sm'
+                            ? 'bg-[#C8933E] text-[#231E1B] font-bold border-[#C8933E] shadow-xs'
                             : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#231E1B] hover:border-[#C8933E]'
                         }`}
                       >
@@ -355,14 +393,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     return (
                       <button
                         key={slot}
+                        type="button"
                         onClick={() => setSelectedTime(slot)}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
                           isSelected
-                            ? 'bg-gradient-to-r from-[#68794E] to-[#C8933E] text-white border-[#C8933E] shadow-sm'
-                            : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#C8933E]'
+                            ? 'bg-[#68794E] text-white border-[#68794E] shadow-xs'
+                            : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#68794E]'
                         }`}
                       >
-                        <Clock className="w-3.5 h-3.5 text-[#68794E]" />
+                        <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#68794E]'}`} />
                         <span>{slot}</span>
                       </button>
                     );
@@ -641,7 +680,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               {/* Booking Ticket Card */}
               <div className="bg-[#FAF7F2] border border-[#C8933E]/40 rounded-2xl p-5 text-left max-w-md mx-auto space-y-3 relative overflow-hidden shadow-sm">
-                <div className="absolute top-0 right-0 bg-gradient-to-l from-[#DFAC58] to-[#C8933E] text-white text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl shadow-xs">
+                <div className="absolute top-0 right-0 bg-[#C8933E] text-[#231E1B] text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl shadow-xs">
                   Confirmada
                 </div>
 

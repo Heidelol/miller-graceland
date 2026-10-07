@@ -48,7 +48,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
             {SALON_INFO.servicesIntro}
           </p>
 
-          {/* Category Filter Pills (Solid palette colors, no emojis) */}
+          {/* Category Filter Pills (Solid palette colors, no emojis, accessible focus) */}
           <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8">
             {categories.map((cat) => {
               const isActive = activeCategory === cat.key;
@@ -57,7 +57,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   key={cat.key}
                   type="button"
                   onClick={() => setActiveCategory(cat.key)}
-                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer ${
+                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
                     isActive
                       ? 'bg-[#68794E] text-white shadow-xs'
                       : 'bg-white text-[#5C534B] border border-[#99745A]/20 hover:border-[#68794E] hover:text-[#231E1B]'
@@ -89,9 +89,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                  {/* Signature Badge (Solid gold) */}
+                  {/* Signature Badge (Solid gold with high-contrast text) */}
                   {service.popular && (
-                    <div className="absolute top-3.5 left-3.5 bg-[#C8933E] text-white text-[11px] font-semibold tracking-wider px-3 py-1 rounded-full shadow-xs">
+                    <div className="absolute top-3.5 left-3.5 bg-[#C8933E] text-[#231E1B] text-[11px] font-bold tracking-wider px-3 py-1 rounded-full shadow-xs">
                       Signature
                     </div>
                   )}
@@ -116,8 +116,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                       </p>
                     )}
 
-                    <p className="text-xs sm:text-sm text-[#5C534B] mt-3 leading-relaxed">
-                      {service.description}
+                    {/* Brief Summary always visible on the card face */}
+                    <p className="text-xs sm:text-sm text-[#5C534B] mt-2.5 leading-relaxed">
+                      {service.shortSummary}
                     </p>
 
                     {/* Pricing Tiers (ALWAYS VISIBLE outside collapsible) */}
@@ -156,7 +157,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                         aria-expanded={isExpanded}
                         aria-controls={`service-details-${service.id}`}
                         id={`service-toggle-${service.id}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#68794E] hover:text-[#4B5935] cursor-pointer py-1 transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#68794E] hover:text-[#4B5935] cursor-pointer py-1 transition-colors focus-visible:outline-2 focus-visible:outline-[#68794E] focus-visible:outline-offset-2 rounded"
                       >
                         <span>{isExpanded ? 'Ocultar detalles' : 'Ver detalles e inclusiones'}</span>
                         <ChevronDown
@@ -171,19 +172,30 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                           id={`service-details-${service.id}`}
                           role="region"
                           aria-labelledby={`service-toggle-${service.id}`}
-                          className="mt-3 pt-3 border-t border-[#99745A]/10 space-y-2 animate-fadeIn"
+                          className="mt-3.5 pt-3.5 border-t border-[#99745A]/15 space-y-3.5 animate-fadeIn"
                         >
-                          <p className="text-xs font-semibold text-[#68794E] uppercase tracking-wider">
-                            El servicio incluye:
-                          </p>
-                          <ul className="space-y-1.5">
-                            {service.includes.map((inc, i) => (
-                              <li key={i} className="flex items-start gap-2 text-xs text-[#4E443C] leading-snug">
-                                <Check className="w-3.5 h-3.5 text-[#68794E] shrink-0 mt-0.5" />
-                                <span>{inc}</span>
-                              </li>
-                            ))}
-                          </ul>
+                          <div>
+                            <p className="text-xs font-bold text-[#68794E] uppercase tracking-wider mb-1.5">
+                              Descripción completa:
+                            </p>
+                            <p className="text-xs sm:text-sm text-[#4A423B] leading-relaxed">
+                              {service.description}
+                            </p>
+                          </div>
+
+                          <div className="pt-2 border-t border-[#99745A]/10">
+                            <p className="text-xs font-bold text-[#68794E] uppercase tracking-wider mb-2">
+                              El servicio incluye:
+                            </p>
+                            <ul className="space-y-1.5">
+                              {service.includes.map((inc, i) => (
+                                <li key={i} className="flex items-start gap-2 text-xs text-[#4E443C] leading-snug">
+                                  <Check className="w-3.5 h-3.5 text-[#68794E] shrink-0 mt-0.5" />
+                                  <span>{inc}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -210,7 +222,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                     <button
                       type="button"
                       onClick={() => onSelectService(service)}
-                      className="gold-button shrink-0 self-stretch sm:self-auto px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                      className="gold-button shrink-0 self-stretch sm:self-auto px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
                     >
                       <span>Reservar</span>
                       <ArrowRight className="w-3.5 h-3.5" />

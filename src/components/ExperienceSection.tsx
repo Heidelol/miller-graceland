@@ -42,7 +42,7 @@ export const ExperienceSection: React.FC = () => {
             {/* Overlapping Floating Card in Crisp White */}
             <div className="relative mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 z-20 bg-white border border-[#C8933E]/40 rounded-2xl p-5 shadow-xl sm:max-w-xs">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#C8933E] flex items-center justify-center text-white font-black text-xl shadow-xs">
+                <div className="w-12 h-12 rounded-xl bg-[#C8933E] flex items-center justify-center text-[#231E1B] font-black text-xl shadow-xs">
                   ★
                 </div>
                 <div>

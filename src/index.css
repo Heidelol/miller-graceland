@@ -41,34 +41,58 @@
   color: #A87428;
 }
 
-/* Solid Palette Buttons (No excessive gradients) */
+/* Solid Palette Buttons with High-Contrast Dark Text & Accessible Focus */
 .gold-button {
   background-color: #C8933E;
-  color: #FFFFFF;
-  font-weight: 600;
+  color: #231E1B;
+  font-weight: 700;
   letter-spacing: 0.03em;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
-.gold-button:hover {
+.gold-button:hover:not(:disabled) {
   background-color: #B8822E;
-  box-shadow: 0 3px 8px rgba(184, 130, 46, 0.24);
+  color: #171311;
+  box-shadow: 0 4px 12px rgba(184, 130, 46, 0.28);
+}
+
+.gold-button:focus-visible {
+  outline: 2px solid #231E1B;
+  outline-offset: 2px;
+}
+
+.gold-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 .gold-button-outline {
-  border: 1px solid #C8933E;
-  color: #966720;
+  border: 1.5px solid #C8933E;
+  color: #231E1B;
   background-color: transparent;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.03em;
   transition: all 0.2s ease;
 }
 
-.gold-button-outline:hover {
+.gold-button-outline:hover:not(:disabled) {
   border-color: #B8822E;
-  background-color: rgba(200, 147, 62, 0.08);
-  color: #795015;
+  background-color: rgba(200, 147, 62, 0.14);
+  color: #171311;
+}
+
+.gold-button-outline:focus-visible {
+  outline: 2px solid #231E1B;
+  outline-offset: 2px;
+}
+
+.gold-button-outline:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Olive Green styling */

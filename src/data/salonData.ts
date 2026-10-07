@@ -3,7 +3,7 @@ import type { ServiceItem, Stylist } from '../types/salon';
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
   tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS',
-  heroSubtitle: 'Técnicas de autor en color, rubios de alta gama, extensiones y cortes visagistas para revelar la versión más sofisticada de tu estilo.',
+  heroSubtitle: 'Color, rubios, extensiones y cortes personalizados, con atención a la salud de tu cabello.',
   servicesIntro: 'Una experiencia de belleza diseñada para preservar la salud del cabello, perfeccionar el color y crear resultados personalizados.',
   manifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello. El resultado comienza con un cabello sano; el lujo está en cada detalle.',
   footerAbout: 'Estudio de alta peluquería en Polanco, Ciudad de México. Preservación de la fibra capilar, colorimetría y diseño de imagen a medida.',
@@ -24,6 +24,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Retoque de Color',
     category: 'color',
     tagline: 'Perfeccionamiento del crecimiento con hidratación personalizada',
+    shortSummary: 'Perfeccionamiento del crecimiento con hidratación personalizada, preparación capilar y estilizado final.',
     description: 'Perfeccionamiento del crecimiento con hidratación personalizada y preparación profesional de la fibra capilar. Finalizamos con protector térmico y estilizado para un cabello pulido, luminoso y perfectamente terminado.',
     durationMinutes: 90,
     priceMXN: 650,
@@ -49,7 +50,8 @@ export const SERVICES: ServiceItem[] = [
     name: 'Retoque de Color + Matiz',
     category: 'color',
     tagline: 'Crecimiento de 1 a 2 cm con baño de matiz perlado',
-    description: 'Retoque de crecimiento de 1 a 2 cm, seguido de un exclusivo baño de matiz sobre cabello húmedo. Ideal para mantener los tonos rubios luminosos, neutralizar reflejos amarillos y conseguir un acabado perlado, translúcido y sofisticado.',
+    shortSummary: 'Retoque de 1 a 2 cm con baño de matiz perlado para neutralizar reflejos y conseguir un acabado translúcido.',
+    description: 'Retoque de crecimiento de 1 a 2 cm, seguido de un exclusivo baño de matiz sobre cabello húmedo. Ideal para mantener los tonos rubios luminosos, neutralizar reflejos amarillos y conseguir un acabado perlado, translúcido y sofisticado. Incluye hidratación personalizada, preparación capilar, protección térmica y estilizado.',
     durationMinutes: 105,
     priceMXN: 850,
     priceDisplay: '$850',
@@ -68,6 +70,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Color Completo',
     category: 'color',
     tagline: 'Renovación o transformación total de raíz a puntas',
+    shortSummary: 'Aplicación de color de raíz a puntas para renovar, perfeccionar o transformar completamente el tono.',
     description: 'Aplicación de color de raíz a puntas para renovar, perfeccionar o transformar completamente el tono. Incluye hidratación personalizada, preparación de la fibra, protección térmica y estilizado.',
     durationMinutes: 120,
     priceMXN: 900,
@@ -91,6 +94,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Morena Iluminada',
     category: 'blondes',
     tagline: 'Luz y dimensión diseñada para brunettes sin perder profundidad',
+    shortSummary: 'Creación de luz y dimensión para brunettes que buscan luminosidad sin perder profundidad, con Ritual K18.',
     description: 'Una creación de luz y dimensión diseñada para brunettes que desean luminosidad sin perder profundidad. Incluye Ritual K18 de protección molecular.',
     durationMinutes: 210,
     priceMXN: 2800,
@@ -113,6 +117,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Balayage Dorado',
     category: 'blondes',
     tagline: 'Profundidad, movimiento y reflejos dorados de apariencia natural',
+    shortSummary: 'Interpretación cálida y luminosa del balayage con reflejos dorados de aspecto natural y Ritual K18.',
     description: 'Una interpretación cálida y luminosa del balayage, diseñada para crear profundidad, movimiento y reflejos dorados de apariencia natural. Respaldado por el Ritual K18.',
     durationMinutes: 210,
     priceMXN: 3000,
@@ -136,6 +141,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Balayage Rubio',
     category: 'blondes',
     tagline: 'Rubios más luminosos y sofisticados con acabado multidimensional',
+    shortSummary: 'Rubio luminoso y sofisticado con transición impecable, acabado multidimensional y Ritual K18.',
     description: 'Nuestra propuesta de rubios más luminosos y sofisticados, diseñada para crear una transición impecable y un acabado multidimensional de alta gama.',
     durationMinutes: 240,
     priceMXN: 3200,
@@ -164,6 +170,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Bajada + Recolocación de Extensiones ✨',
     category: 'extensions',
     tagline: '✨ La bajada de extensiones es GRATIS al adquirir este servicio',
+    shortSummary: 'Mantenimiento integral con bajada profesional gratis y posterior recolocación cuidando el cabello natural.',
     description: 'Nuestro servicio especializado de mantenimiento para extensiones incluye la bajada profesional y posterior recolocación, cuidando tanto el cabello natural como las extensiones para conservar su apariencia, movimiento y acabado impecable.',
     durationMinutes: 180,
     priceMXN: 2500,
@@ -189,6 +196,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Bajada de Extensiones ✨',
     category: 'extensions',
     tagline: 'Retiro profesional priorizando la integridad del cabello',
+    shortSummary: 'Retiro profesional y cuidadoso mechón a mechón, priorizando la salud de tu cabello y de las extensiones.',
     description: 'Retiro profesional y cuidadoso de las extensiones, priorizando la integridad del cabello natural y de las propias extensiones para futuras aplicaciones.',
     durationMinutes: 60,
     priceMXN: 850,
@@ -206,7 +214,8 @@ export const SERVICES: ServiceItem[] = [
     name: 'Hair Wash + Extensions',
     category: 'extensions',
     tagline: 'Ritual de limpieza e hidratación para extensiones',
-    description: 'Un ritual de limpieza e hidratación especialmente diseñado para cabello con extensiones. Para mantenerlas limpias, suaves, luminosas y perfectamente integradas al cabello natural.',
+    shortSummary: 'Ritual de limpieza, hidratación profunda y estilizado especialmente formulado para cabello con extensiones.',
+    description: 'Un ritual de limpieza e hidratación especialmente diseñado para cabello con extensiones. Incluye: Lavado profesional, Hidratación personalizada, Preparación de la fibra, Protección térmica, Secado y estilizado. Para mantener las extensiones limpias, suaves, luminosas y perfectamente integradas al cabello natural.',
     durationMinutes: 50,
     priceMXN: 600,
     priceDisplay: '$600',
@@ -229,6 +238,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Corte Signature',
     category: 'cuts',
     tagline: 'Asesoría cosmética, visagismo y corte de diseño',
+    shortSummary: 'Asesoría capilar cosmética, estudio visagista de facciones, corte personalizado en seco y estilizado final.',
     description: 'Una experiencia de corte completamente personalizada. Comenzamos con una asesoría capilar cosmética, analizando las características del cabello y cuero cabelludo para crear una rutina de cuidado personalizada. También estudiamos rostro, facciones, proporciones y movimiento natural del cabello para seleccionar el corte que mejor armonice con cada clienta.',
     durationMinutes: 60,
     priceMXN: 450,
@@ -251,6 +261,7 @@ export const SERVICES: ServiceItem[] = [
     name: 'Gentlemen’s Cut',
     category: 'cuts',
     tagline: 'Corte de precisión y apariencia perfectamente cuidada',
+    shortSummary: 'Corte masculino de precisión con lavado sensorial, hidratación profunda, secado y estilizado pulido.',
     description: 'Un servicio diseñado para mantener un corte impecable y una apariencia perfectamente cuidada con hidratación profunda.',
     durationMinutes: 45,
     priceMXN: 350,
@@ -300,7 +311,8 @@ export const STYLISTS: Stylist[] = [
   }
 ];
 
-export const TESTIMONIALS = [
+// Datos de muestra reservados para desarrollo interno (ocultos de la web pública hasta contar con reseñas verificadas del negocio)
+export const TESTIMONIALS_DEV_PREVIEW = [
   {
     id: 't-1',
     name: 'Sofía Larrondo',
@@ -329,6 +341,8 @@ export const TESTIMONIALS = [
     image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80'
   }
 ];
+
+export const TESTIMONIALS = TESTIMONIALS_DEV_PREVIEW;
 
 export const FAQS = [
   {

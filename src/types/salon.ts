@@ -15,6 +15,7 @@ export interface ServiceItem {
   name: string;
   category: 'color' | 'blondes' | 'extensions' | 'cuts';
   tagline: string;
+  shortSummary: string;
   description: string;
   durationMinutes: number;
   priceMXN: number; // Base minimum price for booking
