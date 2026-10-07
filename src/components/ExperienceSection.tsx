@@ -40,9 +40,9 @@ export const ExperienceSection: React.FC = () => {
             </div>
 
             {/* Overlapping Floating Card in Crisp White */}
-            <div className="absolute -bottom-6 -right-4 sm:right-6 z-20 bg-white border border-[#C8933E]/40 rounded-2xl p-5 shadow-2xl max-w-xs">
+            <div className="relative mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 z-20 bg-white border border-[#C8933E]/40 rounded-2xl p-5 shadow-xl sm:max-w-xs">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#DFAC58] to-[#C8933E] flex items-center justify-center text-white font-black text-xl shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-[#C8933E] flex items-center justify-center text-white font-black text-xl shadow-xs">
                   ★
                 </div>
                 <div>
@@ -53,7 +53,7 @@ export const ExperienceSection: React.FC = () => {
             </div>
 
             {/* Subtle light glow */}
-            <div className="absolute -top-10 -left-10 w-72 h-72 bg-[#C8933E]/8 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute -top-10 -left-10 w-72 h-72 bg-[#C8933E]/5 rounded-full blur-[100px] pointer-events-none" />
           </div>
 
           {/* Right Column: Narrative & Values */}
@@ -66,7 +66,7 @@ export const ExperienceSection: React.FC = () => {
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] leading-tight mb-6">
-              Más que un salón, una pausa de <span className="gold-gradient-text italic font-normal">lujo y bienestar</span>
+              Más que un salón, una pausa de <span className="gold-accent-text italic font-normal">lujo y bienestar</span>
             </h2>
 
             <p className="text-sm sm:text-base text-[#61574E] leading-relaxed mb-8">

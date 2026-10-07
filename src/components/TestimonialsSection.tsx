@@ -1,4 +1,4 @@
-import { Star, Sparkles, Quote } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 import { TESTIMONIALS } from '../data/salonData';
 
 export const TestimonialsSection: React.FC = () => {
@@ -8,17 +8,16 @@ export const TestimonialsSection: React.FC = () => {
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#C8933E]" />
+          <div className="inline-block px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#42502E]">
-              Testimonios Reales
+              Experiencias de Clientas
             </span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] mb-3">
-            La experiencia contada por nuestras clientas
+            La experiencia en Miller Greiseland
           </h2>
           <p className="text-sm sm:text-base text-[#61574E]">
-            La confianza de cientos de mujeres que confían su imagen y salud capilar a Miller Greiseland.
+            Testimonios compartidos por clientas que confían el cuidado y diseño de su cabello en nuestro estudio.
           </p>
         </div>
 
@@ -27,7 +26,7 @@ export const TestimonialsSection: React.FC = () => {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.id}
-              className="bg-white rounded-3xl p-8 flex flex-col justify-between border border-[#99745A]/20 shadow-sm hover:shadow-xl hover:border-[#C8933E]/50 transition-all duration-300 relative"
+              className="bg-white rounded-3xl p-8 flex flex-col justify-between border border-[#99745A]/20 shadow-xs hover:shadow-md hover:border-[#C8933E]/50 transition-all duration-300 relative"
             >
               <Quote className="w-10 h-10 text-[#C8933E]/20 absolute top-6 right-6 pointer-events-none" />
 

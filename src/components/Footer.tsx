@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
                 </div>
               </div>
               <p className="text-xs text-[#63584F] leading-relaxed">
-                Color · Blondes · Hair Care · Extensions · Signature Cuts. Una experiencia de belleza diseñada para preservar la salud del cabello y crear resultados personalizados.
+                {SALON_INFO.footerAbout}
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <div className="px-3 py-1 rounded-lg bg-white border border-[#009EE3]/40 text-[#009EE3] text-[11px] font-bold flex items-center gap-1.5 shadow-xs">

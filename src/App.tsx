@@ -26,7 +26,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B] flex flex-col selection:bg-[#C8933E]/20 selection:text-[#231E1B]">
+    <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B] flex flex-col selection:bg-[#C8933E]/20 selection:text-[#231E1B] overflow-x-hidden">
       {/* Top Navigation */}
       <Navbar onOpenBooking={() => handleOpenBooking()} />
 

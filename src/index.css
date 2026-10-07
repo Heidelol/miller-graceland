@@ -9,29 +9,26 @@
     --mg-cream-bg: #F8F5EE;
     --mg-cream-card: #FFFFFF;
     --mg-cream-alt: #F1ECE2;
-    --mg-cream-border: rgba(153, 116, 90, 0.22);
+    --mg-cream-border: rgba(153, 116, 90, 0.18);
     
     --mg-text-main: #231E1B;
-    --mg-text-muted: #665D55;
+    --mg-text-muted: #5C534B;
     
     --mg-gold: #C8933E;
-    --mg-gold-light: #E8BC75;
-    --mg-gold-dark: #91611C;
+    --mg-gold-hover: #B8822E;
     
     --mg-olive: #68794E;
-    --mg-olive-light: #839763;
-    --mg-olive-bg: rgba(104, 121, 78, 0.12);
+    --mg-olive-hover: #586741;
     
     --mg-mocha: #99745A;
-    --mg-mocha-light: #B89379;
-    --mg-mocha-dark: #7A5940;
   }
 
-  body {
+  html, body {
     font-family: var(--font-sans);
     background-color: var(--mg-cream-bg);
     color: var(--mg-text-main);
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, .font-serif-luxury {
@@ -39,84 +36,82 @@
   }
 }
 
-/* Light Luxury Typography & Gradient Utilities */
-.gold-gradient-text {
-  background: linear-gradient(135deg, #B57F2E 0%, #D19745 40%, #926021 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Refined Typography Accent (Solid Warm Bronze-Gold) */
+.gold-accent-text {
+  color: #A87428;
 }
 
+/* Solid Palette Buttons (No excessive gradients) */
 .gold-button {
-  background: linear-gradient(135deg, #DFAC58 0%, #C8933E 50%, #A97424 100%);
+  background-color: #C8933E;
   color: #FFFFFF;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 18px rgba(200, 147, 62, 0.3);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .gold-button:hover {
-  background: linear-gradient(135deg, #EABA6C 0%, #D49F48 50%, #B8802E 100%);
-  box-shadow: 0 8px 25px rgba(200, 147, 62, 0.42);
-  transform: translateY(-2px);
+  background-color: #B8822E;
+  box-shadow: 0 3px 8px rgba(184, 130, 46, 0.24);
 }
 
 .gold-button-outline {
   border: 1px solid #C8933E;
   color: #966720;
-  background-color: rgba(200, 147, 62, 0.08);
-  transition: all 0.3s ease;
+  background-color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
 }
 
 .gold-button-outline:hover {
-  border-color: #B27B27;
-  background-color: rgba(200, 147, 62, 0.16);
+  border-color: #B8822E;
+  background-color: rgba(200, 147, 62, 0.08);
   color: #795015;
 }
 
 /* Olive Green styling */
 .olive-badge {
   background-color: rgba(104, 121, 78, 0.12);
-  border: 1px solid rgba(104, 121, 78, 0.35);
+  border: 1px solid rgba(104, 121, 78, 0.3);
   color: #4B5935;
 }
 
 .olive-button {
-  background: linear-gradient(135deg, #7C8F60 0%, #68794E 100%);
+  background-color: #68794E;
   color: #FFFFFF;
-  font-weight: 700;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
 
 .olive-button:hover {
-  background: linear-gradient(135deg, #8A9E6C 0%, #728456 100%);
-  box-shadow: 0 6px 20px rgba(104, 121, 78, 0.28);
+  background-color: #586741;
 }
 
-/* Light Alabaster Cards & Surfaces */
+/* Light Alabaster Cards & Surfaces with Subtle Shadows */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(153, 116, 90, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(153, 116, 90, 0.16);
 }
 
 .glass-card {
   background: #FFFFFF;
-  border: 1px solid rgba(153, 116, 90, 0.2);
-  box-shadow: 0 4px 20px rgba(110, 85, 65, 0.06);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(153, 116, 90, 0.18);
+  box-shadow: 0 2px 8px rgba(110, 85, 65, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(200, 147, 62, 0.55);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px -10px rgba(110, 85, 65, 0.14), 0 0 16px rgba(200, 147, 62, 0.12);
+  border-color: rgba(200, 147, 62, 0.45);
+  box-shadow: 0 6px 18px rgba(110, 85, 65, 0.08);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
   background: #F4EFE6;

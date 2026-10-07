@@ -3,8 +3,10 @@ import type { ServiceItem, Stylist } from '../types/salon';
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
   tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS',
-  mission: 'Una experiencia de belleza diseñada para preservar la salud del cabello, perfeccionar el color y crear resultados personalizados.',
-  signatureManifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello. El resultado comienza con un cabello sano. El lujo está en cada detalle.',
+  heroSubtitle: 'Técnicas de autor en color, rubios de alta gama, extensiones y cortes visagistas para revelar la versión más sofisticada de tu estilo.',
+  servicesIntro: 'Una experiencia de belleza diseñada para preservar la salud del cabello, perfeccionar el color y crear resultados personalizados.',
+  manifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello. El resultado comienza con un cabello sano; el lujo está en cada detalle.',
+  footerAbout: 'Estudio de alta peluquería en Polanco, Ciudad de México. Preservación de la fibra capilar, colorimetría y diseño de imagen a medida.',
   phone: '+52 55 8432 9910',
   whatsapp: '525584329910',
   address: 'Av. Presidente Masaryk 420, Polanco, CDMX',
