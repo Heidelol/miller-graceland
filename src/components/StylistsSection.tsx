@@ -8,21 +8,21 @@ interface StylistsSectionProps {
 
 export const StylistsSection: React.FC<StylistsSectionProps> = ({ onBookWithStylist }) => {
   return (
-    <section id="estilistas" className="py-24 bg-[#111114] relative">
+    <section id="estilistas" className="py-24 bg-[#F2EDE3] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#181E15] border border-[#738259]/40 mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#EFD189]" />
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-[#E7E0DA]">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-[#C8933E]" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#42502E]">
               Master Artists & Colorists
             </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#F7F4F0] mb-3">
+          <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] mb-3">
             Manos expertas a tu servicio
           </h2>
-          <p className="text-sm sm:text-base text-[#C7BEB5]">
+          <p className="text-sm sm:text-base text-[#61574E]">
             Nuestros estilistas cuentan con certificaciones internacionales y una visión artística dedicada a resaltar tu belleza única.
           </p>
         </div>
@@ -32,7 +32,7 @@ export const StylistsSection: React.FC<StylistsSectionProps> = ({ onBookWithStyl
           {STYLISTS.map((st) => (
             <div
               key={st.id}
-              className="glass-card rounded-3xl overflow-hidden border border-[#99745A]/25 flex flex-col group"
+              className="bg-white rounded-3xl overflow-hidden border border-[#99745A]/20 hover:border-[#C8933E]/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
             >
               <div className="relative h-80 overflow-hidden">
                 <img
@@ -40,36 +40,36 @@ export const StylistsSection: React.FC<StylistsSectionProps> = ({ onBookWithStyl
                   alt={st.name}
                   className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151417] via-[#151417]/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 
                 {/* Rating Badge */}
-                <div className="absolute top-4 right-4 bg-[#0E0E10]/85 backdrop-blur-md border border-[#D19745]/40 px-3 py-1 rounded-full flex items-center gap-1.5 text-xs text-[#EFD189] font-bold">
-                  <Star className="w-3.5 h-3.5 fill-[#EFD189]" />
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md border border-[#C8933E]/40 px-3 py-1 rounded-full flex items-center gap-1.5 text-xs text-[#231E1B] font-bold shadow-xs">
+                  <Star className="w-3.5 h-3.5 fill-[#C8933E] text-[#C8933E]" />
                   <span>{st.rating} ({st.reviewsCount})</span>
                 </div>
 
                 <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-2 text-[11px] text-[#738259] font-semibold tracking-wider uppercase mb-1">
+                  <div className="flex items-center gap-2 text-[11px] text-[#E8BC75] font-bold tracking-wider uppercase mb-1">
                     <Award className="w-3.5 h-3.5" />
                     <span>{st.experienceYears} años de experiencia</span>
                   </div>
-                  <h3 className="font-serif-luxury text-2xl font-bold text-[#F7F4F0]">
+                  <h3 className="font-serif-luxury text-2xl font-bold text-white">
                     {st.name}
                   </h3>
-                  <p className="text-xs text-[#C7BEB5]">{st.role}</p>
+                  <p className="text-xs text-white/90 font-medium">{st.role}</p>
                 </div>
               </div>
 
-              <div className="p-6 flex-1 flex flex-col justify-between">
+              <div className="p-7 flex-1 flex flex-col justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-[#99745A] uppercase tracking-wider mb-2">
+                  <p className="text-xs font-bold text-[#8F8378] uppercase tracking-wider mb-2.5">
                     Especialidades destacadas:
                   </p>
                   <div className="flex flex-wrap gap-1.5 mb-6">
                     {st.specialties.map((spec, idx) => (
                       <span
                         key={idx}
-                        className="text-[11px] bg-[#1E1B17] border border-[#99745A]/25 text-[#E7E0DA] px-2.5 py-1 rounded-lg font-medium"
+                        className="text-[11px] bg-[#F8F5EE] border border-[#99745A]/20 text-[#68794E] px-2.5 py-1 rounded-lg font-bold"
                       >
                         {spec}
                       </span>
@@ -79,7 +79,7 @@ export const StylistsSection: React.FC<StylistsSectionProps> = ({ onBookWithStyl
 
                 <button
                   onClick={() => onBookWithStylist(st)}
-                  className="gold-button w-full py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  className="gold-button w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
                   <Calendar className="w-4 h-4" />
                   <span>Agendar Cita con {st.name.split(' ')[0]}</span>

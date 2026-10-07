@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
   X, Clock, User, CheckCircle2, 
-  Sparkles, ShieldCheck, CreditCard, ChevronRight, 
+  ShieldCheck, CreditCard, ChevronRight, 
   Phone, Mail, ArrowLeft, ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -95,13 +95,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       setBookingCompleted(true);
       setCurrentStep(5);
 
-      // Trigger celebration confetti with signature palette colors
+      // Trigger celebration confetti
       try {
         confetti({
           particleCount: 90,
           spread: 75,
           origin: { y: 0.6 },
-          colors: ['#EFD189', '#D19745', '#738259', '#99745A', '#E7E0DA']
+          colors: ['#DFAC58', '#C8933E', '#68794E', '#99745A', '#F8F5EE']
         });
       } catch (e) {
         console.error(e);
@@ -129,20 +129,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-[#141316] border border-[#99745A]/35 rounded-3xl shadow-2xl overflow-hidden my-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-white border border-[#99745A]/25 rounded-3xl shadow-2xl overflow-hidden my-6">
         
-        {/* Header with Luxury Accent */}
-        <div className="bg-gradient-to-r from-[#1B191E] via-[#151417] to-[#1B191E] border-b border-[#99745A]/25 p-5 sm:p-6 flex items-center justify-between">
+        {/* Header with Luxury Accent & Official Logo */}
+        <div className="bg-[#F8F5EE] border-b border-[#99745A]/15 p-5 sm:p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full border border-[#D19745]/50 bg-[#0E0E10] flex items-center justify-center text-[#EFD189]">
-              <Sparkles className="w-5 h-5" />
+            <div className="w-11 h-11 rounded-full border border-[#C8933E]/50 bg-white p-1 flex items-center justify-center shadow-xs overflow-hidden">
+              <img
+                src="/logo-miller.png"
+                alt="Miller Greiseland"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/logo-miller.jpeg';
+                }}
+              />
             </div>
             <div>
-              <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#F7F4F0]">
+              <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B]">
                 {bookingCompleted ? '¡Cita Confirmada!' : 'Reserva de Cita en Línea'}
               </h3>
-              <p className="text-xs text-[#C7BEB5]">
+              <p className="text-xs text-[#6B6158]">
                 {bookingCompleted 
                   ? 'Tu espacio en Miller Greiseland ha sido asegurado' 
                   : 'Pasarela oficial respaldada por Mercado Pago (MXN)'}
@@ -152,7 +159,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
           <button
             onClick={handleResetAndClose}
-            className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-[#C7BEB5] hover:text-[#FFF] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 text-[#6B6158] hover:text-[#231E1B] flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,74 +167,74 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
         {/* Step Progress Tracker (Only if not completed) */}
         {!bookingCompleted && (
-          <div className="px-6 py-3 bg-[#0E0E10] border-b border-white/5 flex items-center justify-between text-xs">
+          <div className="px-6 py-3 bg-[#FAF7F2] border-b border-[#99745A]/10 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 1 ? 'bg-[#D19745] text-black' : 'bg-white/10 text-white/50'}`}>1</span>
-              <span className={currentStep === 1 ? 'text-[#EFD189] font-semibold' : 'text-[#8C847A]'}>Servicio</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 1 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>1</span>
+              <span className={currentStep === 1 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Servicio</span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-white/20" />
+            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 2 ? 'bg-[#D19745] text-black' : 'bg-white/10 text-white/50'}`}>2</span>
-              <span className={currentStep === 2 ? 'text-[#EFD189] font-semibold' : 'text-[#8C847A]'}>Horario</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 2 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>2</span>
+              <span className={currentStep === 2 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Horario</span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-white/20" />
+            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 3 ? 'bg-[#D19745] text-black' : 'bg-white/10 text-white/50'}`}>3</span>
-              <span className={currentStep === 3 ? 'text-[#EFD189] font-semibold' : 'text-[#8C847A]'}>Contacto</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 3 ? 'bg-[#C8933E] text-white' : 'bg-black/10 text-black/50'}`}>3</span>
+              <span className={currentStep === 3 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Contacto</span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 text-white/20" />
+            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
             <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 4 ? 'bg-[#009EE3] text-white' : 'bg-white/10 text-white/50'}`}>4</span>
-              <span className={currentStep === 4 ? 'text-[#009EE3] font-semibold' : 'text-[#8C847A]'}>Mercado Pago</span>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 4 ? 'bg-[#009EE3] text-white' : 'bg-black/10 text-black/50'}`}>4</span>
+              <span className={currentStep === 4 ? 'text-[#009EE3] font-bold' : 'text-[#8F8378]'}>Mercado Pago</span>
             </div>
           </div>
         )}
 
         {/* Modal Body */}
-        <div className="p-6 max-h-[72vh] overflow-y-auto">
+        <div className="p-6 max-h-[72vh] overflow-y-auto bg-white">
 
           {/* STEP 1: SERVICE & STYLIST SELECTION */}
           {currentStep === 1 && (
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   1. Confirma o cambia tu servicio:
                 </label>
-                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
                   {SERVICES.map((s) => {
                     const isSelected = selectedService.id === s.id;
                     return (
                       <div
                         key={s.id}
                         onClick={() => setSelectedService(s)}
-                        className={`p-3.5 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                        className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
                           isSelected
-                            ? 'bg-[#221F25] border-[#D19745] text-[#F7F4F0] shadow-md shadow-[#D19745]/15'
-                            : 'bg-[#18171B] border-[#99745A]/20 text-[#B8B0A5] hover:border-[#D19745]/40'
+                            ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-sm'
+                            : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#5C534B] hover:border-[#C8933E]/50'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <img
                             src={s.image}
                             alt={s.name}
-                            className="w-12 h-12 rounded-lg object-cover"
+                            className="w-12 h-12 rounded-xl object-cover"
                           />
                           <div>
-                            <p className="text-sm font-bold text-[#F7F4F0] leading-tight">
+                            <p className="text-sm font-bold text-[#231E1B] leading-tight">
                               {s.name}
                             </p>
-                            <span className="text-[11px] text-[#A69E93] flex items-center gap-1.5 mt-0.5">
-                              <Clock className="w-3 h-3 text-[#738259]" />
+                            <span className="text-[11px] text-[#68794E] font-bold flex items-center gap-1.5 mt-0.5">
+                              <Clock className="w-3 h-3 text-[#68794E]" />
                               {s.durationMinutes} min
                             </span>
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <span className="text-sm font-extrabold text-[#EFD189]">
+                          <span className="text-sm font-black text-[#A87428]">
                             ${s.priceMXN.toLocaleString('es-MX')} MXN
                           </span>
-                          <span className="text-[10px] text-[#A69E93] block">
+                          <span className="text-[10px] text-[#736A60] block font-medium">
                             Anticipo: ${s.depositMXN}
                           </span>
                         </div>
@@ -239,24 +246,24 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               {/* Stylist Selection */}
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   2. ¿Deseas elegir un estilista en específico?
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div
                     onClick={() => setSelectedStylist(null)}
-                    className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                    className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all ${
                       selectedStylist === null
-                        ? 'bg-[#221F25] border-[#D19745] text-[#F7F4F0]'
-                        : 'bg-[#18171B] border-[#99745A]/20 text-[#A69E93] hover:border-[#D19745]/30'
+                        ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
+                        : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-full bg-[#201D19] border border-[#738259]/50 flex items-center justify-center text-xs font-bold text-[#EFD189]">
+                    <div className="w-10 h-10 rounded-full bg-[#EAE3D6] border border-[#68794E]/40 flex items-center justify-center text-xs font-bold text-[#42502E]">
                       MG
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#F7F4F0]">Primer Especialista Disponible</p>
-                      <p className="text-[10px] text-[#8C847A]">Mayor disponibilidad de horario</p>
+                      <p className="text-xs font-bold text-[#231E1B]">Primer Especialista Disponible</p>
+                      <p className="text-[10px] text-[#7A7067]">Mayor disponibilidad de horario</p>
                     </div>
                   </div>
 
@@ -266,20 +273,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       <div
                         key={st.id}
                         onClick={() => setSelectedStylist(st)}
-                        className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition-all ${
+                        className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all ${
                           isSelected
-                            ? 'bg-[#221F25] border-[#D19745] text-[#F7F4F0]'
-                            : 'bg-[#18171B] border-[#99745A]/20 text-[#A69E93] hover:border-[#D19745]/30'
+                            ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
+                            : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
                         }`}
                       >
                         <img
                           src={st.photo}
                           alt={st.name}
-                          className="w-10 h-10 rounded-full object-cover border border-[#99745A]/30"
+                          className="w-10 h-10 rounded-full object-cover border border-[#99745A]/25"
                         />
                         <div className="overflow-hidden">
-                          <p className="text-xs font-bold text-[#F7F4F0] truncate">{st.name}</p>
-                          <p className="text-[10px] text-[#738259] font-medium truncate">{st.role}</p>
+                          <p className="text-xs font-bold text-[#231E1B] truncate">{st.name}</p>
+                          <p className="text-[10px] text-[#68794E] font-bold truncate">{st.role}</p>
                         </div>
                       </div>
                     );
@@ -289,7 +296,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               <button
                 onClick={() => setCurrentStep(2)}
-                className="gold-button w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                className="gold-button w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <span>Continuar a Selección de Fecha</span>
                 <ChevronRight className="w-4 h-4" />
@@ -301,7 +308,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {currentStep === 2 && (
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   1. Selecciona la fecha de tu visita:
                 </label>
                 <div className="grid grid-cols-5 sm:grid-cols-7 gap-2">
@@ -311,11 +318,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       return (
                         <div
                           key={d.fullDate}
-                          className="p-2 rounded-xl bg-white/5 border border-white/5 text-center opacity-40 cursor-not-allowed"
+                          className="p-2 rounded-xl bg-gray-100 border border-gray-200 text-center opacity-40 cursor-not-allowed"
                         >
-                          <span className="text-[10px] block uppercase text-[#736E65]">{d.dayName}</span>
-                          <span className="text-base font-bold text-[#736E65]">{d.dayNumber}</span>
-                          <span className="text-[9px] block text-red-400">Cerrado</span>
+                          <span className="text-[10px] block uppercase text-gray-500">{d.dayName}</span>
+                          <span className="text-base font-bold text-gray-500">{d.dayNumber}</span>
+                          <span className="text-[9px] block text-red-500">Cerrado</span>
                         </div>
                       );
                     }
@@ -323,15 +330,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       <button
                         key={d.fullDate}
                         onClick={() => setSelectedDate(d.fullDate)}
-                        className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-gradient-to-b from-[#EFD189] to-[#D19745] text-[#0E0E10] font-bold border-[#EFD189] shadow-md'
-                            : 'bg-[#18171B] border-[#99745A]/20 text-[#E7E0DA] hover:border-[#D19745]/50'
+                            ? 'bg-gradient-to-b from-[#DFAC58] to-[#C8933E] text-white font-bold border-[#C8933E] shadow-sm'
+                            : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#231E1B] hover:border-[#C8933E]'
                         }`}
                       >
-                        <span className="text-[10px] block uppercase">{d.dayName}</span>
-                        <span className="text-lg font-bold leading-tight">{d.dayNumber}</span>
-                        <span className="text-[10px] block uppercase opacity-80">{d.monthName}</span>
+                        <span className="text-[10px] block uppercase font-bold">{d.dayName}</span>
+                        <span className="text-lg font-black leading-tight">{d.dayNumber}</span>
+                        <span className="text-[10px] block uppercase opacity-90">{d.monthName}</span>
                       </button>
                     );
                   })}
@@ -339,7 +346,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   2. Horarios disponibles para {selectedDate}:
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -349,13 +356,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       <button
                         key={slot}
                         onClick={() => setSelectedTime(slot)}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                           isSelected
-                            ? 'bg-gradient-to-r from-[#738259] to-[#D19745] text-black border-[#D19745] shadow-md font-bold'
-                            : 'bg-[#18171B] border-[#99745A]/20 text-[#C7BEB5] hover:border-[#D19745]/40'
+                            ? 'bg-gradient-to-r from-[#68794E] to-[#C8933E] text-white border-[#C8933E] shadow-sm'
+                            : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#C8933E]'
                         }`}
                       >
-                        <Clock className="w-3.5 h-3.5 text-[#738259]" />
+                        <Clock className="w-3.5 h-3.5 text-[#68794E]" />
                         <span>{slot}</span>
                       </button>
                     );
@@ -366,14 +373,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setCurrentStep(1)}
-                  className="w-1/3 py-3 rounded-xl text-xs font-semibold text-[#C7BEB5] border border-[#99745A]/30 hover:bg-white/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-1/3 py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/25 hover:bg-black/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Volver</span>
                 </button>
                 <button
                   onClick={() => setCurrentStep(3)}
-                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
                   <span>Continuar a tus Datos</span>
                   <ChevronRight className="w-4 h-4" />
@@ -386,57 +393,57 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {currentStep === 3 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] mb-1">
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
                   Nombre y Apellidos *
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-[#A69E93] absolute left-3.5 top-3.5" />
+                  <User className="w-4 h-4 text-[#8C8278] absolute left-3.5 top-3.5" />
                   <input
                     type="text"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
                     placeholder="Ej. Carolina Montes"
-                    className="w-full bg-[#18171B] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#F7F4F0] placeholder-[#666] focus:border-[#D19745] focus:outline-none transition-colors"
+                    className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#E7E0DA] mb-1">
+                  <label className="block text-xs font-bold text-[#4A423B] mb-1">
                     Correo Electrónico *
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-[#A69E93] absolute left-3.5 top-3.5" />
+                    <Mail className="w-4 h-4 text-[#8C8278] absolute left-3.5 top-3.5" />
                     <input
                       type="email"
                       value={clientEmail}
                       onChange={(e) => setClientEmail(e.target.value)}
                       placeholder="tu@correo.com"
-                      className="w-full bg-[#18171B] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#F7F4F0] placeholder-[#666] focus:border-[#D19745] focus:outline-none transition-colors"
+                      className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#E7E0DA] mb-1">
+                  <label className="block text-xs font-bold text-[#4A423B] mb-1">
                     Teléfono / WhatsApp (México) *
                   </label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-[#A69E93] absolute left-3.5 top-3.5" />
+                    <Phone className="w-4 h-4 text-[#8C8278] absolute left-3.5 top-3.5" />
                     <input
                       type="tel"
                       value={clientPhone}
                       onChange={(e) => setClientPhone(e.target.value)}
                       placeholder="55 1234 5678"
-                      className="w-full bg-[#18171B] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#F7F4F0] placeholder-[#666] focus:border-[#D19745] focus:outline-none transition-colors"
+                      className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] mb-1">
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
                   Notas adicionales o especificaciones (Opcional)
                 </label>
                 <textarea
@@ -444,12 +451,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
                   placeholder="Ej. Cabello teñido previamente de negro, me gustaría asesoría en tono miel..."
-                  className="w-full bg-[#18171B] border border-[#99745A]/25 rounded-xl p-3 text-sm text-[#F7F4F0] placeholder-[#666] focus:border-[#D19745] focus:outline-none transition-colors"
+                  className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl p-3 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                 />
               </div>
 
-              <div className="p-3 rounded-xl bg-[#181E15]/50 border border-[#738259]/30 flex items-center gap-3 text-xs text-[#C7BEB5]">
-                <ShieldCheck className="w-5 h-5 text-[#009EE3] shrink-0" />
+              <div className="p-3.5 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center gap-3 text-xs text-[#3D472D]">
+                <ShieldCheck className="w-5 h-5 text-[#68794E] shrink-0" />
                 <span>
                   Tus datos están protegidos. Recibirás tu confirmación de cita en tu correo y WhatsApp.
                 </span>
@@ -458,14 +465,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setCurrentStep(2)}
-                  className="w-1/3 py-3 rounded-xl text-xs font-semibold text-[#C7BEB5] border border-[#99745A]/30 hover:bg-white/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-1/3 py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/25 hover:bg-black/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Volver</span>
                 </button>
                 <button
                   onClick={handleNextStep}
-                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
                 >
                   <span>Ir a Pasarela de Pago</span>
                   <ChevronRight className="w-4 h-4" />
@@ -478,25 +485,25 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {currentStep === 4 && (
             <div className="space-y-6">
               {/* Summary box */}
-              <div className="bg-[#18171C] border border-[#99745A]/25 rounded-2xl p-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/5">
+              <div className="bg-[#FAF7F2] border border-[#99745A]/20 rounded-2xl p-4">
+                <div className="flex items-center justify-between pb-3 border-b border-[#99745A]/15">
                   <div>
-                    <h4 className="text-sm font-bold text-[#F7F4F0]">{selectedService.name}</h4>
-                    <p className="text-xs text-[#EFD189]">
+                    <h4 className="text-sm font-bold text-[#231E1B]">{selectedService.name}</h4>
+                    <p className="text-xs text-[#A87428] font-bold">
                       {selectedDate} a las {selectedTime}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#8C847A] block">Precio Total</span>
-                    <span className="text-base font-bold text-[#F7F4F0]">
+                    <span className="text-xs text-[#7A7067] block">Precio Total</span>
+                    <span className="text-base font-black text-[#231E1B]">
                       ${selectedService.priceMXN.toLocaleString('es-MX')} MXN
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-3 text-xs text-[#C7BEB5] flex justify-between">
+                <div className="pt-3 text-xs text-[#5C534B] flex justify-between">
                   <span>Estilista asignado:</span>
-                  <span className="font-semibold text-[#F7F4F0]">
+                  <span className="font-bold text-[#231E1B]">
                     {selectedStylist ? selectedStylist.name : 'Primer Especialista Disponible'}
                   </span>
                 </div>
@@ -504,31 +511,31 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               {/* Payment Amount Choice */}
               <div>
-                <label className="block text-xs font-semibold text-[#E7E0DA] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   Elige cómo deseas reservar:
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div
                     onClick={() => setPaymentOption('deposit')}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                       paymentOption === 'deposit'
-                        ? 'bg-[#18212D] border-[#009EE3] text-[#F7F4F0] shadow-md'
-                        : 'bg-[#18171B] border-[#99745A]/20 text-[#A69E93] hover:border-[#D19745]/30'
+                        ? 'bg-[#F0F6FA] border-[#009EE3] text-[#231E1B] shadow-sm'
+                        : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#6B6158] hover:border-[#009EE3]/50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#009EE3]">Anticipo para Apartar</span>
-                      <span className="text-xs bg-[#009EE3]/20 text-[#009EE3] font-bold px-2 py-0.5 rounded">
+                      <span className="text-xs font-black text-[#009EE3]">Anticipo para Apartar</span>
+                      <span className="text-xs bg-[#009EE3]/15 text-[#009EE3] font-bold px-2 py-0.5 rounded">
                         Recomendado
                       </span>
                     </div>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-xl font-bold text-[#F7F4F0]">
+                      <span className="text-xl font-black text-[#231E1B]">
                         ${selectedService.depositMXN.toLocaleString('es-MX')}
                       </span>
-                      <span className="text-xs text-[#009EE3]">MXN</span>
+                      <span className="text-xs font-bold text-[#009EE3]">MXN</span>
                     </div>
-                    <p className="text-[11px] text-[#A69E93] mt-1">
+                    <p className="text-[11px] text-[#6B6158] mt-1">
                       Asegura tu horario en la agenda. El saldo restante ($
                       {(selectedService.priceMXN - selectedService.depositMXN).toLocaleString('es-MX')} MXN) se liquida el día de tu servicio.
                     </p>
@@ -536,22 +543,22 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                   <div
                     onClick={() => setPaymentOption('full')}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                       paymentOption === 'full'
-                        ? 'bg-[#18212D] border-[#009EE3] text-[#F7F4F0] shadow-md'
-                        : 'bg-[#18171B] border-[#99745A]/20 text-[#A69E93] hover:border-[#D19745]/30'
+                        ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-sm'
+                        : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#6B6158] hover:border-[#C8933E]/50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#EFD189]">Pago Completo 100%</span>
+                      <span className="text-xs font-black text-[#A87428]">Pago Completo 100%</span>
                     </div>
                     <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-xl font-bold text-[#F7F4F0]">
+                      <span className="text-xl font-black text-[#231E1B]">
                         ${selectedService.priceMXN.toLocaleString('es-MX')}
                       </span>
-                      <span className="text-xs text-[#EFD189]">MXN</span>
+                      <span className="text-xs font-bold text-[#A87428]">MXN</span>
                     </div>
-                    <p className="text-[11px] text-[#A69E93] mt-1">
+                    <p className="text-[11px] text-[#6B6158] mt-1">
                       Liquida tu servicio completo ahora mismo con Mercado Pago y olvídate de pagos adicionales el día de tu cita.
                     </p>
                   </div>
@@ -566,16 +573,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       MP
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-[#F7F4F0]">Mercado Pago México</p>
-                      <p className="text-[10px] text-[#009EE3]">Procesamiento Seguro 256-bit SSL</p>
+                      <p className="text-xs font-bold text-[#231E1B]">Mercado Pago México</p>
+                      <p className="text-[10px] text-[#009EE3] font-semibold">Procesamiento Seguro 256-bit SSL</p>
                     </div>
                   </div>
-                  <span className="text-[11px] text-[#EFD189] font-semibold">
+                  <span className="text-[11px] text-[#A87428] font-bold">
                     3 y 6 MSI disponibles
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-[11px] text-[#C7BEB5]">
+                <div className="flex items-center gap-2 text-[11px] text-[#554C44]">
                   <CreditCard className="w-4 h-4 text-[#009EE3]" />
                   <span>Acepta Visa, Mastercard, AMEX, Dinero en MP y Efectivo en OXXO</span>
                 </div>
@@ -586,7 +593,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <button
                   disabled={isProcessingPayment}
                   onClick={handleProcessMercadoPago}
-                  className="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-wider bg-[#009EE3] hover:bg-[#0089C7] text-white flex items-center justify-center gap-2 cursor-pointer transition-all shadow-xl shadow-[#009EE3]/20 disabled:opacity-50"
+                  className="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-wider bg-[#009EE3] hover:bg-[#0089C7] text-white flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg shadow-[#009EE3]/25 disabled:opacity-50"
                 >
                   {isProcessingPayment ? (
                     <div className="flex items-center gap-2">
@@ -604,7 +611,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <button
                   onClick={() => setCurrentStep(3)}
                   disabled={isProcessingPayment}
-                  className="w-full py-2.5 rounded-xl text-xs font-semibold text-[#8C847A] hover:text-[#C7BEB5] transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl text-xs font-bold text-[#8C8278] hover:text-[#231E1B] transition-colors flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Modificar datos de contacto</span>
@@ -616,57 +623,57 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           {/* STEP 5: SUCCESS CONFIRMATION */}
           {currentStep === 5 && (
             <div className="text-center py-4 space-y-6">
-              <div className="w-16 h-16 rounded-full bg-[#738259]/25 border border-[#738259] flex items-center justify-center mx-auto text-[#EFD189] shadow-lg shadow-[#738259]/20">
+              <div className="w-16 h-16 rounded-full bg-[#68794E]/15 border border-[#68794E] flex items-center justify-center mx-auto text-[#68794E] shadow-sm">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
 
               <div>
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#EFD189]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#68794E]">
                   Pago Aprobado con Mercado Pago
                 </span>
-                <h3 className="font-serif-luxury text-3xl font-bold text-[#F7F4F0] mt-1">
+                <h3 className="font-serif-luxury text-3xl font-bold text-[#231E1B] mt-1">
                   ¡Te esperamos, {clientName.split(' ')[0]}!
                 </h3>
-                <p className="text-xs text-[#A69E93] mt-1">
+                <p className="text-xs text-[#6B6158] mt-1">
                   Hemos enviado los detalles completos a <strong>{clientEmail}</strong>
                 </p>
               </div>
 
               {/* Booking Ticket Card */}
-              <div className="bg-[#18171C] border border-[#D19745]/40 rounded-2xl p-5 text-left max-w-md mx-auto space-y-3 relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-gradient-to-l from-[#EFD189] to-[#D19745] text-black text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl">
+              <div className="bg-[#FAF7F2] border border-[#C8933E]/40 rounded-2xl p-5 text-left max-w-md mx-auto space-y-3 relative overflow-hidden shadow-sm">
+                <div className="absolute top-0 right-0 bg-gradient-to-l from-[#DFAC58] to-[#C8933E] text-white text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl shadow-xs">
                   Confirmada
                 </div>
 
                 <div className="flex justify-between items-baseline">
                   <div>
-                    <span className="text-[10px] uppercase tracking-wider text-[#8C847A]">Código de Cita</span>
-                    <p className="font-mono text-lg font-bold text-[#EFD189]">{bookingCode}</p>
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Código de Cita</span>
+                    <p className="font-mono text-lg font-black text-[#A87428]">{bookingCode}</p>
                   </div>
                   <div className="text-right pr-14">
-                    <span className="text-[10px] uppercase tracking-wider text-[#8C847A]">Monto Pagado</span>
-                    <p className="text-sm font-bold text-[#F7F4F0]">${amountToPay} MXN (MP)</p>
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Monto Pagado</span>
+                    <p className="text-sm font-black text-[#231E1B]">${amountToPay} MXN (MP)</p>
                   </div>
                 </div>
 
-                <div className="border-t border-white/10 pt-3 space-y-1.5 text-xs">
+                <div className="border-t border-[#99745A]/15 pt-3 space-y-1.5 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-[#8C847A]">Servicio:</span>
-                    <span className="font-semibold text-[#F7F4F0]">{selectedService.name}</span>
+                    <span className="text-[#7A7067]">Servicio:</span>
+                    <span className="font-bold text-[#231E1B]">{selectedService.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8C847A]">Fecha y Hora:</span>
-                    <span className="font-semibold text-[#F7F4F0]">{selectedDate} - {selectedTime}</span>
+                    <span className="text-[#7A7067]">Fecha y Hora:</span>
+                    <span className="font-bold text-[#231E1B]">{selectedDate} - {selectedTime}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8C847A]">Estilista:</span>
-                    <span className="font-semibold text-[#F7F4F0]">
+                    <span className="text-[#7A7067]">Estilista:</span>
+                    <span className="font-bold text-[#231E1B]">
                       {selectedStylist ? selectedStylist.name : 'Primer Especialista Disponible'}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#8C847A]">Ubicación:</span>
-                    <span className="font-semibold text-[#F7F4F0]">{SALON_INFO.address}</span>
+                    <span className="text-[#7A7067]">Ubicación:</span>
+                    <span className="font-bold text-[#231E1B]">{SALON_INFO.address}</span>
                   </div>
                 </div>
               </div>
@@ -685,7 +692,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                 <button
                   onClick={handleResetAndClose}
-                  className="w-full py-3 rounded-xl text-xs font-semibold text-[#C7BEB5] border border-white/10 hover:bg-white/5 transition-all cursor-pointer"
+                  className="w-full py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/20 hover:bg-black/5 transition-all cursor-pointer"
                 >
                   Cerrar y Regresar al Sitio
                 </button>
