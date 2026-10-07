@@ -42,7 +42,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
             </span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] mb-4">
-            Carta de Servicios Exclusivos
+            MILLER GREISELAND STUDIO
           </h2>
           <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
             {SALON_INFO.servicesIntro}
@@ -70,8 +70,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           </div>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+        {/* Services Grid (Natural row heights per row, no global auto-rows-fr) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {filteredServices.map((service) => {
             const isExpanded = !!expandedIds[service.id];
 
@@ -80,8 +80,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 key={service.id}
                 className="bg-white rounded-3xl overflow-hidden flex flex-col group border border-[#99745A]/20 hover:border-[#C8933E]/50 shadow-xs hover:shadow-lg transition-all duration-300"
               >
-                {/* Service Image Banner */}
-                <div className="relative h-56 sm:h-60 overflow-hidden">
+                {/* 1. Fotografía con proporción uniforme */}
+                <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.name}
@@ -89,7 +89,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                  {/* Signature Badge (Solid gold with high-contrast text) */}
+                  {/* Signature Badge */}
                   {service.popular && (
                     <div className="absolute top-3.5 left-3.5 bg-[#C8933E] text-[#231E1B] text-[11px] font-bold tracking-wider px-3 py-1 rounded-full shadow-xs">
                       Signature
@@ -103,126 +103,134 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   </div>
                 </div>
 
-                {/* Card Body */}
-                <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between">
-                  <div>
+                {/* Card Body with ~20px padding */}
+                <div className="p-5 flex-1 flex flex-col">
+                  {/* Contiguous Content Block */}
+                  <div className="space-y-3">
+                    {/* 2. Nombre del servicio */}
                     <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B] group-hover:text-[#A87428] transition-colors leading-snug">
                       {service.name}
                     </h3>
                     
-                    {service.tagline && (
-                      <p className="text-xs text-[#A87428] font-medium mt-1">
-                        {service.tagline}
-                      </p>
-                    )}
-
-                    {/* Brief Summary always visible on the card face */}
-                    <p className="text-xs sm:text-sm text-[#5C534B] mt-2.5 leading-relaxed">
+                    {/* 3. Resumen breve de una frase */}
+                    <p className="text-xs sm:text-sm text-[#5C534B] leading-relaxed">
                       {service.shortSummary}
                     </p>
 
-                    {/* Pricing Tiers (ALWAYS VISIBLE outside collapsible) */}
-                    {service.tiers && service.tiers.length > 0 && (
-                      <div className="mt-4 p-3 rounded-2xl bg-[#F8F5EE] border border-[#99745A]/15">
-                        <span className="text-xs font-semibold text-[#68794E] block mb-2 flex items-center gap-1.5">
-                          <Tag className="w-3.5 h-3.5" />
-                          Tarifas por longitud o gramaje:
-                        </span>
-                        <div className="grid grid-cols-2 gap-1.5">
-                          {service.tiers.map((t, idx) => (
-                            <div
-                              key={idx}
-                              className="flex justify-between items-center bg-white px-2.5 py-1.5 rounded-lg border border-[#99745A]/10 text-xs"
-                            >
-                              <span className="text-[#554C44] font-medium">{t.label}</span>
-                              <span className="text-[#A87428] font-bold">${t.priceMXN.toLocaleString('es-MX')}</span>
-                            </div>
-                          ))}
+                    {/* 4. Precio inicial o rango en MXN e indicación discreta en Signature Blondes */}
+                    <div className="pt-2.5 border-t border-[#99745A]/15 space-y-1">
+                      <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-[#231E1B] tracking-tight">
+                            {service.priceDisplay}
+                          </span>
+                          <span className="text-xs font-bold text-[#A87428]">MXN</span>
                         </div>
+                        {service.category === 'blondes' && (
+                          <span className="text-[11px] font-medium text-[#8A5F20]">
+                            Tono base con costo adicional
+                          </span>
+                        )}
                       </div>
-                    )}
 
-                    {/* Pricing Condition Notes (ALWAYS VISIBLE outside collapsible) */}
-                    {service.note && (
-                      <div className="mt-3 text-xs text-[#8A5F20] bg-[#FFF9EE] p-3 rounded-xl border border-[#C8933E]/25 font-medium leading-relaxed">
-                        {service.note}
+                      {/* 5. Anticipo del 50% sobre el precio mínimo */}
+                      <div className="flex items-center gap-1.5 text-xs text-[#5C534B] pt-0.5">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#009EE3] shrink-0" />
+                        <span>Anticipo del 50%: ${service.depositMXN.toLocaleString('es-MX')} MXN</span>
                       </div>
-                    )}
+                      <p className="text-[10px] text-[#7A7067]">
+                        Sobre el precio mínimo publicado.
+                      </p>
+                    </div>
 
-                    {/* Accessible Collapsible: Ver detalles e inclusiones */}
-                    <div className="mt-4 pt-3 border-t border-[#99745A]/15">
+                    {/* 6. Botón «Ver detalles y tarifas» */}
+                    <div className="pt-1">
                       <button
                         type="button"
                         onClick={() => toggleDetails(service.id)}
                         aria-expanded={isExpanded}
                         aria-controls={`service-details-${service.id}`}
                         id={`service-toggle-${service.id}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#68794E] hover:text-[#4B5935] cursor-pointer py-1 transition-colors focus-visible:outline-2 focus-visible:outline-[#68794E] focus-visible:outline-offset-2 rounded"
+                        className="w-full py-2 px-3 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-xs font-semibold text-[#68794E] hover:text-[#4B5935] border border-[#99745A]/20 flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#68794E] focus-visible:outline-offset-2"
                       >
-                        <span>{isExpanded ? 'Ocultar detalles' : 'Ver detalles e inclusiones'}</span>
+                        <span>{isExpanded ? 'Ocultar detalles y tarifas' : 'Ver detalles y tarifas'}</span>
                         <ChevronDown
-                          className={`w-4 h-4 transition-transform duration-200 ${
+                          className={`w-3.5 h-3.5 transition-transform duration-200 ${
                             isExpanded ? 'rotate-180' : ''
                           }`}
                         />
                       </button>
 
+                      {/* Contenido accesible desplegado dentro de «Ver detalles y tarifas» */}
                       {isExpanded && (
                         <div
                           id={`service-details-${service.id}`}
                           role="region"
                           aria-labelledby={`service-toggle-${service.id}`}
-                          className="mt-3.5 pt-3.5 border-t border-[#99745A]/15 space-y-3.5 animate-fadeIn"
+                          className="mt-3 pt-3 border-t border-[#99745A]/15 space-y-3 animate-fadeIn"
                         >
+                          {/* Tarifas por centímetros o gramaje */}
+                          {service.tiers && service.tiers.length > 0 && (
+                            <div className="p-2.5 rounded-xl bg-[#F8F5EE]/90 border border-[#99745A]/15 text-xs">
+                              <span className="text-[11px] font-bold uppercase tracking-wider text-[#68794E] flex items-center gap-1.5 mb-1.5">
+                                <Tag className="w-3 h-3" />
+                                {service.category === 'extensions' ? 'Tarifas por gramaje:' : 'Tarifas por longitud:'}
+                              </span>
+                              <ul className="divide-y divide-[#99745A]/10">
+                                {service.tiers.map((t, idx) => (
+                                  <li key={idx} className="flex justify-between items-center py-1 first:pt-0 last:pb-0">
+                                    <span className="text-[#554C44]">{t.label}</span>
+                                    <span className="font-bold text-[#A87428]">${t.priceMXN.toLocaleString('es-MX')}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Explicaciones y condiciones particulares del servicio */}
+                          {service.note && (
+                            <div className="px-3 py-2 rounded-lg bg-[#FFF9EE] border border-[#C8933E]/25 text-xs text-[#8A5F20] font-medium leading-relaxed">
+                              {service.note}
+                            </div>
+                          )}
+
+                          {/* Descripción completa */}
                           <div>
-                            <p className="text-xs font-bold text-[#68794E] uppercase tracking-wider mb-1.5">
+                            <p className="text-[11px] font-bold text-[#68794E] uppercase tracking-wider mb-1">
                               Descripción completa:
                             </p>
-                            <p className="text-xs sm:text-sm text-[#4A423B] leading-relaxed">
+                            <p className="text-xs sm:text-sm text-[#4A423B] leading-relaxed whitespace-pre-line">
                               {service.description}
                             </p>
                           </div>
 
-                          <div className="pt-2 border-t border-[#99745A]/10">
-                            <p className="text-xs font-bold text-[#68794E] uppercase tracking-wider mb-2">
-                              El servicio incluye:
-                            </p>
-                            <ul className="space-y-1.5">
-                              {service.includes.map((inc, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-[#4E443C] leading-snug">
-                                  <Check className="w-3.5 h-3.5 text-[#68794E] shrink-0 mt-0.5" />
-                                  <span>{inc}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                          {/* Inclusiones */}
+                          {service.includes && service.includes.length > 0 && (
+                            <div className="pt-2 border-t border-[#99745A]/10">
+                              <p className="text-[11px] font-bold text-[#68794E] uppercase tracking-wider mb-1.5">
+                                El servicio incluye:
+                              </p>
+                              <ul className="space-y-1">
+                                {service.includes.map((inc, i) => (
+                                  <li key={i} className="flex items-start gap-2 text-xs text-[#4E443C] leading-snug">
+                                    <Check className="w-3.5 h-3.5 text-[#68794E] shrink-0 mt-0.5" />
+                                    <span>{inc}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Pricing & CTA Footer (Prevents collision / wrapping) */}
-                  <div className="mt-6 pt-4 border-t border-[#99745A]/15 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-                    <div className="min-w-0">
-                      <span className="text-xs font-medium text-[#7A7067] block">
-                        Inversión
-                      </span>
-                      <div className="flex items-baseline gap-1.5 flex-wrap">
-                        <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-[#231E1B] tracking-tight">
-                          {service.priceDisplay}
-                        </span>
-                        <span className="text-xs font-bold text-[#A87428]">MXN</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-[#5C534B] mt-1">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#009EE3] shrink-0" />
-                        <span>Anticipo en línea: ${service.depositMXN} MXN</span>
-                      </div>
-                    </div>
-
+                  {/* 7. Botón «Reservar» alineado al pie */}
+                  <div className="mt-auto pt-4">
                     <button
                       type="button"
                       onClick={() => onSelectService(service)}
-                      className="gold-button shrink-0 self-stretch sm:self-auto px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                      className="gold-button w-full px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
                     >
                       <span>Reservar</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -234,14 +242,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           })}
         </div>
 
-        {/* Brand Manifesto Bottom Banner (No redundant repeats below) */}
+        {/* Brand Manifesto Bottom Banner (Una sola vez al terminar el catálogo) */}
         <div className="mt-16 p-8 rounded-3xl bg-white border border-[#99745A]/20 text-center max-w-3xl mx-auto shadow-xs">
           <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B] mb-3">
-            Miller Greiseland Signature
+            MILLER GREISELAND SIGNATURE
           </h3>
           <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
-            {SALON_INFO.manifesto}
+            Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello.
           </p>
+          <div className="mt-4 pt-4 border-t border-[#99745A]/15 text-sm sm:text-base font-medium text-[#231E1B] space-y-1">
+            <p>El resultado comienza con un cabello sano.</p>
+            <p className="italic text-[#8A5F20]">El lujo está en cada detalle.</p>
+          </div>
         </div>
 
       </div>

@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Brand Logo with Image */}
-          <a href="#" className="flex items-center gap-2.5 group min-w-0">
+          <a href="#" className="flex items-center gap-2.5 group shrink-0">
             <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-[#C8933E]/40 flex items-center justify-center bg-white p-1 shadow-xs group-hover:border-[#C8933E] group-hover:scale-105 transition-all duration-300 overflow-hidden shrink-0">
               <img
                 src="/logo-miller.png"
@@ -41,8 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 }}
               />
             </div>
-            <div className="flex flex-col min-w-0">
-              <span className="font-serif-luxury text-base sm:text-2xl font-bold tracking-wide sm:tracking-[0.16em] text-[#231E1B] uppercase leading-none truncate group-hover:text-[#C8933E] transition-colors">
+            <div className="flex flex-col shrink-0">
+              <span className="font-serif-luxury text-base sm:text-2xl font-bold tracking-wide sm:tracking-[0.16em] text-[#231E1B] uppercase leading-none whitespace-nowrap group-hover:text-[#C8933E] transition-colors">
                 Miller Greiseland
               </span>
               <span className="text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] text-[#68794E] uppercase font-bold mt-1">
@@ -52,15 +52,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wider text-[#5C534B]">
+          <nav className="hidden xl:flex items-center gap-8 text-sm font-semibold tracking-wider text-[#5C534B]">
             <a href="#servicios" className="hover:text-[#C8933E] transition-colors">
               Servicios
             </a>
             <a href="#experiencia" className="hover:text-[#C8933E] transition-colors">
               Experiencia
             </a>
-            <a href="#estilistas" className="hover:text-[#C8933E] transition-colors">
-              Estilistas
+            <a href="#conoceme" className="hover:text-[#C8933E] transition-colors">
+              Conóceme
             </a>
             <a href="#mercadopago" className="hover:text-[#009EE3] transition-colors flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-[#009EE3]" />
@@ -72,7 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden xl:flex items-center gap-4 shrink-0">
             <a
               href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20sus%20servicios`}
               target="_blank"
@@ -92,21 +92,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </button>
           </div>
 
-          {/* Mobile Menu Trigger */}
-          <div className="flex md:hidden items-center gap-1.5 shrink-0">
+          {/* Mobile & Tablet Compact Menu Trigger */}
+          <div className="flex xl:hidden items-center gap-2 shrink-0">
             <button
               onClick={onOpenBooking}
-              className="gold-button px-2.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-xs"
+              className="gold-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-xs cursor-pointer"
             >
-              <Calendar className="w-3 h-3" />
-              <span>Cita</span>
+              <Calendar className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Reservar Cita</span>
+              <span className="sm:hidden">Cita</span>
             </button>
             <button
+              id="mobile-menu-trigger"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 text-[#231E1B] hover:text-[#C8933E] transition-colors"
-              aria-label="Abrir menú"
+              className="p-1.5 sm:p-2 text-[#231E1B] hover:text-[#C8933E] transition-colors rounded-lg cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B]"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu-drawer"
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -114,7 +118,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#FAF7F2] border-b border-[#99745A]/20 px-6 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200 shadow-xl">
+        <div
+          id="mobile-menu-drawer"
+          className="xl:hidden bg-[#FAF7F2] border-b border-[#99745A]/20 px-6 py-6 space-y-4 animate-in slide-in-from-top-2 duration-200 shadow-xl"
+        >
           <nav className="flex flex-col space-y-3 text-base font-semibold text-[#3D352F]">
             <a
               href="#servicios"
@@ -131,11 +138,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               Experiencia Miller Greiseland
             </a>
             <a
-              href="#estilistas"
+              href="#conoceme"
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#C8933E] transition-colors"
             >
-              Nuestros Estilistas
+              Conóceme
             </a>
             <a
               href="#mercadopago"

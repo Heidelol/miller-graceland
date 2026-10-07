@@ -19,7 +19,7 @@ export const MercadoPagoBanner: React.FC = () => {
               </h2>
 
               <p className="text-sm text-[#5C534B] leading-relaxed mb-6">
-                En <strong>Miller Greiseland</strong> garantizamos tu tranquilidad. Puedes apartar tu horario con un anticipo accesible o liquidar tu servicio completo en Pesos Mexicanos (MXN) con la máxima seguridad bancaria.
+                Aparta tu horario con un anticipo del 50% del precio mínimo publicado, en Pesos Mexicanos (MXN). El precio final se confirma tras la valoración en <strong>Miller Greiseland</strong>; el saldo se calcula descontando tu anticipo.
               </p>
 
               {/* Supported payment badges */}

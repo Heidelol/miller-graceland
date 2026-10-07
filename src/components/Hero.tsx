@@ -78,7 +78,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             </div>
             <div>
               <p className="text-xs font-bold text-[#231E1B]">Mercado Pago</p>
-              <p className="text-[11px] text-[#7A7067]">Anticipo seguro en MXN</p>
+              <p className="text-[11px] text-[#7A7067]">Reserva con anticipo del 50%</p>
             </div>
           </div>
 

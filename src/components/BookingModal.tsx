@@ -5,14 +5,13 @@ import {
   Phone, Mail, ArrowLeft, ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { SERVICES, STYLISTS, SALON_INFO } from '../data/salonData';
-import type { ServiceItem, Stylist } from '../types/salon';
+import { SERVICES, SALON_INFO } from '../data/salonData';
+import type { ServiceItem } from '../types/salon';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialService?: ServiceItem | null;
-  initialStylist?: Stylist | null;
 }
 
 const generateDates = () => {
@@ -40,13 +39,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   initialService,
-  initialStylist,
 }) => {
   const [selectedService, setSelectedService] = useState<ServiceItem>(
     initialService || SERVICES[0]
-  );
-  const [selectedStylist, setSelectedStylist] = useState<Stylist | null>(
-    initialStylist || null
   );
   
   const selectedServiceRef = useRef<HTMLDivElement | null>(null);
@@ -68,7 +63,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [notes, setNotes] = useState('');
 
   // Payment configuration
-  const [paymentOption, setPaymentOption] = useState<'deposit' | 'full'>('deposit');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [bookingCompleted, setBookingCompleted] = useState(false);
   const [bookingCode, setBookingCode] = useState('');
@@ -83,9 +77,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     '02:30 PM', '04:00 PM', '05:30 PM', '07:00 PM'
   ];
 
-  const amountToPay = paymentOption === 'deposit' 
-    ? selectedService.depositMXN 
-    : selectedService.priceMXN;
+  const amountToPay = selectedService.depositMXN;
 
   const handleNextStep = () => {
     if (currentStep === 3) {
@@ -132,9 +124,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       `¡Hola Miller Greiseland! Acabo de agendar una cita por la página web:\n\n` +
       `📋 Código: ${bookingCode}\n` +
       `✨ Servicio: ${selectedService.name}\n` +
-      `👤 Estilista: ${selectedStylist ? selectedStylist.name : 'Primer disponible'}\n` +
       `📅 Fecha: ${selectedDate} a las ${selectedTime}\n` +
-      `💳 Pago realizado con Mercado Pago: $${amountToPay} MXN (${paymentOption === 'deposit' ? 'Anticipo' : 'Total'})\n` +
+      `💳 Anticipo del 50% del precio mínimo: $${amountToPay} MXN\n` +
+      `El precio final y el saldo se confirman en el salón.\n` +
       `🙋‍♀️ Cliente: ${clientName} (${clientPhone})`
     );
     return `https://wa.me/${SALON_INFO.whatsapp}?text=${text}`;
@@ -205,14 +197,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {/* Modal Body */}
         <div className="p-6 max-h-[72vh] overflow-y-auto bg-white">
 
-          {/* STEP 1: SERVICE & STYLIST SELECTION */}
+          {/* STEP 1: SERVICE SELECTION */}
           {currentStep === 1 && (
             <div className="space-y-6">
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  1. Confirma o cambia tu servicio:
+                  Confirma o cambia tu servicio:
                 </label>
-                <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
                   {SERVICES.map((s) => {
                     const isSelected = selectedService.id === s.id;
                     return (
@@ -256,74 +248,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                             {s.priceDisplay} MXN
                           </span>
                           <span className="text-[10px] text-[#736A60] block font-medium">
-                            Anticipo MP: ${s.depositMXN}
+                            Anticipo del 50%: ${s.depositMXN.toLocaleString('es-MX')}
                           </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Stylist Selection */}
-              <div>
-                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  2. ¿Deseas elegir un estilista en específico?
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setSelectedStylist(null)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setSelectedStylist(null);
-                      }
-                    }}
-                    className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
-                      selectedStylist === null
-                        ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
-                        : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
-                    }`}
-                  >
-                    <div className="w-10 h-10 rounded-full bg-[#EAE3D6] border border-[#68794E]/40 flex items-center justify-center text-xs font-bold text-[#42502E]">
-                      MG
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-[#231E1B]">Primer Especialista Disponible</p>
-                      <p className="text-[10px] text-[#7A7067]">Mayor disponibilidad de horario</p>
-                    </div>
-                  </div>
-
-                  {STYLISTS.map((st) => {
-                    const isSelected = selectedStylist?.id === st.id;
-                    return (
-                      <div
-                        key={st.id}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => setSelectedStylist(st)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setSelectedStylist(st);
-                          }
-                        }}
-                        className={`p-3 rounded-2xl border flex items-center gap-3 cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
-                          isSelected
-                            ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
-                            : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#6B6158] hover:border-[#C8933E]/40'
-                        }`}
-                      >
-                        <img
-                          src={st.photo}
-                          alt={st.name}
-                          className="w-10 h-10 rounded-full object-cover border border-[#99745A]/25"
-                        />
-                        <div className="overflow-hidden">
-                          <p className="text-xs font-bold text-[#231E1B] truncate">{st.name}</p>
-                          <p className="text-[10px] text-[#68794E] font-bold truncate">{st.role}</p>
                         </div>
                       </div>
                     );
@@ -525,12 +451,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <div className="space-y-6">
               {/* Summary box */}
               <div className="bg-[#FAF7F2] border border-[#99745A]/20 rounded-2xl p-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#99745A]/15">
+                <div className="flex items-center justify-between">
                   <div>
                     <h4 className="text-sm font-bold text-[#231E1B]">{selectedService.name}</h4>
-                    <p className="text-xs text-[#A87428] font-bold">
+                    <p className="text-xs text-[#A87428] font-bold mt-0.5">
                       {selectedDate} a las {selectedTime}
                     </p>
+                    <span className="text-[11px] text-[#68794E] font-semibold flex items-center gap-1 mt-1">
+                      <Clock className="w-3 h-3 text-[#68794E]" />
+                      Duración estimada: {selectedService.durationMinutes} min
+                    </span>
                   </div>
                   <div className="text-right">
                     <span className="text-xs text-[#7A7067] block">Precio / Rango</span>
@@ -539,68 +469,29 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </span>
                   </div>
                 </div>
-
-                <div className="pt-3 text-xs text-[#5C534B] flex justify-between">
-                  <span>Estilista asignado:</span>
-                  <span className="font-bold text-[#231E1B]">
-                    {selectedStylist ? selectedStylist.name : 'Primer Especialista Disponible'}
-                  </span>
-                </div>
               </div>
 
-              {/* Payment Amount Choice */}
+              {/* Reservation deposit based on the published minimum */}
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  Elige cómo deseas reservar:
+                  Reserva con un anticipo del 50%:
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div
-                    onClick={() => setPaymentOption('deposit')}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
-                      paymentOption === 'deposit'
-                        ? 'bg-[#F0F6FA] border-[#009EE3] text-[#231E1B] shadow-sm'
-                        : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#6B6158] hover:border-[#009EE3]/50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-[#009EE3]">Anticipo para Apartar</span>
-                      <span className="text-xs bg-[#009EE3]/15 text-[#009EE3] font-bold px-2 py-0.5 rounded">
-                        Recomendado
-                      </span>
-                    </div>
-                    <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-xl font-black text-[#231E1B]">
-                        ${selectedService.depositMXN.toLocaleString('es-MX')}
-                      </span>
-                      <span className="text-xs font-bold text-[#009EE3]">MXN</span>
-                    </div>
-                    <p className="text-[11px] text-[#6B6158] mt-1">
-                      Asegura tu horario en la agenda. El saldo restante ($
-                      {(selectedService.priceMXN - selectedService.depositMXN).toLocaleString('es-MX')} MXN) se liquida el día de tu servicio.
-                    </p>
+                <div className="p-4 rounded-2xl border bg-[#F0F6FA] border-[#009EE3] text-[#231E1B] shadow-sm">
+                  <p className="text-xs font-bold text-[#231E1B]">Anticipo para reservar</p>
+                  <div className="mt-2 flex items-baseline gap-1">
+                    <span className="text-xl font-black text-[#231E1B]">
+                      ${amountToPay.toLocaleString('es-MX')}
+                    </span>
+                    <span className="text-xs font-bold text-[#231E1B]">MXN</span>
                   </div>
-
-                  <div
-                    onClick={() => setPaymentOption('full')}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
-                      paymentOption === 'full'
-                        ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-sm'
-                        : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#6B6158] hover:border-[#C8933E]/50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-[#A87428]">Pago Completo 100%</span>
-                    </div>
-                    <div className="mt-2 flex items-baseline gap-1">
-                      <span className="text-xl font-black text-[#231E1B]">
-                        ${selectedService.priceMXN.toLocaleString('es-MX')}
-                      </span>
-                      <span className="text-xs font-bold text-[#A87428]">MXN</span>
-                    </div>
-                    <p className="text-[11px] text-[#6B6158] mt-1">
-                      Liquida tu servicio completo ahora mismo con Mercado Pago y olvídate de pagos adicionales el día de tu cita.
-                    </p>
-                  </div>
+                  <p className="text-xs text-[#5C534B] mt-2 leading-relaxed">
+                    El anticipo se calcula sobre el precio mínimo publicado (${selectedService.priceMXN.toLocaleString('es-MX')} MXN).
+                    El precio final se confirma después de la valoración en el salón, según las condiciones y cargos adicionales del servicio.
+                  </p>
+                  <p className="text-xs text-[#5C534B] mt-2 leading-relaxed">
+                    Tu saldo será el precio final confirmado menos los ${amountToPay.toLocaleString('es-MX')} MXN de anticipo.
+                    Se liquida el día de tu servicio.
+                  </p>
                 </div>
               </div>
 
@@ -703,12 +594,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <div className="flex justify-between">
                     <span className="text-[#7A7067]">Fecha y Hora:</span>
                     <span className="font-bold text-[#231E1B]">{selectedDate} - {selectedTime}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#7A7067]">Estilista:</span>
-                    <span className="font-bold text-[#231E1B]">
-                      {selectedStylist ? selectedStylist.name : 'Primer Especialista Disponible'}
-                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#7A7067]">Ubicación:</span>
