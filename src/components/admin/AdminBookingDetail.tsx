@@ -1,13 +1,13 @@
 import React from 'react';
 import { 
   Phone, Mail, Calendar, Clock, 
-  CheckCircle2, AlertCircle, XCircle, FileText,
-  DollarSign, Edit3, X, RefreshCw, CreditCard
+  CheckCircle2, AlertCircle, XCircle,
+  Edit3, RefreshCw, CreditCard
 } from 'lucide-react';
 import type { AdminBooking } from '../../types/admin';
 import { 
   formatDateDisplay, formatTimeDisplay, 
-  calculateEndTime, calculateBalance 
+  calculateEndTime, calculateBalance, getBookingStatusLabel 
 } from '../../lib/adminBookingLogic';
 
 interface AdminBookingDetailProps {
@@ -31,15 +31,15 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
 }) => {
   if (!booking) {
     return (
-      <div className="bg-white rounded-3xl border border-[#99745A]/20 shadow-xs p-8 text-center h-full flex flex-col items-center justify-center min-h-[380px]">
-        <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#99745A]/20 flex items-center justify-center text-[#C8933E] mb-3">
-          <Calendar className="w-6 h-6" />
+      <div className="bg-white rounded-xl border border-[#99745A]/20 shadow-2xs p-8 text-center h-full flex flex-col items-center justify-center min-h-[360px]">
+        <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#99745A]/20 flex items-center justify-center text-[#C8933E] mb-3">
+          <Calendar className="w-5 h-5" />
         </div>
-        <h4 className="font-serif-luxury text-lg font-bold text-[#231E1B]">
-          Detalle de la Cita
+        <h4 className="font-serif-luxury text-base font-bold text-[#231E1B]">
+          Detalle de la cita
         </h4>
         <p className="text-xs text-[#6B6158] max-w-xs mt-1">
-          Selecciona una cita en el calendario o en la lista de reservas para consultar sus datos, registrar anticipos o precio final.
+          Selecciona una cita en la agenda para ver su información, registrar anticipos o precio final.
         </p>
       </div>
     );
@@ -47,284 +47,310 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
 
   const clientName = booking.clientName || 'Clienta';
   const clientPhone = booking.clientPhone || 'Sin teléfono';
-  const serviceName = booking.serviceName || 'Servicio del catálogo';
+  const serviceName = booking.serviceName || 'Servicio';
   const requiredDeposit = booking.requiredDepositMXN ?? 0;
   const receivedDeposit = booking.receivedDepositMXN ?? 0;
 
   const endTime = calculateEndTime(booking.time || '11:00', booking.durationMinutes || 60);
   const balanceCalc = calculateBalance(booking.finalPriceMXN, receivedDeposit);
 
+  // Status badge with icon and label
+  const getStatusBadge = (status: AdminBooking['status']) => {
+    switch (status) {
+      case 'confirmed':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#68794E]/15 text-[#42502E] border border-[#68794E]/30 whitespace-nowrap">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#68794E]" />
+            <span>Confirmada</span>
+          </span>
+        );
+      case 'pending_payment':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#C8933E]/15 text-[#8A5F20] border border-[#C8933E]/30 whitespace-nowrap">
+            <AlertCircle className="w-3.5 h-3.5 text-[#C8933E]" />
+            <span>Pendiente de pago</span>
+          </span>
+        );
+      case 'completed':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#42502E]/20 text-[#2C381E] border border-[#42502E]/40 whitespace-nowrap">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#42502E]" />
+            <span>Atendida</span>
+          </span>
+        );
+      case 'cancelled':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200 whitespace-nowrap">
+            <XCircle className="w-3.5 h-3.5 text-gray-400" />
+            <span>Cancelada</span>
+          </span>
+        );
+      default:
+        return <span>{getBookingStatusLabel(status)}</span>;
+    }
+  };
+
   return (
-    <div className="bg-white rounded-3xl border border-[#99745A]/20 shadow-xs overflow-hidden flex flex-col h-full">
-      {/* Detail Header */}
-      <div className="p-4 sm:p-5 border-b border-[#99745A]/15 bg-[#FAF7F2] flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-sm font-black text-[#A87428]">
+    <div className="bg-white rounded-xl border border-[#99745A]/20 shadow-2xs overflow-hidden flex flex-col h-full text-xs">
+      {/* Header con código de cita y estado */}
+      <div className="p-3.5 sm:p-4 border-b border-[#99745A]/15 bg-[#FAF7F2] flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-mono text-xs font-bold text-[#A87428] bg-white px-2 py-0.5 rounded border border-[#99745A]/20">
             {booking.id}
           </span>
-          {/* Status Badge */}
-          {booking.status === 'confirmed' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#68794E]/15 text-[#42502E] border border-[#68794E]/30">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#68794E]" />
-              Confirmada
-            </span>
-          )}
-          {booking.status === 'pending_payment' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C8933E]/15 text-[#8A5F20] border border-[#C8933E]/30">
-              <AlertCircle className="w-3.5 h-3.5 text-[#C8933E]" />
-              Pendiente de Pago
-            </span>
-          )}
-          {booking.status === 'completed' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#42502E]/20 text-[#2C381E] border border-[#42502E]/40">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#42502E]" />
-              Atendida
-            </span>
-          )}
-          {booking.status === 'cancelled' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200">
-              <XCircle className="w-3.5 h-3.5 text-gray-400" />
-              Cancelada
-            </span>
-          )}
+          {getStatusBadge(booking.status)}
         </div>
 
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-full text-[#6B6158] hover:text-[#231E1B] hover:bg-black/5 transition-colors cursor-pointer"
-            aria-label="Cerrar detalle"
+            className="text-xs font-semibold text-[#6B6158] hover:text-[#231E1B] px-2 py-1 rounded-lg hover:bg-black/5 transition-colors cursor-pointer flex items-center gap-1.5"
+            aria-label="Volver a la agenda"
           >
-            <X className="w-5 h-5" />
+            <span>← Volver a la agenda</span>
           </button>
         )}
       </div>
 
-      {/* Detail Body */}
-      <div className="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
+      {/* Contenido dividido limpiamente sin recuadros anidados */}
+      <div className="divide-y divide-[#99745A]/10 overflow-y-auto flex-1">
         
-        {/* Client Profile */}
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#EAE3D6] border border-[#C8933E]/40 flex items-center justify-center text-xs font-bold text-[#4A423B] shrink-0">
-            {clientName.slice(0, 2).toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] truncate">
-              {clientName}
-            </h3>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-[#5C534B] mt-0.5">
-              {clientPhone && (
-                <a
-                  href={`tel:${clientPhone}`}
-                  className="flex items-center gap-1 text-[#68794E] hover:underline"
-                >
-                  <Phone className="w-3.5 h-3.5" />
-                  <span>{clientPhone}</span>
-                </a>
-              )}
-              {booking.clientEmail && (
-                <a
-                  href={`mailto:${booking.clientEmail}`}
-                  className="flex items-center gap-1 hover:underline truncate"
-                >
-                  <Mail className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="truncate">{booking.clientEmail}</span>
-                </a>
-              )}
-            </div>
+        {/* 1. Clienta y contacto */}
+        <div className="p-4 sm:p-5 space-y-1.5">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
+            Clienta y contacto
+          </span>
+          <h3 className="text-base sm:text-lg font-bold text-[#231E1B]">
+            {clientName}
+          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-[#5C534B] pt-0.5">
+            {clientPhone && (
+              <a
+                href={`tel:${clientPhone}`}
+                className="inline-flex items-center gap-1.5 text-[#68794E] hover:underline font-medium"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>{clientPhone}</span>
+              </a>
+            )}
+            {booking.clientEmail && (
+              <a
+                href={`mailto:${booking.clientEmail}`}
+                className="inline-flex items-center gap-1.5 text-[#6B6158] hover:underline truncate"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#99745A]" />
+                <span className="truncate">{booking.clientEmail}</span>
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Service Card */}
-        <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/15 space-y-2">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-[#68794E] tracking-wider block">
-                Servicio Oficial
-              </span>
-              <h4 className="text-sm font-bold text-[#231E1B]">
-                {serviceName}
-              </h4>
-            </div>
-            <span className="text-xs font-bold text-[#68794E] flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-[#68794E]/20 shadow-2xs shrink-0">
-              <Clock className="w-3.5 h-3.5" />
+        {/* 2. Servicio y horario */}
+        <div className="p-4 sm:p-5 space-y-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
+            Servicio y horario
+          </span>
+          <div className="flex items-baseline justify-between gap-2">
+            <h4 className="text-sm font-bold text-[#231E1B]">
+              {serviceName}
+            </h4>
+            <span className="text-[11px] text-[#68794E] font-semibold shrink-0">
               {booking.durationMinutes || 60} min
             </span>
           </div>
-
-          <div className="flex items-center gap-2 pt-2 border-t border-[#99745A]/10 text-xs text-[#554C44]">
-            <Calendar className="w-3.5 h-3.5 text-[#C8933E] shrink-0" />
-            <span className="font-medium capitalize">{formatDateDisplay(booking.date)}</span>
-            <span className="text-[#8C8278]">|</span>
-            <span className="font-bold text-[#231E1B]">
-              {formatTimeDisplay(booking.time)} – {formatTimeDisplay(endTime)}
-            </span>
+          <div className="text-xs text-[#5C534B] space-y-1">
+            <div className="flex items-center gap-2 capitalize">
+              <Calendar className="w-3.5 h-3.5 text-[#C8933E] shrink-0" />
+              <span>{formatDateDisplay(booking.date)}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-[#68794E] shrink-0" />
+              <span className="font-mono font-bold text-[#231E1B]">
+                {formatTimeDisplay(booking.time)} – {formatTimeDisplay(endTime)}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Financial & Balance Box */}
-        <div className="p-4 rounded-2xl bg-white border border-[#C8933E]/30 shadow-xs space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-[#99745A]/10">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#231E1B] flex items-center gap-1.5">
-              <DollarSign className="w-4 h-4 text-[#C8933E]" />
-              Estado Financiero
+        {/* 3. Pagos con las etiquetas oficiales requeridas */}
+        <div className="p-4 sm:p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067]">
+              Pagos y saldos
             </span>
             <button
               type="button"
               onClick={() => onOpenFinalPrice(booking)}
-              className="text-xs font-bold text-[#A87428] hover:text-[#8A5F20] flex items-center gap-1 cursor-pointer transition-colors"
+              className="text-xs text-[#A87428] hover:text-[#8A5F20] font-bold flex items-center gap-1 cursor-pointer"
             >
               <Edit3 className="w-3.5 h-3.5" />
-              <span>{booking.finalPriceMXN !== null ? 'Modificar precio' : 'Registrar precio final'}</span>
+              <span>{booking.finalPriceMXN !== null ? 'Modificar precio' : 'Asignar precio final'}</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <span className="text-[11px] text-[#7A7067] block">Anticipo requerido (50%)</span>
-              <span className="text-sm font-bold text-[#231E1B]">
+          <div className="space-y-2 text-xs">
+            {/* Anticipo necesario para confirmar */}
+            <div className="flex items-center justify-between py-1 border-b border-[#99745A]/10">
+              <span className="text-[#6B6158]">Anticipo necesario para confirmar:</span>
+              <span className="font-bold text-[#231E1B] font-mono">
                 ${requiredDeposit.toLocaleString('es-MX')} MXN
               </span>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] text-[#7A7067] block">Anticipo recibido</span>
+
+            {/* Anticipo recibido */}
+            <div className="flex items-center justify-between py-1 border-b border-[#99745A]/10">
+              <div className="flex items-center gap-2">
+                <span className="text-[#6B6158]">Anticipo recibido:</span>
                 <button
                   type="button"
                   onClick={() => onOpenDeposit(booking)}
-                  className="text-[11px] font-bold text-[#68794E] hover:text-[#586742] hover:underline flex items-center gap-0.5 cursor-pointer"
-                  title="Registrar importe recibido de anticipo"
+                  className="text-[11px] text-[#A87428] hover:underline font-semibold cursor-pointer"
                 >
-                  <Edit3 className="w-3 h-3" />
-                  <span>Modificar</span>
+                  Modificar
                 </button>
               </div>
-              <span className="text-sm font-bold text-[#68794E]">
+              <span className={`font-bold font-mono ${receivedDeposit >= requiredDeposit ? 'text-[#42502E]' : 'text-[#A87428]'}`}>
                 ${receivedDeposit.toLocaleString('es-MX')} MXN
               </span>
             </div>
-          </div>
 
-          {/* Final price & Live Balance row */}
-          <div className="pt-2 border-t border-[#99745A]/10 grid grid-cols-2 gap-3">
-            <div>
-              <span className="text-[11px] text-[#7A7067] block">Precio final acordado</span>
-              <span className={`text-base font-bold font-serif-luxury ${booking.finalPriceMXN !== null ? 'text-[#231E1B]' : 'text-gray-400 italic'}`}>
-                {booking.finalPriceMXN !== null
-                  ? `$${booking.finalPriceMXN.toLocaleString('es-MX')} MXN`
-                  : 'Por confirmar'}
-              </span>
-            </div>
-
-            <div className={`p-2.5 rounded-xl border ${
-              balanceCalc.hasCredit
-                ? 'bg-[#EBF0E6] border-[#68794E]/40'
-                : 'bg-[#FFF9EE] border-[#C8933E]/30'
-            }`}>
-              <span className={`text-[10px] uppercase font-bold block ${
-                balanceCalc.hasCredit ? 'text-[#3D472D]' : 'text-[#8A5F20]'
-              }`}>
-                Saldo por liquidar
-              </span>
-              <span className={`text-base font-bold font-serif-luxury ${
-                balanceCalc.isPending
-                  ? 'text-gray-400 italic'
-                  : balanceCalc.hasCredit
-                  ? 'text-[#4A5736]'
-                  : 'text-[#A87428]'
-              }`}>
-                {balanceCalc.isPending
-                  ? 'Por confirmar'
-                  : `$${balanceCalc.pendingBalanceMXN?.toLocaleString('es-MX')} MXN`}
-              </span>
-
-              {balanceCalc.hasCredit && (
-                <div className="mt-1.5 pt-1.5 border-t border-[#68794E]/25">
-                  <span className="text-[10px] uppercase font-bold text-[#3D472D] block">
-                    Saldo a favor
-                  </span>
-                  <span className="text-sm font-bold font-serif-luxury text-[#4A5736]">
-                    ${balanceCalc.creditBalanceMXN.toLocaleString('es-MX')} MXN
-                  </span>
-                </div>
+            {/* Precio final del servicio */}
+            <div className="flex items-center justify-between py-1 border-b border-[#99745A]/10">
+              <span className="text-[#6B6158]">Precio final del servicio:</span>
+              {booking.finalPriceMXN !== null ? (
+                <span className="font-bold text-[#231E1B] font-mono">
+                  ${booking.finalPriceMXN.toLocaleString('es-MX')} MXN
+                </span>
+              ) : (
+                <span className="text-[#7A7067] italic">
+                  Precio final por confirmar en el salón
+                </span>
               )}
             </div>
-          </div>
 
-          {balanceCalc.explanation && (
-            <p className={`text-[11px] leading-tight ${
-              balanceCalc.hasCredit ? 'text-[#3D472D] font-medium' : 'text-[#7A7067] italic'
-            }`}>
-              {balanceCalc.explanation}
-            </p>
-          )}
+            {/* Falta por pagar o Saldo a favor */}
+            {booking.finalPriceMXN !== null ? (
+              <>
+                <div className="flex items-center justify-between py-1 pt-1 font-bold">
+                  <span className="text-[#231E1B]">Falta por pagar:</span>
+                  <span className="text-sm font-mono text-[#A87428]">
+                    ${balanceCalc.pendingBalanceMXN?.toLocaleString('es-MX')} MXN
+                  </span>
+                </div>
+
+                {balanceCalc.hasCredit && (
+                  <div className="flex items-center justify-between py-1.5 px-3 bg-[#EBF0E6] rounded-lg border border-[#68794E]/30 text-[#2C381E] font-bold">
+                    <span>Saldo a favor:</span>
+                    <span className="text-sm font-mono text-[#3D472D]">
+                      ${balanceCalc.creditBalanceMXN.toLocaleString('es-MX')} MXN
+                    </span>
+                  </div>
+                )}
+
+                {balanceCalc.explanation && (
+                  <p className="text-[11px] text-[#7A7067] italic pt-0.5">
+                    {balanceCalc.explanation}
+                  </p>
+                )}
+              </>
+            ) : (
+              <div className="py-1 text-[11px] text-[#7A7067] italic">
+                El saldo por liquidar se calculará tras confirmar el precio final en el salón.
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Notes */}
+        {/* 4. Notas */}
         {booking.notes && (
-          <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/15 text-xs text-[#554C44] space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B6158] flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5 text-[#99745A]" />
+          <div className="p-4 sm:p-5 space-y-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
               Notas de la cita
             </span>
-            <p className="leading-relaxed">{booking.notes}</p>
+            <p className="text-xs text-[#554C44] leading-relaxed">
+              {booking.notes}
+            </p>
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="pt-3 border-t border-[#99745A]/15 space-y-2.5">
-          {/* Action: Registrar Anticipo */}
-          {booking.status !== 'cancelled' && (
+        {/* 5. Acciones con jerarquía clara */}
+        <div className="p-4 sm:p-5 space-y-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
+            Acciones
+          </span>
+
+          {/* Acción Principal según estado */}
+          {booking.status === 'pending_payment' && (
             <button
               type="button"
               onClick={() => onOpenDeposit(booking)}
-              className="w-full py-2.5 rounded-xl border border-[#68794E] text-[#4A5736] hover:bg-[#68794E]/10 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#C8933E] hover:bg-[#B58232] text-[#231E1B] font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition-colors cursor-pointer"
             >
-              <CreditCard className="w-4 h-4 text-[#68794E]" />
-              <span>Registrar Anticipo</span>
+              <CreditCard className="w-4 h-4" />
+              <span>Registrar anticipo</span>
             </button>
           )}
 
-          {booking.status !== 'completed' && booking.status !== 'cancelled' && (
+          {booking.status === 'confirmed' && (
             <button
               type="button"
               onClick={() => onMarkAsCompleted(booking)}
-              className="w-full py-2.5 rounded-xl bg-[#68794E] hover:bg-[#586742] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#68794E] hover:bg-[#586742] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition-colors cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Marcar como Atendida</span>
+              <span>Marcar como atendida</span>
             </button>
           )}
 
+          {booking.status === 'completed' && (
+            <div className="p-2.5 rounded-lg bg-[#EBF0E6] border border-[#68794E]/25 text-[#2C381E] text-center font-medium text-xs flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#68794E]" />
+              <span>Cita atendida y completada</span>
+            </div>
+          )}
+
+          {booking.status === 'cancelled' && (
+            <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-600 text-center text-xs flex items-center justify-center gap-2">
+              <XCircle className="w-4 h-4 text-gray-400" />
+              <span>Cita cancelada (horario liberado)</span>
+            </div>
+          )}
+
+          {/* Acciones Secundarias */}
           {booking.status !== 'cancelled' && (
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2 pt-1">
               <button
                 type="button"
                 onClick={() => onOpenReschedule(booking)}
-                className="flex-1 py-2.5 rounded-xl border border-[#C8933E] text-[#A87428] hover:bg-[#FFF9EE] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                className="py-2 px-3 rounded-lg border border-[#99745A]/25 text-[#4A423B] hover:text-[#231E1B] hover:bg-black/5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
+                <RefreshCw className="w-3.5 h-3.5 text-[#A87428]" />
                 <span>Reprogramar</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => onOpenCancel(booking)}
-                className="px-3.5 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                title="Cancelar cita y liberar horario"
+                onClick={() => onOpenFinalPrice(booking)}
+                className="py-2 px-3 rounded-lg border border-[#99745A]/25 text-[#4A423B] hover:text-[#231E1B] hover:bg-black/5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
-                <XCircle className="w-3.5 h-3.5" />
-                <span>Cancelar</span>
+                <Edit3 className="w-3.5 h-3.5 text-[#68794E]" />
+                <span>Modificar precio final</span>
               </button>
             </div>
           )}
 
-          {booking.status === 'cancelled' && (
-            <div className="p-3 rounded-xl bg-gray-50 border border-gray-200 text-center text-xs text-gray-500">
-              Esta reserva fue cancelada y el horario está disponible para otras citas.
-            </div>
+          {booking.status !== 'cancelled' && (
+            <button
+              type="button"
+              onClick={() => onOpenCancel(booking)}
+              className="w-full py-2 px-3 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <XCircle className="w-3.5 h-3.5" />
+              <span>Cancelar cita</span>
+            </button>
           )}
+
         </div>
 
       </div>

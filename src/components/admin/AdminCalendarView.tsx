@@ -1,14 +1,14 @@
 import React from 'react';
 import { 
-  ChevronLeft, ChevronRight, Clock, User, 
+  ChevronLeft, ChevronRight, Clock,
   Calendar, CheckCircle2, AlertCircle, XCircle,
-  Plus
+  Plus, ChevronDown
 } from 'lucide-react';
 import type { AdminBooking, AgendaViewMode } from '../../types/admin';
 import { 
   formatDateDisplay, formatTimeDisplay, 
   calculateEndTime, getWeekDays, addDaysToDate,
-  getTodayLocalDate, calculateBalance 
+  getTodayLocalDate, getBookingStatusLabel 
 } from '../../lib/adminBookingLogic';
 
 interface AdminCalendarViewProps {
@@ -61,35 +61,41 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
   // Week days for Week view
   const weekDays = getWeekDays(selectedDate);
 
-  // Status helper colors
+  // Status helper badges with visible text and icons
   const getStatusBadge = (status: AdminBooking['status']) => {
     switch (status) {
       case 'confirmed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#68794E]/15 text-[#42502E] border border-[#68794E]/30">
-            <CheckCircle2 className="w-3 h-3 text-[#68794E]" />
-            Confirmada
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#68794E]/15 text-[#42502E] border border-[#68794E]/30 whitespace-nowrap">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#68794E]" />
+            <span>Confirmada</span>
           </span>
         );
       case 'pending_payment':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C8933E]/15 text-[#8A5F20] border border-[#C8933E]/30">
-            <AlertCircle className="w-3 h-3 text-[#C8933E]" />
-            Pendiente Pago
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#C8933E]/15 text-[#8A5F20] border border-[#C8933E]/30 whitespace-nowrap">
+            <AlertCircle className="w-3.5 h-3.5 text-[#C8933E]" />
+            <span>Pendiente de pago</span>
           </span>
         );
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#42502E]/20 text-[#2C381E] border border-[#42502E]/40">
-            <CheckCircle2 className="w-3 h-3 text-[#42502E]" />
-            Atendida
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#42502E]/20 text-[#2C381E] border border-[#42502E]/40 whitespace-nowrap">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#42502E]" />
+            <span>Atendida</span>
           </span>
         );
       case 'cancelled':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-500 border border-gray-200">
-            <XCircle className="w-3 h-3 text-gray-400" />
-            Cancelada
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200 whitespace-nowrap">
+            <XCircle className="w-3.5 h-3.5 text-gray-400" />
+            <span>Cancelada</span>
+          </span>
+        );
+      default:
+        return (
+          <span className="text-xs text-gray-500 font-medium">
+            {getBookingStatusLabel(status)}
           </span>
         );
     }
@@ -102,40 +108,52 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
     '17:00', '18:00', '19:00'
   ];
 
+  // Calculate free slots count
+  const freeSlotsCount = operationalHours.filter((slot) => {
+    const [slotH, slotM] = slot.split(':').map(Number);
+    const slotMinutes = slotH * 60 + (slotM || 0);
+    return !activeDayBookings.some((b) => {
+      const [bH, bM] = b.time.split(':').map(Number);
+      const bStart = bH * 60 + (bM || 0);
+      const bEnd = bStart + b.durationMinutes;
+      return slotMinutes >= bStart && slotMinutes < bEnd;
+    });
+  }).length;
+
   return (
-    <div className="bg-white rounded-3xl border border-[#99745A]/20 shadow-xs overflow-hidden flex flex-col">
+    <div className="bg-white rounded-xl border border-[#99745A]/20 shadow-2xs overflow-hidden flex flex-col">
       {/* Calendar Header: Navigation & View Mode */}
-      <div className="p-4 sm:p-5 border-b border-[#99745A]/15 bg-[#FAF7F2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="p-3.5 sm:p-4 border-b border-[#99745A]/15 bg-[#FAF7F2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         
         {/* Date Navigation */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={handleToday}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               isSelectedToday
-                ? 'bg-[#C8933E] text-[#231E1B] shadow-xs'
+                ? 'bg-[#C8933E] text-[#231E1B] shadow-2xs'
                 : 'bg-white border border-[#99745A]/25 text-[#5C534B] hover:border-[#C8933E]'
             }`}
           >
             Hoy
           </button>
 
-          <div className="flex items-center bg-white border border-[#99745A]/25 rounded-xl overflow-hidden shadow-xs">
+          <div className="flex items-center bg-white border border-[#99745A]/25 rounded-lg overflow-hidden shadow-2xs">
             <button
               type="button"
               onClick={handlePrev}
               className="p-1.5 hover:bg-black/5 text-[#5C534B] hover:text-[#231E1B] transition-colors cursor-pointer"
-              aria-label="Día o semana anterior"
+              aria-label="Anterior"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <div className="h-4 w-px bg-[#99745A]/20" />
+            <div className="h-3.5 w-px bg-[#99745A]/20" />
             <button
               type="button"
               onClick={handleNext}
               className="p-1.5 hover:bg-black/5 text-[#5C534B] hover:text-[#231E1B] transition-colors cursor-pointer"
-              aria-label="Día o semana siguiente"
+              aria-label="Siguiente"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -147,28 +165,28 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
               type="date"
               value={selectedDate}
               onChange={(e) => e.target.value && onDateChange(e.target.value)}
-              className="text-xs font-bold text-[#231E1B] bg-white border border-[#99745A]/20 rounded-xl px-2.5 py-1.5 cursor-pointer focus:outline-none focus:border-[#C8933E]"
+              className="text-xs font-bold text-[#231E1B] bg-white border border-[#99745A]/20 rounded-lg px-2.5 py-1.5 cursor-pointer focus:outline-none focus:border-[#C8933E]"
               title="Cambiar fecha del calendario"
             />
-            <span className="text-xs font-bold font-serif-luxury text-[#231E1B] hidden md:inline capitalize">
+            <span className="text-xs font-bold text-[#231E1B] hidden md:inline capitalize">
               {formatDateDisplay(selectedDate)}
             </span>
           </div>
         </div>
 
-        {/* View Mode Toggle: Día / Semana & Capacity badge */}
+        {/* View Mode Toggle: Día / Semana & Capacity label */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-          <span className="text-[10px] text-[#68794E] font-bold px-2.5 py-1 rounded-full bg-[#68794E]/10 border border-[#68794E]/20 hidden lg:inline">
-            Capacidad demo: 1 servicio simultáneo
+          <span className="text-[11px] text-[#68794E] font-medium hidden lg:inline">
+            Capacidad: 1 servicio simultáneo
           </span>
 
-          <div className="inline-flex p-1 bg-[#F5EFE6] rounded-xl border border-[#99745A]/20 text-xs">
+          <div className="inline-flex p-0.5 bg-[#F2EDE4] rounded-lg border border-[#99745A]/15 text-xs">
             <button
               type="button"
               onClick={() => onViewModeChange('day')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-md font-bold transition-all cursor-pointer ${
                 viewMode === 'day'
-                  ? 'bg-white text-[#231E1B] shadow-xs'
+                  ? 'bg-white text-[#231E1B] shadow-2xs'
                   : 'text-[#6B6158] hover:text-[#231E1B]'
               }`}
             >
@@ -177,9 +195,9 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
             <button
               type="button"
               onClick={() => onViewModeChange('week')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-md font-bold transition-all cursor-pointer ${
                 viewMode === 'week'
-                  ? 'bg-white text-[#231E1B] shadow-xs'
+                  ? 'bg-white text-[#231E1B] shadow-2xs'
                   : 'text-[#6B6158] hover:text-[#231E1B]'
               }`}
             >
@@ -194,16 +212,16 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
       {/* VISTA DÍA */}
       {/* ======================================================== */}
       {viewMode === 'day' && (
-        <div className="p-4 sm:p-6 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4">
           
-          {/* Day overview summary */}
-          <div className="flex items-center justify-between pb-3 border-b border-[#99745A]/15 text-xs">
+          {/* Day overview header bar */}
+          <div className="flex items-center justify-between pb-2.5 border-b border-[#99745A]/15 text-xs">
             <div className="flex items-center gap-2">
               <span className="font-bold text-[#231E1B]">
                 {activeDayBookings.length} {activeDayBookings.length === 1 ? 'cita programada' : 'citas programadas'}
               </span>
               {cancelledDayBookings.length > 0 && (
-                <span className="text-[11px] text-gray-500">
+                <span className="text-[11px] text-[#7A7067]">
                   ({cancelledDayBookings.length} cancelada)
                 </span>
               )}
@@ -214,13 +232,13 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
               className="text-xs text-[#A87428] hover:text-[#8A5F20] font-bold flex items-center gap-1 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Agendar para esta fecha</span>
+              <span>Agendar en esta fecha</span>
             </button>
           </div>
 
-          {/* Scheduled Appointments Cards */}
+          {/* Listado limpio de filas de citas */}
           {activeDayBookings.length > 0 ? (
-            <div className="space-y-3">
+            <div className="border border-[#99745A]/15 rounded-xl bg-white overflow-hidden divide-y divide-[#99745A]/10">
               {activeDayBookings.map((b) => {
                 const isSelected = selectedBookingId === b.id;
                 const endTime = calculateEndTime(b.time, b.durationMinutes);
@@ -236,99 +254,130 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                         onSelectBooking(b);
                       }
                     }}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer text-left relative overflow-hidden focus-visible:outline-2 focus-visible:outline-[#231E1B] ${
+                    className={`px-4 py-3.5 flex items-center justify-between gap-3 sm:gap-4 transition-colors cursor-pointer text-left ${
                       isSelected
-                        ? 'bg-[#FFF9EE] border-[#C8933E] shadow-md ring-1 ring-[#C8933E]'
-                        : 'bg-[#FAF7F2] border-[#99745A]/20 hover:border-[#C8933E]/60 hover:bg-[#FFFDF9]'
+                        ? 'bg-[#FAF6F0] border-l-4 border-l-[#C8933E]'
+                        : 'hover:bg-[#FAF7F2] border-l-4 border-l-transparent'
                     }`}
                   >
-                    {/* Left Accent Bar */}
-                    <div
-                      className={`absolute left-0 top-0 bottom-0 w-1.5 ${
-                        b.status === 'confirmed'
-                          ? 'bg-[#68794E]'
-                          : b.status === 'pending_payment'
-                          ? 'bg-[#C8933E]'
-                          : 'bg-[#42502E]'
-                      }`}
-                    />
-
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pl-2">
-                      <div>
-                        <div className="flex items-center gap-2 flex-wrap mb-1">
-                          <span className="font-mono text-xs font-black text-[#A87428]">
-                            {b.id}
-                          </span>
-                          {getStatusBadge(b.status)}
-                          <span className="text-xs font-bold text-[#231E1B] flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-[#68794E]" />
-                            {formatTimeDisplay(b.time)} – {formatTimeDisplay(endTime)}
-                          </span>
-                          <span className="text-[11px] text-[#6B6158]">
-                            ({b.durationMinutes} min)
-                          </span>
-                        </div>
-
-                        <h4 className="text-sm sm:text-base font-bold text-[#231E1B] flex items-center gap-2">
-                          <User className="w-4 h-4 text-[#8C8278]" />
-                          <span>{b.clientName}</span>
-                        </h4>
-
-                        <p className="text-xs text-[#554C44] mt-0.5">
-                          {b.serviceName}
-                        </p>
+                    {/* Horario y Duración */}
+                    <div className="w-28 sm:w-36 shrink-0">
+                      <div className="font-mono text-xs font-bold text-[#231E1B]">
+                        {formatTimeDisplay(b.time)} – {formatTimeDisplay(endTime)}
                       </div>
-
-                      {/* Right summary pill */}
-                      <div className="text-right sm:border-l sm:border-[#99745A]/15 sm:pl-4 shrink-0">
-                        <span className="text-[11px] text-[#7A7067] block">Anticipo</span>
-                        <span className="text-xs font-black text-[#231E1B]">
-                          ${(b.receivedDepositMXN ?? 0).toLocaleString('es-MX')} MXN
-                        </span>
-                        <span className="text-[10px] text-[#68794E] font-medium block">
-                          {(() => {
-                            const bCalc = calculateBalance(b.finalPriceMXN, b.receivedDepositMXN);
-                            if (bCalc.isPending) return 'Saldo: Por confirmar';
-                            if (bCalc.hasCredit) return `+$${bCalc.creditBalanceMXN.toLocaleString('es-MX')} a favor`;
-                            return `Saldo: $${bCalc.pendingBalanceMXN?.toLocaleString('es-MX')}`;
-                          })()}
-                        </span>
+                      <div className="text-[11px] text-[#7A7067]">
+                        {b.durationMinutes} min
                       </div>
+                    </div>
+
+                    {/* Clienta y Servicio */}
+                    <div className="flex-1 min-w-0 pr-2">
+                      <div className="font-bold text-sm text-[#231E1B] truncate">
+                        {b.clientName}
+                      </div>
+                      <div className="text-xs text-[#5C534B] truncate">
+                        {b.serviceName}
+                      </div>
+                    </div>
+
+                    {/* Estado */}
+                    <div className="shrink-0 text-right">
+                      {getStatusBadge(b.status)}
                     </div>
                   </div>
                 );
               })}
             </div>
           ) : (
-            <div className="p-8 rounded-2xl bg-[#F9F6F0] border border-dashed border-[#99745A]/25 text-center">
-              <Calendar className="w-10 h-10 text-[#C8933E]/60 mx-auto mb-2" />
+            <div className="p-8 rounded-xl bg-[#FAF7F2]/60 border border-dashed border-[#99745A]/25 text-center">
+              <Calendar className="w-9 h-9 text-[#C8933E]/60 mx-auto mb-2" />
               <p className="text-sm font-bold text-[#231E1B]">No hay citas activas para esta fecha</p>
               <p className="text-xs text-[#6B6158] mt-1 max-w-sm mx-auto">
-                El salón tiene disponibilidad completa en este día. Puedes crear una reserva de prueba con el botón inferior.
+                El salón tiene disponibilidad completa en este día.
               </p>
               <button
                 type="button"
                 onClick={() => onOpenNewBookingWithSlot(selectedDate, '11:00')}
-                className="gold-button inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider mt-4 cursor-pointer shadow-xs"
+                className="gold-button inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold mt-3 cursor-pointer shadow-2xs"
               >
                 <Plus className="w-3.5 h-3.5" />
-                <span>Crear reserva en este día</span>
+                <span>Crear cita en este día</span>
               </button>
             </div>
           )}
 
-          {/* Cancelled Bookings Accordion/Note */}
+          {/* Desplegable: Ver horarios disponibles */}
+          <details className="group border border-[#99745A]/15 rounded-xl bg-[#FAF7F2]/40 overflow-hidden">
+            <summary className="flex items-center justify-between px-4 py-2.5 text-xs font-bold text-[#4A423B] cursor-pointer hover:bg-[#FAF7F2] transition-colors select-none">
+              <span className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#68794E]" />
+                <span>Ver horarios disponibles ({freeSlotsCount} {freeSlotsCount === 1 ? 'libre' : 'libres'})</span>
+              </span>
+              <span className="text-[11px] text-[#A87428] font-medium flex items-center gap-1">
+                <span className="group-open:hidden">Consultar</span>
+                <span className="hidden group-open:inline">Ocultar</span>
+                <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 text-[#7A7067]" />
+              </span>
+            </summary>
+            
+            <div className="p-4 pt-3 border-t border-[#99745A]/10 bg-white">
+              <p className="text-[11px] text-[#7A7067] mb-2.5">
+                Horarios de referencia para {selectedDate}. Selecciona un espacio libre para agendar:
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                {operationalHours.map((slot) => {
+                  const isOccupied = activeDayBookings.some((b) => {
+                    const [slotH, slotM] = slot.split(':').map(Number);
+                    const slotMinutes = slotH * 60 + (slotM || 0);
+                    const [bH, bM] = b.time.split(':').map(Number);
+                    const bStart = bH * 60 + (bM || 0);
+                    const bEnd = bStart + b.durationMinutes;
+                    return slotMinutes >= bStart && slotMinutes < bEnd;
+                  });
+
+                  if (isOccupied) {
+                    return (
+                      <div
+                        key={slot}
+                        className="p-2 rounded-lg border border-[#99745A]/20 bg-[#FAF7F2] text-xs font-medium text-[#736A60] flex items-center justify-between opacity-75"
+                      >
+                        <span className="font-mono font-bold text-[#231E1B]">{formatTimeDisplay(slot)}</span>
+                        <span className="text-[10px] text-[#A87428] font-bold">Ocupado</span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => onOpenNewBookingWithSlot(selectedDate, slot)}
+                      className="p-2 rounded-lg border border-dashed border-[#68794E]/40 hover:border-[#68794E] bg-white hover:bg-[#68794E]/5 text-xs font-medium text-[#3D472D] flex items-center justify-between transition-colors cursor-pointer group"
+                    >
+                      <span className="font-mono font-bold">{formatTimeDisplay(slot)}</span>
+                      <span className="text-[10px] text-[#68794E] group-hover:underline flex items-center gap-0.5 font-bold">
+                        <Plus className="w-3 h-3" />
+                        Libre
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </details>
+
+          {/* Citas canceladas */}
           {cancelledDayBookings.length > 0 && (
             <div className="pt-2">
               <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
                 Citas canceladas (horarios liberados):
               </p>
-              <div className="space-y-2 opacity-75">
+              <div className="space-y-1.5 opacity-80">
                 {cancelledDayBookings.map((b) => (
                   <div
                     key={b.id}
                     onClick={() => onSelectBooking(b)}
-                    className="p-3 rounded-xl border border-gray-200 bg-gray-50 flex items-center justify-between text-xs cursor-pointer hover:bg-gray-100"
+                    className="p-2.5 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-between text-xs cursor-pointer hover:bg-gray-100"
                   >
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-gray-400 font-bold">{b.id}</span>
@@ -336,7 +385,7 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                       <span className="text-gray-400">({b.serviceName})</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-400">{formatTimeDisplay(b.time)}</span>
+                      <span className="text-gray-500">{formatTimeDisplay(b.time)}</span>
                       {getStatusBadge(b.status)}
                     </div>
                   </div>
@@ -345,53 +394,6 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
             </div>
           )}
 
-          {/* Time Slot Availability Grid */}
-          <div className="pt-4 border-t border-[#99745A]/15">
-            <h5 className="text-xs font-bold uppercase tracking-wider text-[#68794E] mb-3">
-              Franjas horarias operativas ({selectedDate}):
-            </h5>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-              {operationalHours.map((slot) => {
-                // Check if an active booking covers this slot
-                const isOccupied = activeDayBookings.some((b) => {
-                  const [slotH, slotM] = slot.split(':').map(Number);
-                  const slotMinutes = slotH * 60 + (slotM || 0);
-                  const [bH, bM] = b.time.split(':').map(Number);
-                  const bStart = bH * 60 + (bM || 0);
-                  const bEnd = bStart + b.durationMinutes;
-                  return slotMinutes >= bStart && slotMinutes < bEnd;
-                });
-
-                if (isOccupied) {
-                  return (
-                    <div
-                      key={slot}
-                      className="p-2.5 rounded-xl border border-[#99745A]/25 bg-[#FAF7F2] text-xs font-medium text-[#736A60] flex items-center justify-between opacity-80"
-                    >
-                      <span className="font-mono font-bold text-[#231E1B]">{formatTimeDisplay(slot)}</span>
-                      <span className="text-[10px] text-[#A87428] font-bold">Ocupado</span>
-                    </div>
-                  );
-                }
-
-                return (
-                  <button
-                    key={slot}
-                    type="button"
-                    onClick={() => onOpenNewBookingWithSlot(selectedDate, slot)}
-                    className="p-2.5 rounded-xl border border-dashed border-[#68794E]/40 hover:border-[#68794E] bg-white hover:bg-[#68794E]/5 text-xs font-medium text-[#3D472D] flex items-center justify-between transition-colors cursor-pointer group"
-                  >
-                    <span className="font-mono font-bold">{formatTimeDisplay(slot)}</span>
-                    <span className="text-[10px] text-[#68794E] group-hover:underline flex items-center gap-0.5 font-bold">
-                      <Plus className="w-3 h-3" />
-                      Libre
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
         </div>
       )}
 
@@ -399,8 +401,8 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
       {/* VISTA SEMANA */}
       {/* ======================================================== */}
       {viewMode === 'week' && (
-        <div className="p-4 sm:p-6 overflow-x-auto">
-          <div className="grid grid-cols-7 gap-2 min-w-[720px]">
+        <div className="p-3 sm:p-5 overflow-x-auto">
+          <div className="grid grid-cols-7 gap-2 min-w-[700px]">
             {weekDays.map((day) => {
               const dayItems = bookings
                 .filter((b) => b.date === day.dateStr && b.status !== 'cancelled')
@@ -411,20 +413,20 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
               return (
                 <div
                   key={day.dateStr}
-                  className={`rounded-2xl border flex flex-col min-h-[360px] overflow-hidden transition-all ${
+                  className={`rounded-xl border flex flex-col min-h-[340px] overflow-hidden transition-all ${
                     isCurrentSelected
-                      ? 'border-[#C8933E] bg-[#FFFDF9] shadow-xs'
+                      ? 'border-[#C8933E] bg-[#FFFDF9] shadow-2xs'
                       : day.isSunday
                       ? 'border-gray-200 bg-gray-50/50'
                       : 'border-[#99745A]/15 bg-white'
                   }`}
                 >
-                  {/* Day Column Header */}
+                  {/* Cabecera del día */}
                   <div
                     role="button"
                     tabIndex={0}
                     onClick={() => onDateChange(day.dateStr)}
-                    className={`p-2.5 text-center border-b transition-colors cursor-pointer ${
+                    className={`p-2 text-center border-b transition-colors cursor-pointer ${
                       day.isToday
                         ? 'bg-[#C8933E] text-[#231E1B] border-[#C8933E]'
                         : isCurrentSelected
@@ -435,7 +437,7 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                     <span className="text-[10px] block uppercase font-bold tracking-wider">
                       {day.dayName}
                     </span>
-                    <span className="text-base font-black font-serif-luxury leading-tight block">
+                    <span className="text-base font-bold font-mono leading-tight block">
                       {day.dayNumber}
                     </span>
                     <span className="text-[9px] block opacity-80 uppercase">
@@ -443,8 +445,8 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                     </span>
                   </div>
 
-                  {/* Bookings within this day */}
-                  <div className="p-2 flex-1 space-y-2 overflow-y-auto max-h-[300px]">
+                  {/* Citas de este día */}
+                  <div className="p-2 flex-1 space-y-1.5 overflow-y-auto max-h-[280px]">
                     {dayItems.length > 0 ? (
                       dayItems.map((b) => {
                         const isSelected = selectedBookingId === b.id;
@@ -454,13 +456,13 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                             role="button"
                             tabIndex={0}
                             onClick={() => onSelectBooking(b)}
-                            className={`p-2 rounded-xl text-left border text-xs transition-all cursor-pointer ${
+                            className={`p-2 rounded-lg text-left border text-xs transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-[#FFF9EE] border-[#C8933E] shadow-xs'
-                                : 'bg-[#FAF7F2] border-[#99745A]/20 hover:border-[#C8933E]/50'
+                                ? 'bg-[#FAF6F0] border-[#C8933E] shadow-2xs'
+                                : 'bg-[#FAF7F2] border-[#99745A]/15 hover:border-[#C8933E]/50'
                             }`}
                           >
-                            <div className="flex items-center justify-between text-[10px] font-bold mb-1">
+                            <div className="flex items-center justify-between text-[10px] font-bold mb-0.5">
                               <span className="text-[#A87428] font-mono">{formatTimeDisplay(b.time)}</span>
                               <span
                                 className={`w-2 h-2 rounded-full ${
@@ -491,12 +493,12 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                     )}
                   </div>
 
-                  {/* Add button at bottom of day column */}
+                  {/* Botón rápido para agendar */}
                   <div className="p-1.5 border-t border-[#99745A]/10 bg-gray-50/50">
                     <button
                       type="button"
                       onClick={() => onOpenNewBookingWithSlot(day.dateStr, '11:00')}
-                      className="w-full py-1 rounded-lg text-[10px] font-bold text-[#68794E] hover:bg-[#68794E]/10 transition-colors flex items-center justify-center gap-0.5 cursor-pointer"
+                      className="w-full py-1 rounded text-[10px] font-bold text-[#68794E] hover:bg-[#68794E]/10 transition-colors flex items-center justify-center gap-0.5 cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Agendar</span>

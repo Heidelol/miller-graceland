@@ -5,7 +5,7 @@ import {
   resetStorageToSeed 
 } from '../lib/adminStorage';
 import { 
-  calculateAdminKPIs, getTodayLocalDate,
+  getTodayLocalDate,
   determineStatusAfterDepositChange
 } from '../lib/adminBookingLogic';
 
@@ -69,9 +69,6 @@ export const AdminDemoPage: React.FC = () => {
 
   // Selected booking object
   const selectedBooking = bookings.find((b) => b.id === selectedBookingId) || null;
-
-  // KPIs
-  const kpis = calculateAdminKPIs(bookings);
 
   // Actions
   const handleSelectBooking = (booking: AdminBooking) => {
@@ -217,8 +214,13 @@ export const AdminDemoPage: React.FC = () => {
           </div>
         )}
 
-        {/* Dynamic KPIs */}
-        <AdminKPIs kpis={kpis} />
+        {/* Franja de Resumen Operativo */}
+        <AdminKPIs
+          bookings={bookings}
+          selectedDate={selectedDate}
+          viewMode={agendaViewMode}
+          currentTab={currentTab}
+        />
 
         {/* TAB 1: AGENDA VIEW */}
         {currentTab === 'agenda' && (
@@ -281,13 +283,26 @@ export const AdminDemoPage: React.FC = () => {
 
       </main>
 
-      {/* Mobile Detail Modal / Dialog */}
+      {/* Vista de Detalle Móvil (Ancho Completo con Botón Claro para Volver) */}
       {isMobileDetailOpen && selectedBooking && (
-        <div className="lg:hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-3xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl animate-in slide-in-from-bottom-4">
+        <div className="lg:hidden fixed inset-0 z-50 flex flex-col bg-[#FAF7F2] overflow-hidden">
+          {/* Barra superior móvil */}
+          <div className="bg-white border-b border-[#99745A]/20 px-4 py-3 flex items-center justify-between shrink-0 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setIsMobileDetailOpen(false)}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#231E1B] hover:text-[#A87428] cursor-pointer"
+            >
+              <span>← Volver a la agenda</span>
+            </button>
+            <span className="font-mono text-xs font-bold text-[#A87428] bg-[#FAF7F2] px-2.5 py-0.5 rounded border border-[#99745A]/20">
+              {selectedBooking.id}
+            </span>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-[#FAF7F2]">
             <AdminBookingDetail
               booking={selectedBooking}
-              onClose={() => setIsMobileDetailOpen(false)}
               onOpenReschedule={(b) => {
                 setIsMobileDetailOpen(false);
                 setRescheduleTarget(b);

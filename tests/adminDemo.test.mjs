@@ -22,6 +22,7 @@ const {
   getBookingStatusLabel,
   BOOKING_STATUS_LABELS,
   hasScheduleConflict,
+  calculateAgendaSummary,
 } = await import('../src/lib/adminBookingLogic.ts');
 
 const {
@@ -426,6 +427,98 @@ test('Cita cancelada libera el horario para nuevas reservas', () => {
 
   const res = hasScheduleConflict(cancelledBooking, '2026-10-15', '11:00', 120);
   assert.equal(res.hasConflict, false, 'Citas canceladas no deben bloquear horarios');
+});
+
+// ---------------------------------------------------------
+// 10. FRANJA DE RESUMEN DE AGENDA (calculateAgendaSummary)
+// ---------------------------------------------------------
+console.log('\n10. Franja de resumen de agenda (calculateAgendaSummary):');
+
+test('calculateAgendaSummary calcula métricas precisas en vista día excluyendo canceladas', () => {
+  const testBookings = [
+    {
+      ...baseValidBooking,
+      id: 'MG-D1',
+      date: '2026-10-15',
+      status: 'confirmed',
+      receivedDepositMXN: 1600,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-D2',
+      date: '2026-10-15',
+      status: 'pending_payment',
+      receivedDepositMXN: 500,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-D3',
+      date: '2026-10-15',
+      status: 'cancelled',
+      receivedDepositMXN: 800, // Cancelada: no debe computar
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-D4',
+      date: '2026-10-16', // Otra fecha
+      status: 'confirmed',
+      receivedDepositMXN: 2000,
+    },
+  ];
+
+  const daySummary = calculateAgendaSummary(testBookings, '2026-10-15', 'day');
+  assert.equal(daySummary.periodLabel, 'Citas del día');
+  assert.equal(daySummary.appointmentsCount, 2, 'Debe incluir solo citas activas del día');
+  assert.equal(daySummary.pendingDepositCount, 1, 'Debe contar solo citas pendientes del día');
+  assert.equal(daySummary.receivedDepositsMXN, 2100, 'Debe sumar 1600 + 500, excluyendo la cancelada');
+});
+
+test('calculateAgendaSummary calcula métricas semanales (lunes a domingo) reflejando dinero real recibido', () => {
+  // 2026-10-15 es jueves. La semana ISO comprende del 2026-10-12 (lunes) al 2026-10-18 (domingo).
+  const testBookings = [
+    {
+      ...baseValidBooking,
+      id: 'MG-W1',
+      date: '2026-10-12', // Lunes de esa semana
+      status: 'confirmed',
+      receivedDepositMXN: 1000,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-W2',
+      date: '2026-10-15', // Jueves de esa semana
+      status: 'pending_payment',
+      receivedDepositMXN: 500,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-W3',
+      date: '2026-10-17', // Sábado de esa semana
+      status: 'completed',
+      receivedDepositMXN: 2000,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-W4',
+      date: '2026-10-18', // Domingo de esa semana (cancelada)
+      status: 'cancelled',
+      receivedDepositMXN: 700,
+    },
+    {
+      ...baseValidBooking,
+      id: 'MG-W5',
+      date: '2026-10-20', // Martes de la SIGUIENTE semana
+      status: 'confirmed',
+      receivedDepositMXN: 1500,
+    },
+  ];
+
+  const weekSummary = calculateAgendaSummary(testBookings, '2026-10-15', 'week');
+  assert.equal(weekSummary.periodLabel, 'Citas de la semana');
+  assert.equal(weekSummary.appointmentsCount, 3, 'Debe contar 3 citas activas de la semana (Lunes, Jueves, Sábado)');
+  assert.equal(weekSummary.pendingDepositCount, 1, 'Debe identificar 1 cita pendiente en la semana');
+  assert.equal(weekSummary.receivedDepositsMXN, 3500, 'Debe sumar 1000 + 500 + 2000 = 3500 MXN en dinero real recibido');
+  assert.match(weekSummary.scopeSubtitle, /Semana del/i, 'Debe describir el intervalo de la semana');
 });
 
 console.log('\n----------------------------------------------------');

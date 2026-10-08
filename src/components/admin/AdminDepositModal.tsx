@@ -84,10 +84,10 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           
           {/* Reference Info */}
-          <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/15 space-y-2">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border border-[#99745A]/15 space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="text-[#6B6158]">Anticipo requerido oficial (50% mín):</span>
-              <span className="font-bold text-[#231E1B]">
+              <span className="text-[#6B6158]">Anticipo necesario para confirmar (50% mín):</span>
+              <span className="font-bold text-[#231E1B] font-mono">
                 ${booking.requiredDepositMXN.toLocaleString('es-MX')} MXN
               </span>
             </div>
@@ -97,13 +97,19 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
                 {getBookingStatusLabel(booking.status)}
               </span>
             </div>
+            <div className="flex justify-between items-center text-xs border-t border-[#99745A]/10 pt-1.5">
+              <span className="text-[#6B6158]">Anticipo actualmente registrado:</span>
+              <span className="font-bold text-[#231E1B] font-mono">
+                ${(booking.receivedDepositMXN ?? 0).toLocaleString('es-MX')} MXN
+              </span>
+            </div>
           </div>
 
           {/* Deposit Input */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label htmlFor="deposit-amount-input" className="block font-bold text-[#4A423B]">
-                Importe efectivamente recibido ($ MXN) *
+                Total de anticipo recibido ($ MXN) *
               </label>
               <button
                 type="button"
@@ -129,6 +135,9 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
                 className="w-full bg-[#FAF7F2] border border-[#99745A]/25 rounded-xl pl-8 pr-4 py-2.5 text-sm font-bold text-[#231E1B] focus:outline-none focus:border-[#C8933E]"
               />
             </div>
+            <p className="text-[11px] text-[#7A7067] mt-1 leading-normal">
+              Indica el monto total acumulado recibido por este concepto. Reemplaza el importe anterior si hubo pagos previos.
+            </p>
             {errorMsg && (
               <p className="text-[11px] text-red-600 font-semibold mt-1">{errorMsg}</p>
             )}
@@ -225,10 +234,10 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
             </button>
             <button
               type="submit"
-              className="gold-button flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
+              className="gold-button flex-1 py-2.5 rounded-xl text-xs font-bold cursor-pointer shadow-2xs flex items-center justify-center gap-1.5"
             >
               <CreditCard className="w-3.5 h-3.5" />
-              <span>Guardar Anticipo</span>
+              <span>Guardar anticipo</span>
             </button>
           </div>
 

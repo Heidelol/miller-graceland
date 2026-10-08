@@ -1,4 +1,4 @@
-import type { AdminBooking, AdminKPIsData, BookingStatus } from '../types/admin';
+import type { AdminBooking, AdminKPIsData, BookingStatus, AgendaViewMode } from '../types/admin';
 import { SERVICES } from '../data/salonData';
 
 /**
@@ -267,6 +267,63 @@ export function getWeekDays(baseDateStr: string): {
   }
 
   return days;
+}
+
+export interface AgendaSummaryData {
+  periodLabel: string;
+  scopeSubtitle: string;
+  appointmentsCount: number;
+  pendingDepositCount: number;
+  receivedDepositsMXN: number;
+}
+
+/**
+ * Calculates compact summary data for the selected day or week.
+ * - In Day view: reflects appointments and registered deposits on selectedDate.
+ * - In Week view: reflects appointments and registered deposits for the 7 days of that week.
+ * - Deposits represent actual registered money (receivedDepositMXN), not estimates or totals.
+ */
+export function calculateAgendaSummary(
+  bookings: AdminBooking[],
+  selectedDate: string,
+  viewMode: AgendaViewMode
+): AgendaSummaryData {
+  if (viewMode === 'week') {
+    const weekDays = getWeekDays(selectedDate);
+    const weekDates = new Set(weekDays.map((d) => d.dateStr));
+    const weekBookings = bookings.filter((b) => weekDates.has(b.date));
+    const activeWeekBookings = weekBookings.filter((b) => b.status !== 'cancelled');
+
+    const pendingDepositCount = activeWeekBookings.filter((b) => b.status === 'pending_payment').length;
+    const receivedDepositsMXN = activeWeekBookings.reduce((sum, b) => sum + (b.receivedDepositMXN || 0), 0);
+
+    const firstDay = weekDays[0];
+    const lastDay = weekDays[6];
+    const scopeSubtitle = `Semana del ${firstDay.dayNumber} ${firstDay.monthName} al ${lastDay.dayNumber} ${lastDay.monthName}`;
+
+    return {
+      periodLabel: 'Citas de la semana',
+      scopeSubtitle,
+      appointmentsCount: activeWeekBookings.length,
+      pendingDepositCount,
+      receivedDepositsMXN,
+    };
+  }
+
+  // Day view (default)
+  const dayBookings = bookings.filter((b) => b.date === selectedDate);
+  const activeDayBookings = dayBookings.filter((b) => b.status !== 'cancelled');
+
+  const pendingDepositCount = activeDayBookings.filter((b) => b.status === 'pending_payment').length;
+  const receivedDepositsMXN = activeDayBookings.reduce((sum, b) => sum + (b.receivedDepositMXN || 0), 0);
+
+  return {
+    periodLabel: 'Citas del día',
+    scopeSubtitle: formatDateDisplay(selectedDate, { short: true }),
+    appointmentsCount: activeDayBookings.length,
+    pendingDepositCount,
+    receivedDepositsMXN,
+  };
 }
 
 /**

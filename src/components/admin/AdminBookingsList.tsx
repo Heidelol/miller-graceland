@@ -82,7 +82,7 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-[#99745A]/20 shadow-xs overflow-hidden flex flex-col">
+    <div className="bg-white rounded-xl border border-[#99745A]/20 shadow-xs overflow-hidden flex flex-col">
       {/* Search and Filters Header */}
       <div className="p-4 sm:p-6 border-b border-[#99745A]/15 bg-[#FAF7F2] space-y-4">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -114,7 +114,7 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
             className="gold-button px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>+ Nueva Reserva</span>
+            <span>Nueva cita</span>
           </button>
         </div>
 
