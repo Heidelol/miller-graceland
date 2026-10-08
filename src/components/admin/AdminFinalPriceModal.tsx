@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Calculator, HelpCircle } from 'lucide-react';
 import type { AdminBooking } from '../../types/admin';
+import { calculateBalance } from '../../lib/adminBookingLogic';
 
 interface AdminFinalPriceModalProps {
   isOpen: boolean;
@@ -21,9 +22,9 @@ export const AdminFinalPriceModal: React.FC<AdminFinalPriceModalProps> = ({
 
   if (!isOpen || !booking) return null;
 
-  const numericValue = priceInput.trim() !== '' ? Number(priceInput) : null;
+  const numericValue = priceInput.trim() !== '' ? Math.max(0, Number(priceInput)) : null;
   const receivedDeposit = booking.receivedDepositMXN || 0;
-  const calculatedBalance = numericValue !== null ? Math.max(0, numericValue - receivedDeposit) : null;
+  const balanceCalc = calculateBalance(numericValue, receivedDeposit);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,14 +114,22 @@ export const AdminFinalPriceModal: React.FC<AdminFinalPriceModalProps> = ({
             <div className="flex justify-between items-baseline pt-1">
               <span className="text-xs text-[#5C534B]">Saldo resultante a liquidar:</span>
               <span className="text-lg font-bold font-serif-luxury text-[#A87428]">
-                {calculatedBalance !== null
-                  ? `$${calculatedBalance.toLocaleString('es-MX')} MXN`
-                  : 'Por confirmar'}
+                {balanceCalc.isPending
+                  ? 'Por confirmar'
+                  : `$${balanceCalc.pendingBalanceMXN?.toLocaleString('es-MX')} MXN`}
               </span>
             </div>
-            {calculatedBalance !== null && (
-              <p className="text-[10px] text-[#7A7067]">
-                ${numericValue?.toLocaleString('es-MX')} (precio final) − ${receivedDeposit.toLocaleString('es-MX')} (anticipo recibido) = ${calculatedBalance.toLocaleString('es-MX')} MXN.
+            {balanceCalc.hasCredit && (
+              <div className="flex justify-between items-baseline pt-1 border-t border-[#C8933E]/20 text-[#4A5736]">
+                <span className="text-xs font-bold">Saldo a favor de la clienta:</span>
+                <span className="text-base font-bold font-serif-luxury">
+                  ${balanceCalc.creditBalanceMXN.toLocaleString('es-MX')} MXN
+                </span>
+              </div>
+            )}
+            {balanceCalc.explanation && (
+              <p className="text-[10px] text-[#7A7067] pt-1">
+                {balanceCalc.explanation}
               </p>
             )}
           </div>

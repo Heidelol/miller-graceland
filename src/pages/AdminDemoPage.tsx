@@ -5,7 +5,8 @@ import {
   resetStorageToSeed 
 } from '../lib/adminStorage';
 import { 
-  calculateAdminKPIs, getTodayLocalDate 
+  calculateAdminKPIs, getTodayLocalDate,
+  determineStatusAfterDepositChange
 } from '../lib/adminBookingLogic';
 
 import { AdminHeader } from '../components/admin/AdminHeader';
@@ -16,6 +17,7 @@ import { AdminBookingsList } from '../components/admin/AdminBookingsList';
 import { AdminNewBookingModal } from '../components/admin/AdminNewBookingModal';
 import { AdminRescheduleModal } from '../components/admin/AdminRescheduleModal';
 import { AdminFinalPriceModal } from '../components/admin/AdminFinalPriceModal';
+import { AdminDepositModal } from '../components/admin/AdminDepositModal';
 import { AdminConfirmDialog } from '../components/admin/AdminConfirmDialog';
 
 export const AdminDemoPage: React.FC = () => {
@@ -41,6 +43,7 @@ export const AdminDemoPage: React.FC = () => {
   const [newBookingSlot, setNewBookingSlot] = useState<{ date: string; time: string } | null>(null);
   const [rescheduleTarget, setRescheduleTarget] = useState<AdminBooking | null>(null);
   const [finalPriceTarget, setFinalPriceTarget] = useState<AdminBooking | null>(null);
+  const [depositTarget, setDepositTarget] = useState<AdminBooking | null>(null);
   const [confirmDialog, setConfirmDialog] = useState<{
     isOpen: boolean;
     type: 'cancel_booking' | 'reset_seed';
@@ -114,6 +117,41 @@ export const AdminDemoPage: React.FC = () => {
       b.id === booking.id ? { ...b, status: 'completed' as const } : b
     );
     updateAndPersistBookings(updated, `Cita de ${booking.clientName} marcada como Atendida.`);
+  };
+
+  const handleSaveDeposit = (bookingId: string, receivedDepositMXN: number) => {
+    const target = bookings.find((b) => b.id === bookingId);
+    if (!target) return;
+
+    const nextStatus = determineStatusAfterDepositChange(
+      target.status,
+      receivedDepositMXN,
+      target.requiredDepositMXN
+    );
+
+    const updated = bookings.map((b) =>
+      b.id === bookingId
+        ? {
+            ...b,
+            receivedDepositMXN,
+            status: nextStatus,
+          }
+        : b
+    );
+
+    const statusNote =
+      target.status !== nextStatus
+        ? nextStatus === 'confirmed'
+          ? ' La cita pasó a Confirmada.'
+          : nextStatus === 'pending_payment'
+          ? ' La cita pasó a Pendiente de pago.'
+          : ''
+        : '';
+
+    updateAndPersistBookings(
+      updated,
+      `Anticipo de $${receivedDepositMXN.toLocaleString('es-MX')} MXN registrado para ${target.clientName}.${statusNote}`
+    );
   };
 
   const handleConfirmCancel = () => {
@@ -207,6 +245,7 @@ export const AdminDemoPage: React.FC = () => {
                 onOpenCancel={(b) => setConfirmDialog({ isOpen: true, type: 'cancel_booking', booking: b })}
                 onMarkAsCompleted={handleMarkAsCompleted}
                 onOpenFinalPrice={(b) => setFinalPriceTarget(b)}
+                onOpenDeposit={(b) => setDepositTarget(b)}
               />
             </div>
           </div>
@@ -234,6 +273,7 @@ export const AdminDemoPage: React.FC = () => {
                 onOpenCancel={(b) => setConfirmDialog({ isOpen: true, type: 'cancel_booking', booking: b })}
                 onMarkAsCompleted={handleMarkAsCompleted}
                 onOpenFinalPrice={(b) => setFinalPriceTarget(b)}
+                onOpenDeposit={(b) => setDepositTarget(b)}
               />
             </div>
           </div>
@@ -263,6 +303,10 @@ export const AdminDemoPage: React.FC = () => {
               onOpenFinalPrice={(b) => {
                 setIsMobileDetailOpen(false);
                 setFinalPriceTarget(b);
+              }}
+              onOpenDeposit={(b) => {
+                setIsMobileDetailOpen(false);
+                setDepositTarget(b);
               }}
             />
           </div>
@@ -300,6 +344,15 @@ export const AdminDemoPage: React.FC = () => {
         onClose={() => setFinalPriceTarget(null)}
         booking={finalPriceTarget}
         onSaveFinalPrice={handleSaveFinalPrice}
+      />
+
+      {/* Deposit Modal */}
+      <AdminDepositModal
+        key={depositTarget ? `${depositTarget.id}-${depositTarget.receivedDepositMXN}` : 'no-deposit'}
+        isOpen={!!depositTarget}
+        onClose={() => setDepositTarget(null)}
+        booking={depositTarget}
+        onSaveDeposit={handleSaveDeposit}
       />
 
       {/* Confirmation Dialog (Cancel / Reset) */}

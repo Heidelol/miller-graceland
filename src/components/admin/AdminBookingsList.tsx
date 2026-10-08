@@ -198,7 +198,7 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
             <tbody className="divide-y divide-[#99745A]/10">
               {filteredBookings.map((b) => {
                 const isSelected = selectedBookingId === b.id;
-                const { balanceMXN, isPending } = calculateBalance(b.finalPriceMXN, b.receivedDepositMXN);
+                const balanceCalc = calculateBalance(b.finalPriceMXN, b.receivedDepositMXN);
 
                 return (
                   <tr
@@ -215,15 +215,15 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="font-bold text-[#231E1B]">{b.clientName}</div>
-                      <div className="text-[11px] text-[#7A7067]">{b.clientPhone}</div>
+                      <div className="font-bold text-[#231E1B]">{b.clientName || 'Sin nombre'}</div>
+                      <div className="text-[11px] text-[#7A7067]">{b.clientPhone || 'Sin teléfono'}</div>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="font-medium text-[#231E1B]">{b.serviceName}</div>
+                      <div className="font-medium text-[#231E1B]">{b.serviceName || 'Servicio'}</div>
                       <div className="text-[11px] text-[#68794E] flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {b.durationMinutes} min
+                        {b.durationMinutes || 60} min
                       </div>
                     </td>
 
@@ -237,11 +237,11 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4 text-right font-medium text-[#68794E] whitespace-nowrap">
-                      ${b.receivedDepositMXN.toLocaleString('es-MX')} MXN
+                      ${(b.receivedDepositMXN ?? 0).toLocaleString('es-MX')} MXN
                     </td>
 
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      {b.finalPriceMXN !== null ? (
+                      {b.finalPriceMXN !== null && b.finalPriceMXN !== undefined ? (
                         <span className="font-bold text-[#231E1B]">
                           ${b.finalPriceMXN.toLocaleString('es-MX')} MXN
                         </span>
@@ -251,12 +251,19 @@ export const AdminBookingsList: React.FC<AdminBookingsListProps> = ({
                     </td>
 
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      {!isPending && balanceMXN !== null ? (
-                        <span className="font-bold text-[#A87428]">
-                          ${balanceMXN.toLocaleString('es-MX')} MXN
-                        </span>
-                      ) : (
+                      {balanceCalc.isPending ? (
                         <span className="text-gray-400 italic">Por confirmar</span>
+                      ) : balanceCalc.hasCredit ? (
+                        <div>
+                          <span className="font-bold text-[#4A5736]">$0 MXN</span>
+                          <div className="text-[10px] text-[#4A5736] font-bold">
+                            +${balanceCalc.creditBalanceMXN.toLocaleString('es-MX')} a favor
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="font-bold text-[#A87428]">
+                          ${balanceCalc.pendingBalanceMXN?.toLocaleString('es-MX')} MXN
+                        </span>
                       )}
                     </td>
 

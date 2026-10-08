@@ -8,7 +8,7 @@ import type { AdminBooking, AgendaViewMode } from '../../types/admin';
 import { 
   formatDateDisplay, formatTimeDisplay, 
   calculateEndTime, getWeekDays, addDaysToDate,
-  getTodayLocalDate 
+  getTodayLocalDate, calculateBalance 
 } from '../../lib/adminBookingLogic';
 
 interface AdminCalendarViewProps {
@@ -283,12 +283,15 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                       <div className="text-right sm:border-l sm:border-[#99745A]/15 sm:pl-4 shrink-0">
                         <span className="text-[11px] text-[#7A7067] block">Anticipo</span>
                         <span className="text-xs font-black text-[#231E1B]">
-                          ${b.receivedDepositMXN.toLocaleString('es-MX')} MXN
+                          ${(b.receivedDepositMXN ?? 0).toLocaleString('es-MX')} MXN
                         </span>
                         <span className="text-[10px] text-[#68794E] font-medium block">
-                          {b.finalPriceMXN !== null
-                            ? `Saldo: $${Math.max(0, b.finalPriceMXN - b.receivedDepositMXN).toLocaleString('es-MX')}`
-                            : 'Saldo: Por confirmar'}
+                          {(() => {
+                            const bCalc = calculateBalance(b.finalPriceMXN, b.receivedDepositMXN);
+                            if (bCalc.isPending) return 'Saldo: Por confirmar';
+                            if (bCalc.hasCredit) return `+$${bCalc.creditBalanceMXN.toLocaleString('es-MX')} a favor`;
+                            return `Saldo: $${bCalc.pendingBalanceMXN?.toLocaleString('es-MX')}`;
+                          })()}
                         </span>
                       </div>
                     </div>

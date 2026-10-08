@@ -31,21 +31,26 @@ export const AdminNewBookingModal: React.FC<AdminNewBookingModalProps> = ({
   const [selectedServiceId, setSelectedServiceId] = useState(SERVICES[0].id);
   const [date, setDate] = useState(initialDate || getTodayLocalDate());
   const [time, setTime] = useState(initialTime || '11:00');
-  const [status, setStatus] = useState<BookingStatus>('confirmed');
-  const [receivedDeposit, setReceivedDeposit] = useState<number>(SERVICES[0].depositMXN);
+  const [status, setStatus] = useState<BookingStatus>('pending_payment');
+  const [receivedDeposit, setReceivedDeposit] = useState<number>(0);
   const [notes, setNotes] = useState('');
   const [conflictError, setConflictError] = useState<string | null>(null);
 
   const selectedService = SERVICES.find((s) => s.id === selectedServiceId) || SERVICES[0];
 
-  // When service changes, update suggested deposit
+  // When service changes, required deposit updates but received deposit remains intact ($0 by default)
   const handleServiceChange = (serviceId: string) => {
     setSelectedServiceId(serviceId);
-    const s = SERVICES.find((item) => item.id === serviceId);
-    if (s) {
-      setReceivedDeposit(s.depositMXN);
-    }
     setConflictError(null);
+  };
+
+  const handleDepositChange = (val: number) => {
+    const num = Math.max(0, isNaN(val) ? 0 : val);
+    setReceivedDeposit(num);
+    setConflictError(null);
+    if (num < selectedService.depositMXN && status === 'confirmed') {
+      setStatus('pending_payment');
+    }
   };
 
   if (!isOpen) return null;
@@ -60,6 +65,16 @@ export const AdminNewBookingModal: React.FC<AdminNewBookingModalProps> = ({
     }
     if (!clientPhone.trim()) {
       setConflictError('Por favor ingresa un teléfono de contacto.');
+      return;
+    }
+
+    const depositNum = Math.max(0, Number(receivedDeposit) || 0);
+
+    // Rule 2: Cannot save as confirmed if received deposit is less than required deposit
+    if (status === 'confirmed' && depositNum < selectedService.depositMXN) {
+      setConflictError(
+        `No es posible guardar la cita como «Confirmada»: el importe recibido ($${depositNum.toLocaleString('es-MX')} MXN) es inferior al anticipo requerido ($${selectedService.depositMXN.toLocaleString('es-MX')} MXN). Debe iniciar como «Pendiente de pago» o registrarse el anticipo completo.`
+      );
       return;
     }
 
@@ -92,7 +107,7 @@ export const AdminNewBookingModal: React.FC<AdminNewBookingModalProps> = ({
       durationMinutes: selectedService.durationMinutes,
       status,
       requiredDepositMXN: selectedService.depositMXN,
-      receivedDepositMXN: Number(receivedDeposit) || 0,
+      receivedDepositMXN: depositNum,
       finalPriceMXN: null, // Initial state: "Por confirmar"
       notes: notes.trim() || undefined,
       createdAt: getCurrentIsoTimestamp(),
@@ -262,24 +277,53 @@ export const AdminNewBookingModal: React.FC<AdminNewBookingModalProps> = ({
               </label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as BookingStatus)}
+                onChange={(e) => {
+                  const newStatus = e.target.value as BookingStatus;
+                  if (newStatus === 'confirmed' && receivedDeposit < selectedService.depositMXN) {
+                    setConflictError(
+                      `Para marcar como Confirmada se requiere registrar un anticipo recibido de al menos $${selectedService.depositMXN.toLocaleString('es-MX')} MXN.`
+                    );
+                    return;
+                  }
+                  setStatus(newStatus);
+                  setConflictError(null);
+                }}
                 className="w-full bg-[#FAF7F2] border border-[#99745A]/25 rounded-xl px-3 py-2 text-xs text-[#231E1B] focus:outline-none focus:border-[#C8933E] cursor-pointer"
               >
-                <option value="confirmed">Confirmada (Anticipo cubierto)</option>
                 <option value="pending_payment">Pendiente de pago</option>
+                <option
+                  value="confirmed"
+                  disabled={receivedDeposit < selectedService.depositMXN}
+                >
+                  Confirmada {receivedDeposit < selectedService.depositMXN ? `(Requiere $${selectedService.depositMXN.toLocaleString('es-MX')})` : '(Anticipo cubierto)'}
+                </option>
               </select>
             </div>
 
             <div>
-              <label className="block font-bold text-[#4A423B] mb-1">
-                Anticipo recibido ($ MXN)
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block font-bold text-[#4A423B]">
+                  Anticipo recibido ($ MXN)
+                </label>
+                {receivedDeposit === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDepositChange(selectedService.depositMXN);
+                      setStatus('confirmed');
+                    }}
+                    className="text-[10px] font-bold text-[#A87428] hover:underline cursor-pointer"
+                  >
+                    Cubrir 50% (${selectedService.depositMXN.toLocaleString('es-MX')})
+                  </button>
+                )}
+              </div>
               <input
                 type="number"
                 min="0"
                 step="any"
                 value={receivedDeposit}
-                onChange={(e) => setReceivedDeposit(Number(e.target.value))}
+                onChange={(e) => handleDepositChange(Number(e.target.value))}
                 className="w-full bg-[#FAF7F2] border border-[#99745A]/25 rounded-xl px-3 py-2 text-xs text-[#231E1B] font-bold focus:outline-none focus:border-[#C8933E]"
               />
             </div>

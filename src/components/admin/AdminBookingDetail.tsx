@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Phone, Mail, Calendar, Clock, 
   CheckCircle2, AlertCircle, XCircle, FileText,
-  DollarSign, Edit3, X, RefreshCw
+  DollarSign, Edit3, X, RefreshCw, CreditCard
 } from 'lucide-react';
 import type { AdminBooking } from '../../types/admin';
 import { 
@@ -17,6 +17,7 @@ interface AdminBookingDetailProps {
   onOpenCancel: (booking: AdminBooking) => void;
   onMarkAsCompleted: (booking: AdminBooking) => void;
   onOpenFinalPrice: (booking: AdminBooking) => void;
+  onOpenDeposit: (booking: AdminBooking) => void;
 }
 
 export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
@@ -26,6 +27,7 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
   onOpenCancel,
   onMarkAsCompleted,
   onOpenFinalPrice,
+  onOpenDeposit,
 }) => {
   if (!booking) {
     return (
@@ -37,14 +39,20 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
           Detalle de la Cita
         </h4>
         <p className="text-xs text-[#6B6158] max-w-xs mt-1">
-          Selecciona una cita en el calendario o en la lista de reservas para consultar sus datos, registrar el precio final o reprogramarla.
+          Selecciona una cita en el calendario o en la lista de reservas para consultar sus datos, registrar anticipos o precio final.
         </p>
       </div>
     );
   }
 
-  const endTime = calculateEndTime(booking.time, booking.durationMinutes);
-  const { balanceMXN, isPending } = calculateBalance(booking.finalPriceMXN, booking.receivedDepositMXN);
+  const clientName = booking.clientName || 'Clienta';
+  const clientPhone = booking.clientPhone || 'Sin teléfono';
+  const serviceName = booking.serviceName || 'Servicio del catálogo';
+  const requiredDeposit = booking.requiredDepositMXN ?? 0;
+  const receivedDeposit = booking.receivedDepositMXN ?? 0;
+
+  const endTime = calculateEndTime(booking.time || '11:00', booking.durationMinutes || 60);
+  const balanceCalc = calculateBalance(booking.finalPriceMXN, receivedDeposit);
 
   return (
     <div className="bg-white rounded-3xl border border-[#99745A]/20 shadow-xs overflow-hidden flex flex-col h-full">
@@ -99,20 +107,22 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
         {/* Client Profile */}
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-[#EAE3D6] border border-[#C8933E]/40 flex items-center justify-center text-xs font-bold text-[#4A423B] shrink-0">
-            {booking.clientName.slice(0, 2).toUpperCase()}
+            {clientName.slice(0, 2).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] truncate">
-              {booking.clientName}
+              {clientName}
             </h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-[#5C534B] mt-0.5">
-              <a
-                href={`tel:${booking.clientPhone}`}
-                className="flex items-center gap-1 text-[#68794E] hover:underline"
-              >
-                <Phone className="w-3.5 h-3.5" />
-                <span>{booking.clientPhone}</span>
-              </a>
+              {clientPhone && (
+                <a
+                  href={`tel:${clientPhone}`}
+                  className="flex items-center gap-1 text-[#68794E] hover:underline"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>{clientPhone}</span>
+                </a>
+              )}
               {booking.clientEmail && (
                 <a
                   href={`mailto:${booking.clientEmail}`}
@@ -134,12 +144,12 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
                 Servicio Oficial
               </span>
               <h4 className="text-sm font-bold text-[#231E1B]">
-                {booking.serviceName}
+                {serviceName}
               </h4>
             </div>
             <span className="text-xs font-bold text-[#68794E] flex items-center gap-1 bg-white px-2 py-1 rounded-lg border border-[#68794E]/20 shadow-2xs shrink-0">
               <Clock className="w-3.5 h-3.5" />
-              {booking.durationMinutes} min
+              {booking.durationMinutes || 60} min
             </span>
           </div>
 
@@ -174,17 +184,29 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
             <div>
               <span className="text-[11px] text-[#7A7067] block">Anticipo requerido (50%)</span>
               <span className="text-sm font-bold text-[#231E1B]">
-                ${booking.requiredDepositMXN.toLocaleString('es-MX')} MXN
+                ${requiredDeposit.toLocaleString('es-MX')} MXN
               </span>
             </div>
             <div>
-              <span className="text-[11px] text-[#7A7067] block">Anticipo recibido</span>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#7A7067] block">Anticipo recibido</span>
+                <button
+                  type="button"
+                  onClick={() => onOpenDeposit(booking)}
+                  className="text-[11px] font-bold text-[#68794E] hover:text-[#586742] hover:underline flex items-center gap-0.5 cursor-pointer"
+                  title="Registrar importe recibido de anticipo"
+                >
+                  <Edit3 className="w-3 h-3" />
+                  <span>Modificar</span>
+                </button>
+              </div>
               <span className="text-sm font-bold text-[#68794E]">
-                ${booking.receivedDepositMXN.toLocaleString('es-MX')} MXN
+                ${receivedDeposit.toLocaleString('es-MX')} MXN
               </span>
             </div>
           </div>
 
+          {/* Final price & Live Balance row */}
           <div className="pt-2 border-t border-[#99745A]/10 grid grid-cols-2 gap-3">
             <div>
               <span className="text-[11px] text-[#7A7067] block">Precio final acordado</span>
@@ -195,21 +217,46 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
               </span>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-[#FFF9EE] border border-[#C8933E]/30">
-              <span className="text-[10px] uppercase font-bold text-[#8A5F20] block">
+            <div className={`p-2.5 rounded-xl border ${
+              balanceCalc.hasCredit
+                ? 'bg-[#EBF0E6] border-[#68794E]/40'
+                : 'bg-[#FFF9EE] border-[#C8933E]/30'
+            }`}>
+              <span className={`text-[10px] uppercase font-bold block ${
+                balanceCalc.hasCredit ? 'text-[#3D472D]' : 'text-[#8A5F20]'
+              }`}>
                 Saldo por liquidar
               </span>
-              <span className={`text-base font-bold font-serif-luxury ${!isPending ? 'text-[#A87428]' : 'text-gray-400 italic'}`}>
-                {!isPending && balanceMXN !== null
-                  ? `$${balanceMXN.toLocaleString('es-MX')} MXN`
-                  : 'Por confirmar'}
+              <span className={`text-base font-bold font-serif-luxury ${
+                balanceCalc.isPending
+                  ? 'text-gray-400 italic'
+                  : balanceCalc.hasCredit
+                  ? 'text-[#4A5736]'
+                  : 'text-[#A87428]'
+              }`}>
+                {balanceCalc.isPending
+                  ? 'Por confirmar'
+                  : `$${balanceCalc.pendingBalanceMXN?.toLocaleString('es-MX')} MXN`}
               </span>
+
+              {balanceCalc.hasCredit && (
+                <div className="mt-1.5 pt-1.5 border-t border-[#68794E]/25">
+                  <span className="text-[10px] uppercase font-bold text-[#3D472D] block">
+                    Saldo a favor
+                  </span>
+                  <span className="text-sm font-bold font-serif-luxury text-[#4A5736]">
+                    ${balanceCalc.creditBalanceMXN.toLocaleString('es-MX')} MXN
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {isPending && (
-            <p className="text-[11px] text-[#7A7067] italic leading-tight">
-              * El saldo definitivo se calculará una vez que se registre el precio final tras la valoración en el salón.
+          {balanceCalc.explanation && (
+            <p className={`text-[11px] leading-tight ${
+              balanceCalc.hasCredit ? 'text-[#3D472D] font-medium' : 'text-[#7A7067] italic'
+            }`}>
+              {balanceCalc.explanation}
             </p>
           )}
         </div>
@@ -227,6 +274,18 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
 
         {/* Action Buttons */}
         <div className="pt-3 border-t border-[#99745A]/15 space-y-2.5">
+          {/* Action: Registrar Anticipo */}
+          {booking.status !== 'cancelled' && (
+            <button
+              type="button"
+              onClick={() => onOpenDeposit(booking)}
+              className="w-full py-2.5 rounded-xl border border-[#68794E] text-[#4A5736] hover:bg-[#68794E]/10 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <CreditCard className="w-4 h-4 text-[#68794E]" />
+              <span>Registrar Anticipo</span>
+            </button>
+          )}
+
           {booking.status !== 'completed' && booking.status !== 'cancelled' && (
             <button
               type="button"
