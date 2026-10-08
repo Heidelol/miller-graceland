@@ -1,5 +1,6 @@
 import type { AdminBooking, BookingStatus } from '../types/admin';
 import { generateSeedBookings } from './adminBookingLogic';
+import { SERVICES } from '../data/salonData';
 
 export const ADMIN_STORAGE_KEY = 'mg_admin_demo_v1';
 
@@ -43,23 +44,44 @@ function isValidTimeString(val: unknown): val is string {
 }
 
 /**
- * Validates and sanitizes a booking record.
- * Rejects corrupt types, out-of-range dates/hours, invalid statuses or negative amounts.
- * Preserves safe fallbacks for optional fields so the UI never crashes.
+ * Detailed inspection of a booking candidate.
+ * Returns the specific problem description if invalid, or null if valid.
  */
-export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
-  if (!item || typeof item !== 'object') return null;
+export function getBookingValidationIssue(item: unknown): string | null {
+  if (!item || typeof item !== 'object') {
+    return 'formato no es un objeto válido';
+  }
   const b = item as Record<string, unknown>;
 
   // Required non-empty string fields
-  if (typeof b.id !== 'string' || !b.id.trim()) return null;
-  if (typeof b.clientName !== 'string' || !b.clientName.trim()) return null;
-  if (typeof b.serviceId !== 'string' || !b.serviceId.trim()) return null;
-  if (typeof b.serviceName !== 'string' || !b.serviceName.trim()) return null;
+  if (typeof b.id !== 'string' || !b.id.trim()) {
+    return 'identificador ausente o vacío';
+  }
+  if (typeof b.clientName !== 'string' || !b.clientName.trim()) {
+    return 'nombre de clienta ausente o vacío';
+  }
+  if (typeof b.serviceId !== 'string' || !b.serviceId.trim()) {
+    return 'identificador de servicio ausente';
+  }
+
+  // 1. Validate serviceId against official catalog SERVICES
+  const serviceIdTrimmed = (b.serviceId as string).trim();
+  const matchedService = SERVICES.find((s) => s.id === serviceIdTrimmed);
+  if (!matchedService) {
+    return `servicio no pertenece al catálogo oficial ("${b.serviceId}")`;
+  }
+
+  if (typeof b.serviceName !== 'string' || !b.serviceName.trim()) {
+    return 'nombre de servicio ausente o vacío';
+  }
 
   // Date and Time formats
-  if (!isValidDateString(b.date)) return null;
-  if (!isValidTimeString(b.time)) return null;
+  if (!isValidDateString(b.date)) {
+    return 'fecha inválida o fuera de rango (formato YYYY-MM-DD requerido)';
+  }
+  if (!isValidTimeString(b.time)) {
+    return 'hora inválida (formato HH:MM 24h requerido)';
+  }
 
   // Duration: finite > 0
   if (
@@ -67,7 +89,7 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
     !Number.isFinite(b.durationMinutes) ||
     b.durationMinutes <= 0
   ) {
-    return null;
+    return 'duración de servicio inválida (debe ser número positivo)';
   }
 
   // Status must belong to allowed enum
@@ -75,23 +97,46 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
     typeof b.status !== 'string' ||
     !ALLOWED_STATUSES.includes(b.status as BookingStatus)
   ) {
-    return null;
+    return `estado desconocido ("${b.status}")`;
   }
 
   // Financial amounts: finite, non-negative
-  if (!isFiniteNonNegative(b.requiredDepositMXN)) return null;
-
-  let receivedDeposit = 0;
-  if (b.receivedDepositMXN !== undefined && b.receivedDepositMXN !== null) {
-    if (!isFiniteNonNegative(b.receivedDepositMXN)) return null;
-    receivedDeposit = b.receivedDepositMXN;
+  if (!isFiniteNonNegative(b.requiredDepositMXN)) {
+    return 'anticipo requerido no numérico o negativo';
   }
 
-  let finalPrice: number | null = null;
-  if (b.finalPriceMXN !== null && b.finalPriceMXN !== undefined) {
-    if (!isFiniteNonNegative(b.finalPriceMXN)) return null;
-    finalPrice = b.finalPriceMXN;
+  // 2. receivedDepositMXN must NOT be missing or silently defaulted to 0
+  if (b.receivedDepositMXN === undefined || b.receivedDepositMXN === null) {
+    return 'anticipo registrado ausente (registro de pago incompleto)';
   }
+  if (!isFiniteNonNegative(b.receivedDepositMXN)) {
+    return 'anticipo registrado no numérico o negativo';
+  }
+
+  // A booking cannot be persisted as confirmed without covering the required deposit
+  if (b.status === 'confirmed' && (b.receivedDepositMXN as number) < (b.requiredDepositMXN as number)) {
+    return 'cita marcada como confirmada pero con anticipo recibido inferior al requerido';
+  }
+
+  if (b.finalPriceMXN !== null && b.finalPriceMXN !== undefined && !isFiniteNonNegative(b.finalPriceMXN)) {
+    return 'precio final inválido o negativo';
+  }
+
+  return null;
+}
+
+/**
+ * Validates and sanitizes a booking record.
+ * Rejects corrupt types, uncatalogued services, missing deposits, out-of-range dates/hours,
+ * invalid statuses or negative amounts.
+ * Preserves safe fallbacks for optional fields so the UI never crashes.
+ */
+export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
+  if (getBookingValidationIssue(item) !== null) {
+    return null;
+  }
+  const b = item as Record<string, unknown>;
+  const officialService = SERVICES.find((s) => s.id === (b.serviceId as string).trim())!;
 
   // Optional string fields with defensive defaults
   const clientPhone =
@@ -109,19 +154,27 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
       ? b.createdAt
       : new Date().toISOString();
 
+  const finalPrice: number | null =
+    b.finalPriceMXN !== null && b.finalPriceMXN !== undefined
+      ? (b.finalPriceMXN as number)
+      : null;
+
   return {
-    id: b.id.trim(),
-    clientName: b.clientName.trim(),
+    id: (b.id as string).trim(),
+    clientName: (b.clientName as string).trim(),
     clientPhone,
     clientEmail,
-    serviceId: b.serviceId.trim(),
-    serviceName: b.serviceName.trim(),
-    date: b.date,
-    time: b.time,
-    durationMinutes: Math.round(b.durationMinutes),
+    serviceId: officialService.id,
+    serviceName:
+      typeof b.serviceName === 'string' && b.serviceName.trim()
+        ? (b.serviceName as string).trim()
+        : officialService.name,
+    date: b.date as string,
+    time: b.time as string,
+    durationMinutes: Math.round(b.durationMinutes as number),
     status: b.status as BookingStatus,
-    requiredDepositMXN: b.requiredDepositMXN,
-    receivedDepositMXN: receivedDeposit,
+    requiredDepositMXN: b.requiredDepositMXN as number,
+    receivedDepositMXN: b.receivedDepositMXN as number,
     finalPriceMXN: finalPrice,
     notes,
     createdAt,
@@ -183,24 +236,31 @@ export function loadBookingsFromStorage(): StorageLoadResult {
     }
 
     const validBookings: AdminBooking[] = [];
+    const invalidReasons: string[] = [];
     let invalidCount = 0;
 
     for (const item of parsed) {
+      const issue = getBookingValidationIssue(item);
       const valid = validateAndSanitizeBooking(item);
       if (valid) {
         validBookings.push(valid);
       } else {
         invalidCount++;
+        if (issue) {
+          invalidReasons.push(issue);
+        }
       }
     }
 
     // Partial corruption: keep all valid records and alert the user
     if (invalidCount > 0 && validBookings.length > 0) {
       const saveRes = saveBookingsToStorage(validBookings);
+      const uniqueReasons = Array.from(new Set(invalidReasons));
+      const reasonDetail = uniqueReasons.length > 0 ? ` (${uniqueReasons.slice(0, 2).join('; ')})` : '';
       return {
         bookings: validBookings,
         isInitialSeed: false,
-        error: `Se detectaron y descartaron ${invalidCount} registro(s) inválidos o incompletos. Se conservaron ${validBookings.length} reservas válidas.${saveRes.success ? '' : ` Error al actualizar almacenamiento: ${saveRes.error}`}`,
+        error: `Se detectaron y descartaron ${invalidCount} registro(s) inválidos o incompletos${reasonDetail}. Se conservaron ${validBookings.length} reservas válidas.${saveRes.success ? '' : ` Error al actualizar almacenamiento: ${saveRes.error}`}`,
       };
     }
 
@@ -208,10 +268,12 @@ export function loadBookingsFromStorage(): StorageLoadResult {
     if (validBookings.length === 0) {
       const seed = generateSeedBookings();
       const saveRes = saveBookingsToStorage(seed);
+      const uniqueReasons = Array.from(new Set(invalidReasons));
+      const reasonDetail = uniqueReasons.length > 0 ? ` (${uniqueReasons.slice(0, 2).join('; ')})` : '';
       return {
         bookings: seed,
         isInitialSeed: true,
-        error: `Ningún registro guardado cumplía las validaciones requeridas (${invalidCount} descartados). Se restablecieron los datos de ejemplo.${saveRes.success ? '' : ` Error de guardado: ${saveRes.error}`}`,
+        error: `Ningún registro guardado cumplía las validaciones requeridas${reasonDetail} (${invalidCount} descartados). Se restablecieron los datos de ejemplo.${saveRes.success ? '' : ` Error de guardado: ${saveRes.error}`}`,
       };
     }
 

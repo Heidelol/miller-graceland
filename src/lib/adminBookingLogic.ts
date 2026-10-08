@@ -184,6 +184,20 @@ export function determineStatusAfterDepositChange(
 }
 
 /**
+ * Spanish human-readable status labels.
+ */
+export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  pending_payment: 'Pendiente de pago',
+  confirmed: 'Confirmada',
+  completed: 'Atendida',
+  cancelled: 'Cancelada',
+};
+
+export function getBookingStatusLabel(status: BookingStatus): string {
+  return BOOKING_STATUS_LABELS[status] || status;
+}
+
+/**
  * Checks schedule conflicts against existing non-cancelled bookings.
  * Simulated capacity: 1 simultaneous appointment at a time.
  */

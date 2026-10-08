@@ -4,6 +4,7 @@ import type { AdminBooking } from '../../types/admin';
 import {
   calculateBalance,
   determineStatusAfterDepositChange,
+  getBookingStatusLabel,
 } from '../../lib/adminBookingLogic';
 
 interface AdminDepositModalProps {
@@ -92,11 +93,8 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
             </div>
             <div className="flex justify-between items-center text-xs">
               <span className="text-[#6B6158]">Estado actual de la cita:</span>
-              <span className="font-bold capitalize text-[#68794E]">
-                {booking.status === 'confirmed' && 'Confirmada'}
-                {booking.status === 'pending_payment' && 'Pendiente de pago'}
-                {booking.status === 'completed' && 'Atendida'}
-                {booking.status === 'cancelled' && 'Cancelada'}
+              <span className="font-bold text-[#68794E]">
+                {getBookingStatusLabel(booking.status)}
               </span>
             </div>
           </div>
@@ -146,7 +144,7 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
                 : 'bg-amber-50 border-amber-300 text-amber-900'
             }`}
           >
-            <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px]">
+            <div className="flex items-center gap-1.5 font-bold text-[11px]">
               {booking.status === 'cancelled' || booking.status === 'completed' ? (
                 <ShieldCheck className="w-3.5 h-3.5 text-gray-500" />
               ) : isCoversRequired ? (
@@ -154,7 +152,7 @@ export const AdminDepositModal: React.FC<AdminDepositModalProps> = ({
               ) : (
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
               )}
-              <span>Estado resultante de la cita: {nextStatus.toUpperCase()}</span>
+              <span>Estado resultante de la cita: «{getBookingStatusLabel(nextStatus)}»</span>
             </div>
 
             {booking.status === 'cancelled' && (
