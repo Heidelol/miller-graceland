@@ -159,6 +159,11 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
       ? (b.finalPriceMXN as number)
       : null;
 
+  const hairProfile =
+    typeof b.hairProfile === 'object' && b.hairProfile !== null
+      ? (b.hairProfile as import('../types/admin').HairProfile)
+      : undefined;
+
   return {
     id: (b.id as string).trim(),
     clientName: (b.clientName as string).trim(),
@@ -177,6 +182,7 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
     receivedDepositMXN: b.receivedDepositMXN as number,
     finalPriceMXN: finalPrice,
     notes,
+    hairProfile,
     createdAt,
   };
 }

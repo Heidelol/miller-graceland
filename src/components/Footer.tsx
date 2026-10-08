@@ -1,4 +1,4 @@
-import { Phone, MapPin, Clock, ShieldCheck, Heart, MessageCircle } from 'lucide-react';
+import { Phone, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -35,11 +35,10 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-[#63584F] leading-relaxed">
                 {SALON_INFO.footerAbout}
               </p>
-              <div className="flex items-center gap-2 pt-2">
-                <div className="px-3 py-1 rounded-lg bg-white border border-[#009EE3]/40 text-[#009EE3] text-[11px] font-bold flex items-center gap-1.5 shadow-xs">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Mercado Pago Oficial</span>
-                </div>
+              <div className="pt-1">
+                <span className="text-[11px] text-[#7A7067] font-medium">
+                  Atención exclusiva con cita previa
+                </span>
               </div>
             </div>
 
@@ -48,13 +47,25 @@ export const Footer: React.FC = () => {
               <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
                 Ubicación & Contacto
               </h4>
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#C8933E] shrink-0 mt-0.5" />
-                <span className="text-[#3D352E]">{SALON_INFO.address}</span>
+              <div className="space-y-1">
+                <div className="flex items-start gap-2.5">
+                  <MapPin className="w-4 h-4 text-[#C8933E] shrink-0 mt-0.5" />
+                  <span className="text-[#3D352E]">{SALON_INFO.address}</span>
+                </div>
+                <div className="pl-6.5">
+                  <a
+                    href={SALON_INFO.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-[#A87428] hover:text-[#231E1B] font-semibold underline underline-offset-2 transition-colors"
+                  >
+                    <span>Cómo llegar en Google Maps</span>
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#68794E] shrink-0" />
-                <a href={`tel:${SALON_INFO.phone}`} className="text-[#3D352E] hover:text-[#C8933E] font-medium transition-colors">
+                <a href={SALON_INFO.phoneCall} className="text-[#3D352E] hover:text-[#C8933E] font-medium transition-colors">
                   {SALON_INFO.phone}
                 </a>
               </div>
@@ -76,29 +87,28 @@ export const Footer: React.FC = () => {
             {/* Column 3: Horarios de Atención */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
-                Horarios de Estudio
+                Horario de Estudio
               </h4>
               <div className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#68794E] shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="text-[#231E1B] font-bold">Lunes a Sábado:</p>
-                  <p className="text-[#3D352E]">9:00 AM – 8:00 PM</p>
-                  <p className="text-[#231E1B] font-bold pt-1">Domingos:</p>
-                  <p className="text-[#3D352E]">Atención exclusiva previa cita</p>
+                  <p className="text-[#231E1B] font-bold">Atención general:</p>
+                  <p className="text-[#3D352E]">{SALON_INFO.schedule}</p>
+                  <p className="text-[11px] text-[#7A7067] pt-1">Previa cita programada</p>
                 </div>
               </div>
             </div>
 
-            {/* Column 4: Políticas & Seguridad */}
+            {/* Column 4: Reservas & Formas de Pago */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
-                Garantías & Políticas
+                Reservas & Pagos
               </h4>
               <ul className="space-y-1.5 text-[11px] text-[#554C44]">
-                <li>• Diagnóstico capilar sin costo en tu servicio.</li>
-                <li>• Reprogramación flexible con 24 hrs de antelación.</li>
-                <li>• Cobros procesados en MXN vía Mercado Pago.</li>
-                <li>• Protocolos de higiene y sanitización continua.</li>
+                <li>• Anticipo del 50% sobre el precio mínimo para reservar.</li>
+                <li>• Formas de pago: efectivo, transferencia bancaria y terminal en el salón.</li>
+                <li>• Solicita cambios con al menos 24 hrs de anticipación.</li>
+                <li>• Los anticipos no son reembolsables.</li>
               </ul>
             </div>
           </div>

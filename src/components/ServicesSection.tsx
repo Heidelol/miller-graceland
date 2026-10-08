@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown } from 'lucide-react';
+import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, Sparkles, Palette, Layers, MessageCircle } from 'lucide-react';
 import { SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory, ServiceItem } from '../types/salon';
 
@@ -35,7 +35,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-block max-w-full px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider sm:tracking-widest text-[#42502E]">
               {SALON_INFO.tagline}
@@ -47,27 +47,100 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
             {SALON_INFO.servicesIntro}
           </p>
+        </div>
 
-          {/* Category Filter Pills (Solid palette colors, no emojis, accessible focus) */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8">
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat.key;
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => setActiveCategory(cat.key)}
-                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
-                    isActive
-                      ? 'bg-[#68794E] text-white shadow-xs'
-                      : 'bg-white text-[#5C534B] border border-[#99745A]/20 hover:border-[#68794E] hover:text-[#231E1B]'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
+        {/* Commercial Priorities Access Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto mb-12">
+          {/* 1. Tratamientos Capilares (WhatsApp CTA) */}
+          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center mb-3">
+                <Sparkles className="w-5 h-5 text-[#68794E]" />
+              </div>
+              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
+                Tratamientos Capilares
+              </h3>
+              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
+                Protocolos reconstructivos y nutrición profunda adaptados al estado de tu cabello.
+              </p>
+            </div>
+            <a
+              href={SALON_INFO.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2.5 px-4 rounded-xl bg-[#68794E] hover:bg-[#576641] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Consultar Tratamientos</span>
+            </a>
           </div>
+
+          {/* 2. Tintes y Coloración (Direct filter to Color) */}
+          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-[#C8933E]/10 border border-[#C8933E]/25 flex items-center justify-center mb-3">
+                <Palette className="w-5 h-5 text-[#C8933E]" />
+              </div>
+              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
+                Tintes y Coloración
+              </h3>
+              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
+                Balayage, diseño de color, rubios personalizados y retoque de color con K18.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveCategory('color')}
+              className="w-full py-2.5 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            >
+              <span>Ver Servicios de Color</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#C8933E]" />
+            </button>
+          </div>
+
+          {/* 3. Extensiones de Cabello Humano (Direct filter to Extensions) */}
+          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center mb-3">
+                <Layers className="w-5 h-5 text-[#68794E]" />
+              </div>
+              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
+                Extensiones de Cabello Humano
+              </h3>
+              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
+                100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveCategory('extensions')}
+              className="w-full py-2.5 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            >
+              <span>Ver Extensiones</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#68794E]" />
+            </button>
+          </div>
+        </div>
+
+        {/* Category Filter Pills (Solid palette colors, no emojis, accessible focus) */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.key;
+            return (
+              <button
+                key={cat.key}
+                type="button"
+                onClick={() => setActiveCategory(cat.key)}
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
+                  isActive
+                    ? 'bg-[#68794E] text-white shadow-xs'
+                    : 'bg-white text-[#5C534B] border border-[#99745A]/20 hover:border-[#68794E] hover:text-[#231E1B]'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Services Grid (Natural row heights per row, no global auto-rows-fr) */}
@@ -135,7 +208,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
                       {/* 5. Anticipo del 50% sobre el precio mínimo */}
                       <div className="flex items-center gap-1.5 text-xs text-[#5C534B] pt-0.5">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#009EE3] shrink-0" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#68794E] shrink-0" />
                         <span>Anticipo del 50%: ${service.depositMXN.toLocaleString('es-MX')} MXN</span>
                       </div>
                       <p className="text-[10px] text-[#7A7067]">

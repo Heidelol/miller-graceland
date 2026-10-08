@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { 
-  X, Clock, User, CheckCircle2, 
-  ShieldCheck, CreditCard, ChevronRight, 
-  Phone, Mail, ArrowLeft, ExternalLink
+import {
+  X, Clock, User, CheckCircle2,
+  ChevronRight,
+  Phone, Mail, ArrowLeft, MessageCircle,
+  Sparkles, HelpCircle, AlertCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceItem } from '../types/salon';
+import type { AdminBooking } from '../types/admin';
+import { loadBookingsFromStorage, saveBookingsToStorage } from '../lib/adminStorage';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -20,7 +23,7 @@ const generateDates = () => {
   for (let i = 1; i <= 10; i++) {
     const nextDate = new Date(today);
     nextDate.setDate(today.getDate() + i);
-    // Skip Sundays if closed
+    // Sundays closed as per general salon operation
     const isSunday = nextDate.getDay() === 0;
     dates.push({
       fullDate: nextDate.toISOString().split('T')[0],
@@ -34,6 +37,19 @@ const generateDates = () => {
 };
 
 const DATES_LIST = generateDates();
+
+type StepId = 'service' | 'hair' | 'schedule' | 'contact' | 'summary' | 'success';
+
+function convertTo24Hour(timeStr: string): string {
+  const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+  if (!match) return '11:00';
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const period = match[3]?.toUpperCase();
+  if (period === 'PM' && hours < 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+  return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
 
 export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
@@ -52,6 +68,17 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     }
   }, [selectedService.id]);
 
+  const isColorService = selectedService.category === 'color' || selectedService.category === 'blondes';
+
+  // Hair Profile questionnaire (for Color & Blondes only)
+  const [currentColor, setCurrentColor] = useState('');
+  const [desiredResult, setDesiredResult] = useState('');
+  const [hairLength, setHairLength] = useState<'corto' | 'medio' | 'largo'>('medio');
+  const [previousColoring, setPreviousColoring] = useState<'si' | 'no' | 'no_se'>('no');
+  const [lastProcessDetails, setLastProcessDetails] = useState('');
+  const [additionalComments, setAdditionalComments] = useState('');
+
+  // Date & Time
   const datesList = DATES_LIST;
   const [selectedDate, setSelectedDate] = useState<string>(datesList[0].fullDate);
   const [selectedTime, setSelectedTime] = useState<string>('11:00 AM');
@@ -62,74 +89,174 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [clientPhone, setClientPhone] = useState('');
   const [notes, setNotes] = useState('');
 
-  // Payment configuration
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [bookingCompleted, setBookingCompleted] = useState(false);
+  // Booking result
   const [bookingCode, setBookingCode] = useState('');
-
-  // Step tracker (1: Servicio/Estilista, 2: Fecha/Hora, 3: Datos, 4: Mercado Pago, 5: Exito)
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<StepId>('service');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
+  // Operating hours: 11:00 a. m. a 7:00 p. m.
   const timeSlots = [
-    '09:30 AM', '11:00 AM', '12:30 PM', 
-    '02:30 PM', '04:00 PM', '05:30 PM', '07:00 PM'
+    '11:00 AM', '12:30 PM', '02:00 PM', 
+    '03:30 PM', '05:00 PM', '06:00 PM'
   ];
 
   const amountToPay = selectedService.depositMXN;
 
-  const handleNextStep = () => {
-    if (currentStep === 3) {
-      if (!clientName.trim() || !clientEmail.trim() || !clientPhone.trim()) {
-        alert('Por favor completa tu nombre, correo y teléfono.');
-        return;
-      }
+  // Step definitions
+  const stepList: { id: StepId; label: string; number: number }[] = isColorService
+    ? [
+        { id: 'service', label: 'Servicio', number: 1 },
+        { id: 'hair', label: 'Tu Cabello', number: 2 },
+        { id: 'schedule', label: 'Horario', number: 3 },
+        { id: 'contact', label: 'Contacto', number: 4 },
+        { id: 'summary', label: 'Resumen', number: 5 },
+      ]
+    : [
+        { id: 'service', label: 'Servicio', number: 1 },
+        { id: 'schedule', label: 'Horario', number: 2 },
+        { id: 'contact', label: 'Contacto', number: 3 },
+        { id: 'summary', label: 'Resumen', number: 4 },
+      ];
+
+  const currentStepNumber = stepList.find((s) => s.id === currentStep)?.number || 1;
+
+  const handleNextFromService = () => {
+    setValidationError(null);
+    if (isColorService) {
+      setCurrentStep('hair');
+    } else {
+      setCurrentStep('schedule');
     }
-    setCurrentStep((prev) => Math.min(prev + 1, 4));
   };
 
-  const handleProcessMercadoPago = () => {
-    setIsProcessingPayment(true);
+  const handleNextFromHair = () => {
+    if (!currentColor.trim()) {
+      setValidationError('Por favor indica tu color actual de cabello.');
+      return;
+    }
+    if (!desiredResult.trim()) {
+      setValidationError('Por favor indica el resultado que estás buscando.');
+      return;
+    }
+    setValidationError(null);
+    setCurrentStep('schedule');
+  };
 
-    setTimeout(() => {
-      const code = `MG-${Math.floor(1000 + Math.random() * 9000)}`;
-      setBookingCode(code);
-      setIsProcessingPayment(false);
-      setBookingCompleted(true);
-      setCurrentStep(5);
+  const handleNextFromSchedule = () => {
+    setValidationError(null);
+    setCurrentStep('contact');
+  };
 
-      // Trigger celebration confetti
-      try {
-        confetti({
-          particleCount: 90,
-          spread: 75,
-          origin: { y: 0.6 },
-          colors: ['#DFAC58', '#C8933E', '#68794E', '#99745A', '#F8F5EE']
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }, 1800);
+  const handleNextFromContact = () => {
+    if (!clientName.trim() || !clientEmail.trim() || !clientPhone.trim()) {
+      setValidationError('Por favor completa tu nombre, correo electrónico y teléfono / WhatsApp.');
+      return;
+    }
+    setValidationError(null);
+    setCurrentStep('summary');
+  };
+
+  const handleBack = () => {
+    setValidationError(null);
+    if (currentStep === 'hair') {
+      setCurrentStep('service');
+    } else if (currentStep === 'schedule') {
+      setCurrentStep(isColorService ? 'hair' : 'service');
+    } else if (currentStep === 'contact') {
+      setCurrentStep('schedule');
+    } else if (currentStep === 'summary') {
+      setCurrentStep('contact');
+    }
+  };
+
+  const handleFinalizeBooking = () => {
+    const code = `MG-${Math.floor(1000 + Math.random() * 9000)}`;
+    setBookingCode(code);
+
+    // Persist new booking as pending_payment in demo storage so it appears in /admin-demo
+    try {
+      const { bookings: existing } = loadBookingsFromStorage();
+      const newBooking: AdminBooking = {
+        id: code,
+        clientName: clientName.trim(),
+        clientPhone: clientPhone.trim(),
+        clientEmail: clientEmail.trim() || undefined,
+        serviceId: selectedService.id,
+        serviceName: selectedService.name,
+        date: selectedDate,
+        time: convertTo24Hour(selectedTime),
+        durationMinutes: selectedService.durationMinutes,
+        status: 'pending_payment',
+        requiredDepositMXN: selectedService.depositMXN,
+        receivedDepositMXN: 0,
+        finalPriceMXN: selectedService.priceMXN,
+        createdAt: new Date().toISOString(),
+        notes: notes.trim() || undefined,
+        hairProfile: isColorService ? {
+          currentColor: currentColor.trim(),
+          desiredResult: desiredResult.trim(),
+          hairLength,
+          previousColoring,
+          lastProcessDetails: lastProcessDetails.trim() || undefined,
+          additionalComments: additionalComments.trim() || undefined,
+        } : undefined,
+      };
+
+      saveBookingsToStorage([newBooking, ...existing]);
+    } catch (e) {
+      console.warn('No se pudo guardar la reserva en almacenamiento local:', e);
+    }
+
+    setCurrentStep('success');
+
+    // Trigger celebration confetti
+    try {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#DFAC58', '#C8933E', '#68794E', '#99745A', '#F8F5EE']
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleResetAndClose = () => {
-    setBookingCompleted(false);
-    setCurrentStep(1);
+    setCurrentStep('service');
     onClose();
   };
 
   const getWhatsAppMessageUrl = () => {
-    const text = encodeURIComponent(
-      `¡Hola Miller Greiseland! Acabo de agendar una cita por la página web:\n\n` +
-      `📋 Código: ${bookingCode}\n` +
+    let msg = `¡Hola Miller Greiseland! Deseo solicitar una cita previa:\n\n` +
+      `📋 Código de solicitud: ${bookingCode || 'Pendiente'}\n` +
       `✨ Servicio: ${selectedService.name}\n` +
-      `📅 Fecha: ${selectedDate} a las ${selectedTime}\n` +
-      `💳 Anticipo del 50% del precio mínimo: $${amountToPay} MXN\n` +
-      `El precio final y el saldo se confirman en el salón.\n` +
-      `🙋‍♀️ Cliente: ${clientName} (${clientPhone})`
-    );
-    return `https://wa.me/${SALON_INFO.whatsapp}?text=${text}`;
+      `📅 Fecha solicitada: ${selectedDate} a las ${selectedTime} (sujeta a confirmación)\n` +
+      `💳 Anticipo requerido (50%): $${amountToPay.toLocaleString('es-MX')} MXN\n` +
+      `Nota: El saldo final se confirma en el salón tras la valoración.\n\n` +
+      `🙋‍♀️ Clienta: ${clientName} (${clientPhone})\n` +
+      `✉️ Correo: ${clientEmail}\n`;
+
+    if (isColorService) {
+      const prevColorText = previousColoring === 'si' ? 'Sí' : previousColoring === 'no' ? 'No' : 'No lo sé';
+      msg += `\n💇‍♀️ Diagnóstico sobre mi cabello:\n` +
+        `• Color actual: ${currentColor}\n` +
+        `• Resultado que busco: ${desiredResult}\n` +
+        `• Largo aproximado: ${hairLength}\n` +
+        `• Coloración/decoloración previa: ${prevColorText}\n` +
+        (lastProcessDetails ? `• Último proceso y fecha: ${lastProcessDetails}\n` : '') +
+        (additionalComments ? `• Comentarios adicionales: ${additionalComments}\n` : '');
+    }
+
+    if (notes) {
+      msg += `\n📝 Notas adicionales: ${notes}\n`;
+    }
+
+    msg += `\nQuedo atenta para confirmar el horario y recibir los datos de pago del anticipo. ¡Gracias!`;
+
+    return `https://wa.me/${SALON_INFO.whatsapp}?text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -139,7 +266,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         {/* Header with Luxury Accent & Official Logo */}
         <div className="bg-[#F8F5EE] border-b border-[#99745A]/15 p-5 sm:p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full border border-[#C8933E]/50 bg-white p-1 flex items-center justify-center shadow-xs overflow-hidden">
+            <div className="w-11 h-11 rounded-full border border-[#C8933E]/50 bg-white p-1 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
               <img
                 src="/logo-miller.png"
                 alt="Miller Greiseland"
@@ -151,46 +278,61 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             </div>
             <div>
               <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B]">
-                {bookingCompleted ? '¡Cita Confirmada!' : 'Reserva de Cita en Línea'}
+                {currentStep === 'success' ? 'Solicitud Registrada' : 'Solicitar Cita en Miller Greiseland'}
               </h3>
               <p className="text-xs text-[#6B6158]">
-                {bookingCompleted 
-                  ? 'Tu espacio en Miller Greiseland ha sido asegurado' 
-                  : 'Pasarela oficial respaldada por Mercado Pago (MXN)'}
+                {currentStep === 'success'
+                  ? 'Cita pendiente de confirmación por el salón'
+                  : 'Fecha y horario solicitados · Confirmación y anticipo previo'}
               </p>
             </div>
           </div>
 
           <button
             onClick={handleResetAndClose}
-            className="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 text-[#6B6158] hover:text-[#231E1B] flex items-center justify-center transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 text-[#6B6158] hover:text-[#231E1B] flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            aria-label="Cerrar modal de reserva"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Step Progress Tracker (Only if not completed) */}
-        {!bookingCompleted && (
-          <div className="px-6 py-3 bg-[#FAF7F2] border-b border-[#99745A]/10 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 1 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>1</span>
-              <span className={currentStep === 1 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Servicio</span>
-            </div>
-            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 2 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>2</span>
-              <span className={currentStep === 2 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Horario</span>
-            </div>
-            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 3 ? 'bg-[#C8933E] text-[#231E1B]' : 'bg-black/10 text-black/50'}`}>3</span>
-              <span className={currentStep === 3 ? 'text-[#A87428] font-bold' : 'text-[#8F8378]'}>Contacto</span>
-            </div>
-            <ChevronRight className="w-3.5 h-3.5 text-black/20" />
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${currentStep >= 4 ? 'bg-[#009EE3] text-white' : 'bg-black/10 text-black/50'}`}>4</span>
-              <span className={currentStep === 4 ? 'text-[#009EE3] font-bold' : 'text-[#8F8378]'}>Mercado Pago</span>
-            </div>
+        {currentStep !== 'success' && (
+          <div className="px-4 sm:px-6 py-3 bg-[#FAF7F2] border-b border-[#99745A]/10 flex items-center justify-between text-xs overflow-x-auto">
+            {stepList.map((step, idx) => {
+              const isCurrent = currentStep === step.id;
+              const isPast = currentStepNumber > step.number;
+              return (
+                <div key={step.id} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                      isCurrent
+                        ? 'bg-[#68794E] text-white'
+                        : isPast
+                        ? 'bg-[#C8933E] text-[#231E1B]'
+                        : 'bg-black/10 text-black/50'
+                    }`}
+                  >
+                    {step.number}
+                  </span>
+                  <span
+                    className={`text-xs ${
+                      isCurrent
+                        ? 'text-[#42502E] font-bold'
+                        : isPast
+                        ? 'text-[#231E1B] font-medium'
+                        : 'text-[#8F8378]'
+                    }`}
+                  >
+                    {step.label}
+                  </span>
+                  {idx < stepList.length - 1 && (
+                    <ChevronRight className="w-3.5 h-3.5 text-black/20 mx-1 shrink-0" />
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -198,11 +340,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="p-6 max-h-[72vh] overflow-y-auto bg-white">
 
           {/* STEP 1: SERVICE SELECTION */}
-          {currentStep === 1 && (
+          {currentStep === 'service' && (
             <div className="space-y-6">
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  Confirma o cambia tu servicio:
+                  1. Confirma o cambia tu servicio:
                 </label>
                 <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
                   {SERVICES.map((s) => {
@@ -222,7 +364,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         }}
                         className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
                           isSelected
-                            ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-sm'
+                            ? 'bg-[#FFF9EE] border-[#C8933E] text-[#231E1B] shadow-xs'
                             : 'bg-[#F9F6F0] border-[#99745A]/15 text-[#5C534B] hover:border-[#C8933E]/50'
                         }`}
                       >
@@ -257,23 +399,187 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
               </div>
 
+              {isColorService && (
+                <div className="p-3.5 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center gap-2.5 text-xs text-[#3D472D]">
+                  <Sparkles className="w-4 h-4 text-[#68794E] shrink-0" />
+                  <span>
+                    Servicio de color seleccionado. A continuación te haremos unas breves preguntas sobre tu cabello para preparar tu diagnóstico.
+                  </span>
+                </div>
+              )}
+
               <button
-                onClick={() => setCurrentStep(2)}
-                className="gold-button w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                type="button"
+                onClick={handleNextFromService}
+                className="gold-button w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs"
               >
-                <span>Continuar a Selección de Fecha</span>
+                <span>{isColorService ? 'Continuar a Diagnóstico de Cabello' : 'Continuar a Selección de Horario'}</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
 
-          {/* STEP 2: DATE & TIME SELECTION */}
-          {currentStep === 2 && (
+          {/* STEP 2: HAIR PROFILE QUESTIONNAIRE (Color & Blondes Only) */}
+          {currentStep === 'hair' && isColorService && (
+            <div className="space-y-5">
+              <div className="border-b border-[#99745A]/15 pb-3">
+                <span className="text-xs font-bold text-[#68794E] uppercase tracking-wider block mb-1">
+                  Paso 2 · Diagnóstico Previo
+                </span>
+                <h4 className="font-serif-luxury text-xl font-bold text-[#231E1B]">
+                  Cuéntanos sobre tu cabello
+                </h4>
+                <p className="text-xs text-[#5C534B] mt-1 leading-relaxed">
+                  Esta información nos ayuda a prever el tiempo y los materiales adecuados para el día de tu cita.
+                </p>
+              </div>
+
+              {/* 1. Color actual */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
+                  1. Color actual de tu cabello *
+                </label>
+                <input
+                  type="text"
+                  value={currentColor}
+                  onChange={(e) => setCurrentColor(e.target.value)}
+                  placeholder="Ej. Castaño oscuro natural, rubio dorado teñido, base negra..."
+                  className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl px-3.5 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
+                />
+              </div>
+
+              {/* 2. Resultado que busca */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
+                  2. Resultado que estás buscando *
+                </label>
+                <input
+                  type="text"
+                  value={desiredResult}
+                  onChange={(e) => setDesiredResult(e.target.value)}
+                  placeholder="Ej. Balayage beige cenizo, aclarado sutil miel, cubrir canas..."
+                  className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl px-3.5 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
+                />
+              </div>
+
+              {/* 3. Largo aproximado */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1.5">
+                  3. Largo aproximado de tu cabello *
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['corto', 'medio', 'largo'] as const).map((len) => (
+                    <button
+                      key={len}
+                      type="button"
+                      onClick={() => setHairLength(len)}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold capitalize transition-all cursor-pointer ${
+                        hairLength === len
+                          ? 'bg-[#68794E] text-white border-[#68794E] shadow-xs'
+                          : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#68794E]'
+                      }`}
+                    >
+                      {len === 'corto' && 'Corto (hasta hombros)'}
+                      {len === 'medio' && 'Medio (a media espalda)'}
+                      {len === 'largo' && 'Largo (cintura o más)'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 4. Coloración o decoloración previa */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1.5">
+                  4. ¿Tienes coloración o decoloración previa? *
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['si', 'no', 'no_se'] as const).map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setPreviousColoring(val)}
+                      className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        previousColoring === val
+                          ? 'bg-[#C8933E] text-[#231E1B] border-[#C8933E] shadow-xs'
+                          : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#C8933E]'
+                      }`}
+                    >
+                      {val === 'si' && 'Sí'}
+                      {val === 'no' && 'No (cabello virgen)'}
+                      {val === 'no_se' && 'No lo sé'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 5. Último proceso realizado */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
+                  5. Último proceso realizado y fecha aproximada (si lo conoces)
+                </label>
+                <input
+                  type="text"
+                  value={lastProcessDetails}
+                  onChange={(e) => setLastProcessDetails(e.target.value)}
+                  placeholder="Ej. Tinte en casa hace 3 meses / Decoloración en salón hace 6 meses"
+                  className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl px-3.5 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
+                />
+              </div>
+
+              {/* 6. Comentarios adicionales */}
+              <div>
+                <label className="block text-xs font-bold text-[#4A423B] mb-1">
+                  6. Comentarios adicionales sobre tu cabello (Opcional)
+                </label>
+                <textarea
+                  value={additionalComments}
+                  onChange={(e) => setAdditionalComments(e.target.value)}
+                  rows={2}
+                  placeholder="Ej. Siento las puntas secas, tengo restos de keratina, etc."
+                  className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl p-3 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
+                />
+              </div>
+
+              {validationError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="w-1/3 py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/25 hover:bg-black/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Volver</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextFromHair}
+                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                >
+                  <span>Continuar a Horario</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3 (or 2 for cuts/extensions): SCHEDULE SELECTION */}
+          {currentStep === 'schedule' && (
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  1. Selecciona la fecha de tu visita:
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider">
+                    Fecha solicitada de tu visita:
+                  </label>
+                  <span className="text-[11px] text-[#A87428] font-semibold">
+                    Sujeto a confirmación
+                  </span>
+                </div>
                 <div className="grid grid-cols-5 sm:grid-cols-7 gap-2">
                   {datesList.map((d) => {
                     const isSelected = selectedDate === d.fullDate;
@@ -311,9 +617,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  2. Horarios disponibles para {selectedDate}:
+                  Horario solicitado para {selectedDate}:
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   {timeSlots.map((slot) => {
                     const isSelected = selectedTime === slot;
                     return (
@@ -333,19 +639,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     );
                   })}
                 </div>
+                <p className="text-[11px] text-[#7A7067] mt-2 flex items-center gap-1.5">
+                  <HelpCircle className="w-3.5 h-3.5 text-[#A87428] shrink-0" />
+                  <span>
+                    El horario seleccionado es una solicitud. El salón confirmará la disponibilidad exacta antes de formalizar la cita.
+                  </span>
+                </p>
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button
-                  onClick={() => setCurrentStep(1)}
+                  type="button"
+                  onClick={handleBack}
                   className="w-1/3 py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/25 hover:bg-black/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Volver</span>
                 </button>
                 <button
-                  onClick={() => setCurrentStep(3)}
-                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  type="button"
+                  onClick={handleNextFromSchedule}
+                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
                   <span>Continuar a tus Datos</span>
                   <ChevronRight className="w-4 h-4" />
@@ -354,8 +668,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             </div>
           )}
 
-          {/* STEP 3: CONTACT INFORMATION */}
-          {currentStep === 3 && (
+          {/* STEP 4 (or 3): CONTACT INFORMATION */}
+          {currentStep === 'contact' && (
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] mb-1">
@@ -392,7 +706,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-[#4A423B] mb-1">
-                    Teléfono / WhatsApp (México) *
+                    Teléfono / WhatsApp *
                   </label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-[#8C8278] absolute left-3.5 top-3.5" />
@@ -400,7 +714,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       type="tel"
                       value={clientPhone}
                       onChange={(e) => setClientPhone(e.target.value)}
-                      placeholder="55 1234 5678"
+                      placeholder="983 137 3038"
                       className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl pl-10 pr-4 py-2.5 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                     />
                   </div>
@@ -409,53 +723,63 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-[#4A423B] mb-1">
-                  Notas adicionales o especificaciones (Opcional)
+                  Notas adicionales (Opcional)
                 </label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
-                  placeholder="Ej. Cabello teñido previamente de negro, me gustaría asesoría en tono miel..."
+                  placeholder="Detalles sobre tu disponibilidad o requerimientos especiales..."
                   className="w-full bg-[#F9F6F0] border border-[#99745A]/25 rounded-xl p-3 text-sm text-[#231E1B] placeholder-gray-400 focus:border-[#C8933E] focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center gap-3 text-xs text-[#3D472D]">
-                <ShieldCheck className="w-5 h-5 text-[#68794E] shrink-0" />
+                <Clock className="w-4 h-4 text-[#68794E] shrink-0" />
                 <span>
-                  Tus datos están protegidos. Recibirás tu confirmación de cita en tu correo y WhatsApp.
+                  Horario de atención del salón: 11:00 a. m. a 7:00 p. m.
                 </span>
               </div>
 
+              {validationError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+
               <div className="flex gap-3 pt-2">
                 <button
-                  onClick={() => setCurrentStep(2)}
+                  type="button"
+                  onClick={handleBack}
                   className="w-1/3 py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/25 hover:bg-black/5 transition-all flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Volver</span>
                 </button>
                 <button
-                  onClick={handleNextStep}
-                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  type="button"
+                  onClick={handleNextFromContact}
+                  className="gold-button w-2/3 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <span>Ir a Pasarela de Pago</span>
+                  <span>Revisar Resumen y Pagos</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
           )}
 
-          {/* STEP 4: MERCADO PAGO CHECKOUT */}
-          {currentStep === 4 && (
-            <div className="space-y-6">
-              {/* Summary box */}
-              <div className="bg-[#FAF7F2] border border-[#99745A]/20 rounded-2xl p-4">
+          {/* STEP 5 (or 4): SUMMARY & PAYMENT INFORMATION */}
+          {currentStep === 'summary' && (
+            <div className="space-y-5">
+              
+              {/* Service & Schedule Summary */}
+              <div className="bg-[#FAF7F2] border border-[#99745A]/20 rounded-2xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="text-sm font-bold text-[#231E1B]">{selectedService.name}</h4>
                     <p className="text-xs text-[#A87428] font-bold mt-0.5">
-                      {selectedDate} a las {selectedTime}
+                      Fecha solicitada: {selectedDate} a las {selectedTime}
                     </p>
                     <span className="text-[11px] text-[#68794E] font-semibold flex items-center gap-1 mt-1">
                       <Clock className="w-3 h-3 text-[#68794E]" />
@@ -463,85 +787,101 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-[#7A7067] block">Precio / Rango</span>
+                    <span className="text-[10px] text-[#7A7067] uppercase font-bold block">Precio publicado</span>
                     <span className="text-base font-black text-[#231E1B]">
                       {selectedService.priceDisplay} MXN
                     </span>
                   </div>
                 </div>
+
+                <div className="border-t border-[#99745A]/15 pt-2 flex justify-between items-center text-xs text-[#5C534B]">
+                  <span>Clienta: <strong className="text-[#231E1B]">{clientName}</strong> ({clientPhone})</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#FAF0D9] text-[#8A5F20] text-[10px] font-bold">
+                    Pendiente de confirmación
+                  </span>
+                </div>
               </div>
 
-              {/* Reservation deposit based on the published minimum */}
-              <div>
-                <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
-                  Reserva con un anticipo del 50%:
-                </label>
-                <div className="p-4 rounded-2xl border bg-[#F0F6FA] border-[#009EE3] text-[#231E1B] shadow-sm">
-                  <p className="text-xs font-bold text-[#231E1B]">Anticipo para reservar</p>
-                  <div className="mt-2 flex items-baseline gap-1">
+              {/* Hair Profile Summary (if Color) */}
+              {isColorService && currentColor && (
+                <div className="p-3.5 rounded-xl bg-[#FAF7F2] border border-[#99745A]/15 text-xs space-y-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#68794E] block">
+                    Diagnóstico de cabello incluido:
+                  </span>
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
+                    <div><span className="text-[#7A7067]">Color actual:</span> <strong className="text-[#231E1B]">{currentColor}</strong></div>
+                    <div><span className="text-[#7A7067]">Resultado:</span> <strong className="text-[#231E1B]">{desiredResult}</strong></div>
+                    <div><span className="text-[#7A7067]">Largo:</span> <strong className="text-[#231E1B] capitalize">{hairLength}</strong></div>
+                    <div><span className="text-[#7A7067]">Coloración previa:</span> <strong className="text-[#231E1B]">{previousColoring === 'si' ? 'Sí' : previousColoring === 'no' ? 'No' : 'No lo sé'}</strong></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Anticipo requerido del 50% */}
+              <div className="p-4 rounded-2xl border bg-[#F8F5EE] border-[#C8933E]/40 text-[#231E1B]">
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <span className="text-xs font-bold text-[#68794E] uppercase tracking-wider">Anticipo requerido (50%)</span>
+                  <div className="flex items-baseline gap-1">
                     <span className="text-xl font-black text-[#231E1B]">
                       ${amountToPay.toLocaleString('es-MX')}
                     </span>
-                    <span className="text-xs font-bold text-[#231E1B]">MXN</span>
+                    <span className="text-xs font-bold text-[#A87428]">MXN</span>
                   </div>
-                  <p className="text-xs text-[#5C534B] mt-2 leading-relaxed">
-                    El anticipo se calcula sobre el precio mínimo publicado (${selectedService.priceMXN.toLocaleString('es-MX')} MXN).
-                    El precio final se confirma después de la valoración en el salón, según las condiciones y cargos adicionales del servicio.
+                </div>
+                <p className="text-xs text-[#5C534B] leading-relaxed">
+                  Calculado sobre el precio mínimo publicado (${selectedService.priceMXN.toLocaleString('es-MX')} MXN). Para servicios con rango, el precio final y el saldo por liquidar se confirman en el salón tras la valoración técnica.
+                </p>
+              </div>
+
+              {/* Formas de Pago Reales */}
+              <div className="p-4 rounded-2xl bg-white border border-[#99745A]/20 space-y-2.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
+                  Formas de pago confirmadas:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                  <div className="p-2.5 rounded-xl bg-[#F9F6F0] border border-[#99745A]/15">
+                    <p className="font-bold text-[#231E1B]">1. Efectivo</p>
+                    <p className="text-[11px] text-[#7A7067]">En el salón</p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F9F6F0] border border-[#99745A]/15">
+                    <p className="font-bold text-[#231E1B]">2. Transferencia</p>
+                    <p className="text-[11px] text-[#7A7067]">Datos por WhatsApp</p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F9F6F0] border border-[#99745A]/15">
+                    <p className="font-bold text-[#231E1B]">3. Terminal</p>
+                    <p className="text-[11px] text-[#7A7067]">Bancaria en salón</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Política de cancelación y anticipos */}
+              <div className="p-3.5 rounded-xl bg-[#FFF9EE] border border-[#C8933E]/30 text-xs text-[#8A5F20] flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-[#C8933E] shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-bold text-[#231E1B]">
+                    Política de cambios y anticipos:
                   </p>
-                  <p className="text-xs text-[#5C534B] mt-2 leading-relaxed">
-                    Tu saldo será el precio final confirmado menos los ${amountToPay.toLocaleString('es-MX')} MXN de anticipo.
-                    Se liquida el día de tu servicio.
+                  <p className="text-[#6D4C1B]">
+                    Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.
                   </p>
                 </div>
               </div>
 
-              {/* Mercado Pago Badge and Payment methods */}
-              <div className="p-4 rounded-2xl bg-[#009EE3]/10 border border-[#009EE3]/30">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-[#009EE3] flex items-center justify-center font-bold text-white text-xs">
-                      MP
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-[#231E1B]">Mercado Pago México</p>
-                      <p className="text-[10px] text-[#009EE3] font-semibold">Procesamiento Seguro 256-bit SSL</p>
-                    </div>
-                  </div>
-                  <span className="text-[11px] text-[#A87428] font-bold">
-                    3 y 6 MSI disponibles
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-[11px] text-[#554C44]">
-                  <CreditCard className="w-4 h-4 text-[#009EE3]" />
-                  <span>Acepta Visa, Mastercard, AMEX, Dinero en MP y Efectivo en OXXO</span>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3 pt-2">
+              {/* Primary action */}
+              <div className="space-y-2.5 pt-1">
                 <button
-                  disabled={isProcessingPayment}
-                  onClick={handleProcessMercadoPago}
-                  className="w-full py-4 rounded-xl text-sm font-bold uppercase tracking-wider bg-[#009EE3] hover:bg-[#0089C7] text-white flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg shadow-[#009EE3]/25 disabled:opacity-50"
+                  type="button"
+                  onClick={handleFinalizeBooking}
+                  className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#68794E] hover:bg-[#576641] text-white flex items-center justify-center gap-2 cursor-pointer transition-all shadow-xs"
                 >
-                  {isProcessingPayment ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Conectando con Mercado Pago...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <span>Pagar ${amountToPay.toLocaleString('es-MX')} MXN con Mercado Pago</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </>
-                  )}
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Registrar Solicitud de Cita</span>
                 </button>
 
                 <button
-                  onClick={() => setCurrentStep(3)}
-                  disabled={isProcessingPayment}
-                  className="w-full py-2.5 rounded-xl text-xs font-bold text-[#8C8278] hover:text-[#231E1B] transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  type="button"
+                  onClick={handleBack}
+                  className="w-full py-2 rounded-xl text-xs font-bold text-[#8C8278] hover:text-[#231E1B] transition-colors flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Modificar datos de contacto</span>
@@ -550,39 +890,39 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             </div>
           )}
 
-          {/* STEP 5: SUCCESS CONFIRMATION */}
-          {currentStep === 5 && (
-            <div className="text-center py-4 space-y-6">
-              <div className="w-16 h-16 rounded-full bg-[#68794E]/15 border border-[#68794E] flex items-center justify-center mx-auto text-[#68794E] shadow-sm">
+          {/* STEP 6: SUCCESS CONFIRMATION */}
+          {currentStep === 'success' && (
+            <div className="text-center py-2 space-y-5">
+              <div className="w-16 h-16 rounded-full bg-[#68794E]/15 border border-[#68794E] flex items-center justify-center mx-auto text-[#68794E] shadow-xs">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
 
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-[#68794E]">
-                  Pago Aprobado con Mercado Pago
+                  Solicitud Registrada
                 </span>
-                <h3 className="font-serif-luxury text-3xl font-bold text-[#231E1B] mt-1">
-                  ¡Te esperamos, {clientName.split(' ')[0]}!
+                <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#231E1B] mt-1">
+                  ¡Gracias, {clientName.split(' ')[0]}!
                 </h3>
-                <p className="text-xs text-[#6B6158] mt-1">
-                  Hemos enviado los detalles completos a <strong>{clientEmail}</strong>
+                <p className="text-xs text-[#6B6158] mt-1 max-w-md mx-auto leading-relaxed">
+                  Tu solicitud ha sido registrada como <strong>pendiente de confirmación</strong>. Para formalizar el horario y cubrir el anticipo, envía la solicitud directamente por WhatsApp:
                 </p>
               </div>
 
               {/* Booking Ticket Card */}
-              <div className="bg-[#FAF7F2] border border-[#C8933E]/40 rounded-2xl p-5 text-left max-w-md mx-auto space-y-3 relative overflow-hidden shadow-sm">
-                <div className="absolute top-0 right-0 bg-[#C8933E] text-[#231E1B] text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl shadow-xs">
-                  Confirmada
+              <div className="bg-[#FAF7F2] border border-[#C8933E]/40 rounded-2xl p-5 text-left max-w-md mx-auto space-y-3 relative overflow-hidden shadow-xs">
+                <div className="absolute top-0 right-0 bg-[#FAF0D9] text-[#8A5F20] border-b border-l border-[#C8933E]/30 text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl">
+                  Pendiente de confirmación
                 </div>
 
                 <div className="flex justify-between items-baseline">
                   <div>
-                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Código de Cita</span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Código de Solicitud</span>
                     <p className="font-mono text-lg font-black text-[#A87428]">{bookingCode}</p>
                   </div>
-                  <div className="text-right pr-14">
-                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Monto Pagado</span>
-                    <p className="text-sm font-black text-[#231E1B]">${amountToPay} MXN (MP)</p>
+                  <div className="text-right pr-28">
+                    <span className="text-[10px] uppercase tracking-wider text-[#8C8278] font-bold">Anticipo Requerido</span>
+                    <p className="text-sm font-black text-[#231E1B]">${amountToPay.toLocaleString('es-MX')} MXN</p>
                   </div>
                 </div>
 
@@ -592,31 +932,37 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     <span className="font-bold text-[#231E1B]">{selectedService.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#7A7067]">Fecha y Hora:</span>
-                    <span className="font-bold text-[#231E1B]">{selectedDate} - {selectedTime}</span>
+                    <span className="text-[#7A7067]">Fecha solicitada:</span>
+                    <span className="font-bold text-[#231E1B]">{selectedDate} · {selectedTime}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#7A7067]">Ubicación:</span>
-                    <span className="font-bold text-[#231E1B]">{SALON_INFO.address}</span>
+                    <span className="text-[#7A7067]">Dirección del salón:</span>
+                    <span className="font-bold text-[#231E1B] text-right max-w-[65%]">{SALON_INFO.address}</span>
                   </div>
                 </div>
               </div>
 
-              {/* WhatsApp confirmation CTA */}
-              <div className="space-y-3 max-w-md mx-auto">
+              {/* Cancellation policy reminder */}
+              <div className="p-3 rounded-xl bg-[#FAF7F2] border border-[#99745A]/15 text-[11px] text-[#6B6158] max-w-md mx-auto text-left">
+                <strong>Recordatorio:</strong> Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.
+              </div>
+
+              {/* WhatsApp direct CTA */}
+              <div className="space-y-2.5 max-w-md mx-auto">
                 <a
                   href={getWhatsAppMessageUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#25D366] hover:bg-[#20BE5A] text-black flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all"
+                  className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#25D366] hover:bg-[#20BE5A] text-black flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span>Enviar Cita al WhatsApp del Salón</span>
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Enviar Solicitud por WhatsApp</span>
                 </a>
 
                 <button
+                  type="button"
                   onClick={handleResetAndClose}
-                  className="w-full py-3 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/20 hover:bg-black/5 transition-all cursor-pointer"
+                  className="w-full py-2.5 rounded-xl text-xs font-bold text-[#5C534B] border border-[#99745A]/20 hover:bg-black/5 transition-all cursor-pointer"
                 >
                   Cerrar y Regresar al Sitio
                 </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Phone, Menu, X, ShieldCheck } from 'lucide-react';
+import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 
 interface NavbarProps {
@@ -62,9 +62,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             <a href="#conoceme" className="hover:text-[#C8933E] transition-colors">
               Conóceme
             </a>
-            <a href="#mercadopago" className="hover:text-[#009EE3] transition-colors flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#009EE3]" />
-              Pagos MP
+            <a href="#pagos" className="hover:text-[#C8933E] transition-colors">
+              Formas de pago
             </a>
             <a href="#faq" className="hover:text-[#C8933E] transition-colors">
               Preguntas
@@ -145,12 +144,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               Conóceme
             </a>
             <a
-              href="#mercadopago"
+              href="#pagos"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-[#009EE3] transition-colors flex items-center gap-2"
+              className="py-1 hover:text-[#C8933E] transition-colors"
             >
-              <ShieldCheck className="w-4 h-4 text-[#009EE3]" />
-              Pagos con Mercado Pago
+              Reservas y formas de pago
             </a>
             <a
               href="#faq"
@@ -170,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               className="gold-button w-full py-3 rounded-xl text-center text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" />
-              <span>Agendar con Mercado Pago</span>
+              <span>Reservar Cita</span>
             </button>
             <a
               href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20agendar%20cita`}

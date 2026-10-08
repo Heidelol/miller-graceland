@@ -184,7 +184,7 @@ export const AdminNewBookingModal: React.FC<AdminNewBookingModalProps> = ({
                   required
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
-                  placeholder="55 1234 5678"
+                  placeholder="983 137 3038"
                   className="w-full bg-[#FAF7F2] border border-[#99745A]/25 rounded-xl px-3.5 py-2 text-xs text-[#231E1B] focus:outline-none focus:border-[#C8933E]"
                 />
               </div>

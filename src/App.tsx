@@ -4,7 +4,7 @@ import { Hero } from './components/Hero';
 import { ServicesSection } from './components/ServicesSection';
 import { ExperienceSection } from './components/ExperienceSection';
 import { ConocemeSection } from './components/ConocemeSection';
-import { MercadoPagoBanner } from './components/MercadoPagoBanner';
+import { PaymentMethodsSection } from './components/PaymentMethodsSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
@@ -79,7 +79,7 @@ export function App() {
         <ServicesSection onSelectService={(service) => handleOpenBooking(service)} />
         <ExperienceSection />
         <ConocemeSection />
-        <MercadoPagoBanner />
+        <PaymentMethodsSection onOpenBooking={() => handleOpenBooking()} />
         {/* TestimonialsSection is hidden from public site until verified real customer reviews are available */}
         <FAQSection />
       </main>
@@ -87,7 +87,7 @@ export function App() {
       {/* Footer & Floating WhatsApp */}
       <Footer />
 
-      {/* Booking Wizard with Mercado Pago checkout */}
+      {/* Booking Wizard with reservation and diagnostic flow */}
       {isBookingOpen && (
         <BookingModal
           key={selectedService ? selectedService.id : 'default'}

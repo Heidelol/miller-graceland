@@ -1,5 +1,14 @@
 export type BookingStatus = 'pending_payment' | 'confirmed' | 'completed' | 'cancelled';
 
+export interface HairProfile {
+  currentColor?: string;
+  desiredResult?: string;
+  hairLength?: 'corto' | 'medio' | 'largo' | string;
+  previousColoring?: 'si' | 'no' | 'no_se' | string;
+  lastProcessDetails?: string;
+  additionalComments?: string;
+}
+
 export interface AdminBooking {
   id: string; // e.g. "MG-4102"
   clientName: string;
@@ -15,6 +24,7 @@ export interface AdminBooking {
   receivedDepositMXN: number;
   finalPriceMXN: number | null; // null indicates "Por confirmar"
   notes?: string;
+  hairProfile?: HairProfile;
   createdAt: string;
 }
 

@@ -81,7 +81,7 @@ function createMockLocalStorage(initialStore = {}) {
 const baseValidBooking = {
   id: 'MG-9999',
   clientName: 'Clienta de Prueba',
-  clientPhone: '55 1234 5678',
+  clientPhone: '983 137 3038',
   clientEmail: 'clienta@test.com',
   serviceId: 'balayage-rubio',
   serviceName: 'Balayage Rubio',
@@ -130,6 +130,30 @@ test('Acepta todos los 11 servicios oficiales del catálogo', () => {
     assert.ok(res !== null, `El servicio oficial ${s.id} debe ser aceptado`);
     assert.equal(res.serviceId, s.id);
   }
+});
+
+test('Preserva y sanea información previa de cabello (hairProfile) para servicios de color', () => {
+  const withHair = {
+    ...baseValidBooking,
+    hairProfile: {
+      currentColor: 'Castaño oscuro',
+      desiredResult: 'Balayage rubio beige',
+      hairLength: 'medio',
+      previousColoring: 'no',
+      lastProcessDetails: 'Ninguno',
+      additionalComments: 'Sensible',
+    },
+  };
+  const result = validateAndSanitizeBooking(withHair);
+  assert.ok(result, 'Debe validar con hairProfile');
+  assert.deepEqual(result.hairProfile, {
+    currentColor: 'Castaño oscuro',
+    desiredResult: 'Balayage rubio beige',
+    hairLength: 'medio',
+    previousColoring: 'no',
+    lastProcessDetails: 'Ninguno',
+    additionalComments: 'Sensible',
+  });
 });
 
 // ---------------------------------------------------------

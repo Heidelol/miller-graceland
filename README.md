@@ -1,6 +1,6 @@
 # Miller Greiseland — Salón de Belleza & Hair Studio
 
-Landing page moderna y elegante para **Miller Greiseland**, salón de belleza premium especializado en alta peluquería, colorimetría, estilistas, extensiones, tratamientos capilares y cortes personalizados con sistema interactivo de reservas y pasarela de pago (Mercado Pago / MXN).
+Landing page moderna y elegante para **Miller Greiseland**, estudio especializado en colorimetría y extensiones de cabello 100% humano, con catálogo oficial, formulario de diagnóstico previo para color, reservas y panel administrativo.
 
 ## ✨ Paleta de Identidad Visual
 
@@ -12,14 +12,14 @@ Landing page moderna y elegante para **Miller Greiseland**, salón de belleza pr
 ## ✨ Características
 
 - **Diseño Editorial & Sofisticado:** Paleta exclusiva con tipografía de lujo, microinteracciones fluidas y diseño 100% responsivo.
-- **Catálogo de Servicios Especializados:**
-  - 🎨 Colorimetría de Autor (Balayage Signature, Babylights, Corrección de Color, Gloss)
-  - 💇‍♀️ Estilistas & Extensiones (Extensiones Tape-in, Queratina, Peinado de Eventos)
-  - 🌿 Tratamientos Capilares (Botox Capilar, Olaplex Molecular, Cauterización, Hidratación Profunda)
-  - ✂️ Cortes & Estilismo Visagista de Precisión
-- **Módulo de Reserva en Línea:** Flujo intuitivo de selección de servicio, fecha, horario y estilista.
-- **Pasarela de Pago (Mercado Pago / MXN):** Integración para anticipos y pagos completos seguros con 3 y 6 MSI.
-- **Atención al Cliente Directa:** Integración con WhatsApp para confirmación y bienvenida inmediata.
+- **Catálogo de 11 Servicios Oficiales:**
+  - 🎨 Color (Diseño de Color, Retoque, Morena Iluminada)
+  - ✨ Signature Blondes (Balayage Rubio, Platinados, Total Blonde, Rubios Globales con K18)
+  - 💇‍♀️ Extensions (100% cabello humano: Aplicación, Bajada + Recolocación, Retiro)
+  - ✂️ Signature Cuts (Corte Signature con Visagismo, Gentlemen's Cut)
+- **Diagnóstico Previo de Color:** Cuestionario técnico integrado en reservas de color y rubios.
+- **Formas de Pago Reales:** Efectivo, transferencia bancaria y terminal bancaria en salón con política de anticipos del 50%.
+- **Atención al Cliente Directa:** Integración con WhatsApp oficial para confirmación y bienvenida inmediata.
 
 ## 🛠️ Instalación y Desarrollo
 

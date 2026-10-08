@@ -385,7 +385,7 @@ export function generateSeedBookings(): AdminBooking[] {
     {
       id: 'MG-1042',
       clientName: 'Carolina Montes',
-      clientPhone: '55 1234 5678',
+      clientPhone: '983 123 4567',
       clientEmail: 'carolina.montes@gmail.com',
       serviceId: balayageRubio.id,
       serviceName: balayageRubio.name,
@@ -397,12 +397,20 @@ export function generateSeedBookings(): AdminBooking[] {
       receivedDepositMXN: 1600,
       finalPriceMXN: 3800, // Saldo: $2,200 MXN
       notes: 'Cabello castaño oscuro virgen en raíz, desea rubio beige luminoso. Cita de valoración previa completada.',
+      hairProfile: {
+        currentColor: 'Castaño oscuro natural (nivel 3)',
+        desiredResult: 'Rubio beige luminoso con dimensión suave',
+        hairLength: 'largo',
+        previousColoring: 'no',
+        lastProcessDetails: 'Sin procesos químicos previos en los últimos 2 años',
+        additionalComments: 'Desea proteger las puntas con Ritual K18.',
+      },
       createdAt: new Date().toISOString(),
     },
     {
       id: 'MG-1043',
       clientName: 'Mariana Elizalde',
-      clientPhone: '55 9876 5432',
+      clientPhone: '983 987 6543',
       clientEmail: 'mariana.e@outlook.com',
       serviceId: corteSignature.id,
       serviceName: corteSignature.name,
@@ -413,13 +421,13 @@ export function generateSeedBookings(): AdminBooking[] {
       requiredDepositMXN: corteSignature.depositMXN, // 225
       receivedDepositMXN: 225,
       finalPriceMXN: null, // "Por confirmar"
-      notes: 'Busca visagismo para enmarcar pómulos y recomendación para caída de cabello.',
+      notes: 'Busca visagismo para enmarcar pómulos y recomendación para cuidado en casa.',
       createdAt: new Date().toISOString(),
     },
     {
       id: 'MG-1044',
       clientName: 'Sofía Larrondo',
-      clientPhone: '55 4567 8901',
+      clientPhone: '983 456 7890',
       clientEmail: 'sofia.larrondo@gmail.com',
       serviceId: morenaIluminada.id,
       serviceName: morenaIluminada.name,
@@ -430,13 +438,21 @@ export function generateSeedBookings(): AdminBooking[] {
       requiredDepositMXN: morenaIluminada.depositMXN, // 1400
       receivedDepositMXN: 0,
       finalPriceMXN: null, // "Por confirmar"
-      notes: 'Pendiente comprobante de anticipo vía transferencia/Mercado Pago.',
+      notes: 'Pendiente comprobante de anticipo vía transferencia bancaria.',
+      hairProfile: {
+        currentColor: 'Castaño medio con reflejos cálidos',
+        desiredResult: 'Morena iluminada avellana y caramelo',
+        hairLength: 'medio',
+        previousColoring: 'si',
+        lastProcessDetails: 'Tinte tono sobre tono hace 6 meses',
+        additionalComments: 'Busca mantener la base natural sin decoloración agresiva.',
+      },
       createdAt: new Date().toISOString(),
     },
     {
       id: 'MG-1045',
       clientName: 'Valeria Sánchez',
-      clientPhone: '55 2345 6789',
+      clientPhone: '983 234 5678',
       clientEmail: 'valeria.s@empresa.com',
       serviceId: retoqueColorMatiz.id,
       serviceName: retoqueColorMatiz.name,
@@ -453,7 +469,7 @@ export function generateSeedBookings(): AdminBooking[] {
     {
       id: 'MG-1041',
       clientName: 'Regina Morales',
-      clientPhone: '55 8765 4321',
+      clientPhone: '983 876 5432',
       clientEmail: 'regina.morales@gmail.com',
       serviceId: bajadaRecolocacion.id,
       serviceName: bajadaRecolocacion.name,
@@ -470,7 +486,7 @@ export function generateSeedBookings(): AdminBooking[] {
     {
       id: 'MG-1046',
       clientName: 'Lucía Navarro',
-      clientPhone: '55 3456 7890',
+      clientPhone: '983 345 6789',
       clientEmail: 'lucia.navarro@yahoo.com',
       serviceId: colorCompleto.id,
       serviceName: colorCompleto.name,
@@ -487,7 +503,7 @@ export function generateSeedBookings(): AdminBooking[] {
     {
       id: 'MG-1047',
       clientName: 'Andrés Gómez',
-      clientPhone: '55 6789 0123',
+      clientPhone: '983 678 9012',
       clientEmail: 'andres.g@tech.mx',
       serviceId: gentlemensCut.id,
       serviceName: gentlemensCut.name,

@@ -3,17 +3,22 @@ import type { ServiceItem } from '../types/salon';
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
   tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS',
-  heroSubtitle: 'Color, rubios, extensiones y cortes personalizados, con atención a la salud de tu cabello.',
-  servicesIntro: 'Una experiencia de belleza diseñada para preservar la salud del cabello, perfeccionar el color y crear resultados personalizados.',
+  heroSubtitle: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
+  description: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
+  servicesIntro: 'Una selección de servicios de colorimetría, rubios, extensiones y diseño capilar diseñados para preservar la salud del cabello con atención personalizada.',
   manifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello.\n\nEl resultado comienza con un cabello sano.\nEl lujo está en cada detalle.',
-  footerAbout: 'Estudio de alta peluquería en Polanco, Ciudad de México. Preservación de la fibra capilar, colorimetría y diseño de imagen a medida.',
-  phone: '+52 55 8432 9910',
-  whatsapp: '525584329910',
-  address: 'Av. Presidente Masaryk 420, Polanco, CDMX',
-  schedule: 'Lunes a Sábado: 9:00 AM – 8:00 PM | Domingo: Previa Cita',
+  footerAbout: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Formación en más de 20 países, preservación de la fibra capilar y atención personalizada.',
+  phone: '983 137 3038',
+  phoneCall: 'tel:+529831373038',
+  whatsapp: '529831373038',
+  whatsappUrl: 'https://wa.me/529831373038',
+  address: 'Av. Venustiano Carranza #163, entre Héroes y 16 de Septiembre.',
+  googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=Av.+Venustiano+Carranza+%23163%2C+entre+H%C3%A9roes+y+16+de+Septiembre',
+  schedule: '11:00 a. m. a 7:00 p. m.',
   currency: 'MXN',
   instagram: '@millergreiseland.studio',
   instagramUrl: 'https://www.instagram.com/millergreiseland.studio/',
+  cancellationPolicy: 'Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.',
 };
 
 export const RESERVATION_PERCENT = 50;
@@ -297,7 +302,7 @@ export const TESTIMONIALS_DEV_PREVIEW = [
     name: 'Mariana Elizalde',
     service: 'Bajada + Recolocación de Extensiones',
     rating: 5,
-    comment: 'Aproveché la bajada gratis con la recolocación y el resultado fue perfecto. Cuidaron mi cabello natural y las extensiones se sienten como mías. Todo pagado seguro por Mercado Pago.',
+    comment: 'Aproveché la bajada gratis con la recolocación y el resultado fue perfecto. Cuidaron mi cabello natural y las extensiones se sienten como mías.',
     date: 'Hace 1 semana',
     image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80'
   },
@@ -316,8 +321,8 @@ export const TESTIMONIALS = TESTIMONIALS_DEV_PREVIEW;
 
 export const FAQS = [
   {
-    question: '¿Cómo funciona la reserva en línea y el anticipo con Mercado Pago?',
-    answer: 'Eliges el servicio en nuestro catálogo y seleccionas fecha y horario. Para reservar, el anticipo es del 50% del precio mínimo publicado, en pesos mexicanos. Conservamos los rangos orientativos: el precio final se confirma después de la valoración en el salón y el saldo será ese importe menos el anticipo pagado. Los cargos adicionales indicados en el servicio se consideran en el precio final.'
+    question: '¿Cómo funcionan las reservas de citas y las formas de pago?',
+    answer: 'Eliges el servicio en nuestro catálogo y seleccionas tu fecha y horario solicitados. Para agendar, se requiere un anticipo del 50% sobre el precio mínimo publicado. Aceptamos efectivo, transferencia bancaria (los datos se proporcionan por WhatsApp) y terminal bancaria en el salón al momento de tu cita. Para servicios con rango o tarifas según longitud o gramaje, el precio final se confirma tras la valoración presencial en el salón y se descuenta el anticipo efectivamente recibido.'
   },
   {
     question: '¿Qué es el Ritual K18 incluido en los servicios de Signature Blondes?',
@@ -332,7 +337,7 @@ export const FAQS = [
     answer: 'Analizamos las facciones de tu rostro, proporciones corporales, textura y caída natural del cabello, además de evaluar la salud cosmética de tu fibra para diseñar el corte más favorecedor y recomendarte una rutina de cuidado en casa.'
   },
   {
-    question: '¿Qué pasa si necesito reprogramar mi cita?',
-    answer: 'Puedes reprogramar sin penalización avisando con al menos 24 horas de anticipación a través de nuestro WhatsApp oficial. Tu anticipo quedará guardado para tu nueva fecha.'
+    question: '¿Qué política aplica para cambios de cita y anticipos?',
+    answer: 'Puedes solicitar un cambio de cita con al menos 24 horas de anticipación a través de nuestro WhatsApp oficial. Los anticipos no son reembolsables.'
   }
 ];

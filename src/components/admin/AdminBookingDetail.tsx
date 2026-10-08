@@ -262,7 +262,56 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
           </div>
         </div>
 
-        {/* 4. Notas */}
+        {/* 4. Información previa del cabello (para servicios de color/rubios) */}
+        {booking.hairProfile && (
+          <div className="p-4 sm:p-5 space-y-2.5 bg-[#FAF7F2]/60">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#A87428] block">
+              Cuéntanos sobre tu cabello · Diagnóstico previo
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+              {booking.hairProfile.currentColor && (
+                <div>
+                  <span className="text-[#7A7067] block text-[10px]">Color actual:</span>
+                  <span className="font-semibold text-[#231E1B]">{booking.hairProfile.currentColor}</span>
+                </div>
+              )}
+              {booking.hairProfile.desiredResult && (
+                <div>
+                  <span className="text-[#7A7067] block text-[10px]">Resultado que busca:</span>
+                  <span className="font-semibold text-[#231E1B]">{booking.hairProfile.desiredResult}</span>
+                </div>
+              )}
+              {booking.hairProfile.hairLength && (
+                <div>
+                  <span className="text-[#7A7067] block text-[10px]">Largo aproximado:</span>
+                  <span className="font-semibold text-[#231E1B] capitalize">{booking.hairProfile.hairLength}</span>
+                </div>
+              )}
+              {booking.hairProfile.previousColoring && (
+                <div>
+                  <span className="text-[#7A7067] block text-[10px]">Coloración / decoloración previa:</span>
+                  <span className="font-semibold text-[#231E1B]">
+                    {booking.hairProfile.previousColoring === 'si' ? 'Sí' : booking.hairProfile.previousColoring === 'no' ? 'No' : 'No lo sé'}
+                  </span>
+                </div>
+              )}
+              {booking.hairProfile.lastProcessDetails && (
+                <div className="sm:col-span-2">
+                  <span className="text-[#7A7067] block text-[10px]">Último proceso y fecha aproximada:</span>
+                  <span className="font-semibold text-[#231E1B]">{booking.hairProfile.lastProcessDetails}</span>
+                </div>
+              )}
+              {booking.hairProfile.additionalComments && (
+                <div className="sm:col-span-2">
+                  <span className="text-[#7A7067] block text-[10px]">Comentarios adicionales:</span>
+                  <span className="font-semibold text-[#231E1B]">{booking.hairProfile.additionalComments}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 5. Notas */}
         {booking.notes && (
           <div className="p-4 sm:p-5 space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A7067] block">
