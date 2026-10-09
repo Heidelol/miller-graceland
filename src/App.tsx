@@ -30,20 +30,21 @@ export function App() {
 
   const isAdminRoute = currentPath === '/admin-demo' || currentPath.startsWith('/admin-demo');
 
-  // Accessible exclusively on /admin-demo during local development
+  // Accessible on /admin-demo during local development or when VITE_ENABLE_ADMIN_DEMO is true
   if (isAdminRoute) {
-    const isLocalDev =
+    const isDemoEnabled =
       import.meta.env.DEV ||
+      import.meta.env.VITE_ENABLE_ADMIN_DEMO === 'true' ||
       (typeof window !== 'undefined' &&
         (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
 
-    if (!isLocalDev) {
+    if (!isDemoEnabled) {
       return (
         <div className="min-h-screen bg-[#F9F6F0] flex items-center justify-center p-6 text-center">
           <div className="max-w-md bg-white p-8 rounded-3xl border border-[#99745A]/20 shadow-sm space-y-3">
             <h2 className="font-serif-luxury text-xl font-bold text-[#231E1B]">Página no disponible</h2>
             <p className="text-xs text-[#6B6158]">
-              El panel administrativo de demostración solo está disponible en el entorno de desarrollo local.
+              El panel administrativo de demostración no está habilitado en este entorno.
             </p>
             <a
               href="/"

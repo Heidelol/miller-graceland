@@ -132,6 +132,41 @@ export function formatTimeDisplay(timeStr: string): string {
   return `${displayHours}:${String(isNaN(minutes) ? 0 : minutes).padStart(2, '0')} ${period}`;
 }
 
+export function convertTo24Hour(timeStr: string): string {
+  const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+  if (!match) return '11:00';
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const period = match[3]?.toUpperCase();
+  if (period === 'PM' && hours < 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+  return `${hours.toString().padStart(2, '0')}:${minutes}`;
+}
+
+export function generateBookingDates(): {
+  fullDate: string;
+  dayName: string;
+  dayNumber: number;
+  monthName: string;
+  available: boolean;
+}[] {
+  const dates = [];
+  const now = new Date();
+  for (let i = 1; i <= 10; i++) {
+    // Generar fecha local explícitamente a las 12:00 del mediodía para evitar cualquier desplazamiento por zona horaria o cambio de día
+    const nextDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, 12, 0, 0);
+    const fullDate = formatLocalDate(nextDate);
+    dates.push({
+      fullDate,
+      dayName: nextDate.toLocaleDateString('es-MX', { weekday: 'short' }),
+      dayNumber: nextDate.getDate(),
+      monthName: nextDate.toLocaleDateString('es-MX', { month: 'short' }),
+      available: true,
+    });
+  }
+  return dates;
+}
+
 export interface BalanceCalculation {
   isPending: boolean;
   /** Saldo pendiente por liquidar (0 si está cubierto o si hay saldo a favor; null si está 'Por confirmar') */

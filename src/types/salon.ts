@@ -23,6 +23,9 @@ export interface ServiceItem {
   depositMXN: number; // 50% del precio mínimo publicado; el precio final se confirma en el salón
   popular?: boolean;
   image: string;
+  imageAlt?: string;
+  imageObjectPosition?: string;
+  isIllustrative?: boolean;
   includes: string[];
   tiers?: ServicePriceTier[];
   note?: string;

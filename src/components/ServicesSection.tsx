@@ -154,11 +154,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 className="bg-white rounded-3xl overflow-hidden flex flex-col group border border-[#99745A]/20 hover:border-[#C8933E]/50 shadow-xs hover:shadow-lg transition-all duration-300"
               >
                 {/* 1. Fotografía con proporción uniforme */}
-                <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
+                <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#E8E1D5]">
                   <img
                     src={service.image}
-                    alt={`${service.name} · Referencia visual ilustrativa`}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    alt={service.imageAlt || `${service.name} · Referencia visual ilustrativa`}
+                    className={`w-full h-full object-cover ${service.imageObjectPosition || 'object-center'} transition-transform duration-500 group-hover:scale-105`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
@@ -169,10 +169,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                     </div>
                   )}
 
-                  {/* Referencia ilustrativa Badge */}
-                  <div className="absolute top-3.5 right-3.5 bg-black/65 backdrop-blur-xs text-white/95 text-[10px] font-medium tracking-wide px-2.5 py-0.5 rounded-full border border-white/20">
-                    Referencia ilustrativa
-                  </div>
+                  {/* Referencia ilustrativa Badge (únicamente en fotos de stock) */}
+                  {service.isIllustrative !== false && (
+                    <div className="absolute top-3.5 right-3.5 bg-black/65 backdrop-blur-xs text-white/95 text-[10px] font-medium tracking-wide px-2.5 py-0.5 rounded-full border border-white/20">
+                      Referencia ilustrativa
+                    </div>
+                  )}
 
                   {/* Duration Badge */}
                   <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-xs border border-[#99745A]/20 text-[#231E1B] text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-xs">
@@ -323,7 +325,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
         {/* Catalog photography disclaimer */}
         <div className="mt-8 text-center max-w-2xl mx-auto px-4">
           <p className="text-xs text-[#7A7067] italic leading-relaxed">
-            * Las fotografías del catálogo son referencias visuales ilustrativas de estilo y acabado. Cada servicio es realizado y personalizado a medida por Miller Greiseland Studio según el diagnóstico y características particulares de tu cabello.
+            * Algunas imágenes del catálogo son referencias ilustrativas.
           </p>
         </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   X, Clock, User, CheckCircle2,
   ChevronRight,
@@ -11,7 +11,15 @@ import type { ServiceItem } from '../types/salon';
 import type { AdminBooking } from '../types/admin';
 import { loadBookingsFromStorage, saveBookingsToStorage } from '../lib/adminStorage';
 import type { StorageSaveResult } from '../lib/adminStorage';
-import { isWithinOperatingHours } from '../lib/adminBookingLogic';
+import {
+  isWithinOperatingHours,
+  getAvailableStartSlots,
+  formatTimeDisplay,
+  formatDateDisplay,
+  getTodayLocalDate,
+  generateBookingDates,
+  convertTo24Hour,
+} from '../lib/adminBookingLogic';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -19,37 +27,7 @@ interface BookingModalProps {
   initialService?: ServiceItem | null;
 }
 
-const generateDates = () => {
-  const dates = [];
-  const today = new Date();
-  for (let i = 1; i <= 10; i++) {
-    const nextDate = new Date(today);
-    nextDate.setDate(today.getDate() + i);
-    dates.push({
-      fullDate: nextDate.toISOString().split('T')[0],
-      dayName: nextDate.toLocaleDateString('es-MX', { weekday: 'short' }),
-      dayNumber: nextDate.getDate(),
-      monthName: nextDate.toLocaleDateString('es-MX', { month: 'short' }),
-      available: true,
-    });
-  }
-  return dates;
-};
-
-const DATES_LIST = generateDates();
-
 type StepId = 'service' | 'hair' | 'schedule' | 'contact' | 'summary' | 'success';
-
-function convertTo24Hour(timeStr: string): string {
-  const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
-  if (!match) return '11:00';
-  let hours = parseInt(match[1], 10);
-  const minutes = match[2];
-  const period = match[3]?.toUpperCase();
-  if (period === 'PM' && hours < 12) hours += 12;
-  if (period === 'AM' && hours === 12) hours = 0;
-  return `${hours.toString().padStart(2, '0')}:${minutes}`;
-}
 
 export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
@@ -62,14 +40,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   
   const selectedServiceRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (selectedServiceRef.current) {
-      selectedServiceRef.current.scrollIntoView({ block: 'nearest', behavior: 'instant' });
-    }
-  }, [selectedService.id]);
-
-  const isColorService = selectedService.category === 'color' || selectedService.category === 'blondes';
-
   // Hair Profile questionnaire (for Color & Blondes only)
   const [currentColor, setCurrentColor] = useState('');
   const [desiredResult, setDesiredResult] = useState('');
@@ -78,10 +48,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [lastProcessDetails, setLastProcessDetails] = useState('');
   const [additionalComments, setAdditionalComments] = useState('');
 
-  // Date & Time
-  const datesList = DATES_LIST;
-  const [selectedDate, setSelectedDate] = useState<string>(datesList[0].fullDate);
+  // Date & Time (recalculados dinámicamente al abrir el modal)
+  const [datesList, setDatesList] = useState(generateBookingDates);
+  const [selectedDate, setSelectedDate] = useState<string>(() => generateBookingDates()[0]?.fullDate || '');
   const [selectedTime, setSelectedTime] = useState<string>('11:00 AM');
+  const [timeNotice, setTimeNotice] = useState<string | null>(null);
 
   // Customer contact info
   const [clientName, setClientName] = useState('');
@@ -95,20 +66,58 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [validationError, setValidationError] = useState<string | null>(null);
   const [storageSaveResult, setStorageSaveResult] = useState<StorageSaveResult | null>(null);
 
+  // Invalida el horario si el servicio seleccionado ya no permite terminar antes de las 19:00
+  const handleSelectService = useCallback((service: ServiceItem) => {
+    setSelectedService(service);
+    setValidationError(null);
+    if (selectedTime) {
+      const time24 = convertTo24Hour(selectedTime);
+      if (!isWithinOperatingHours(time24, service.durationMinutes)) {
+        setSelectedTime('');
+        setTimeNotice(
+          `El horario previamente seleccionado ya no permite terminar ${service.name} (${service.durationMinutes} min) antes del cierre de las 19:00. Por favor elige un nuevo horario.`
+        );
+      } else {
+        setTimeNotice(null);
+      }
+    }
+  }, [selectedTime]);
+
+  useEffect(() => {
+    if (selectedServiceRef.current) {
+      selectedServiceRef.current.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    }
+  }, [selectedService.id]);
+
+  // Recalcular fechas al abrir el modal (evita lista fijada al cargar el módulo)
+  useEffect(() => {
+    if (isOpen) {
+      const freshDates = generateBookingDates();
+      setDatesList(freshDates);
+      setSelectedDate((prev) => {
+        if (prev && freshDates.some((d) => d.fullDate === prev)) {
+          return prev;
+        }
+        return freshDates[0]?.fullDate || getTodayLocalDate();
+      });
+      setValidationError(null);
+    }
+  }, [isOpen]);
+
+  // Actualizar servicio si cambia initialService
+  useEffect(() => {
+    if (initialService) {
+      handleSelectService(initialService);
+    }
+  }, [initialService, handleSelectService]);
+
+  const isColorService = selectedService.category === 'color' || selectedService.category === 'blondes';
+
   if (!isOpen) return null;
 
-  // Operating hours candidate slots (11:00 a. m. a 7:00 p. m.)
-  const candidateTimeSlots = [
-    '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
-    '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM',
-    '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
-    '05:00 PM', '05:30 PM', '06:00 PM'
-  ];
-
-  // Dynamic filter: only show slots where service finishes before or at 19:00
-  const timeSlots = candidateTimeSlots.filter((slot) =>
-    isWithinOperatingHours(convertTo24Hour(slot), selectedService.durationMinutes)
-  );
+  // Fuente de horarios: getAvailableStartSlots (11:00 a 19:00 según duración)
+  const availableSlots24 = getAvailableStartSlots(selectedService.durationMinutes, 30);
+  const timeSlots = availableSlots24.map(formatTimeDisplay);
 
   const amountToPay = selectedService.depositMXN;
 
@@ -154,6 +163,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
   const handleNextFromSchedule = () => {
     setValidationError(null);
+    if (!selectedDate) {
+      setValidationError('Por favor selecciona una fecha para tu cita.');
+      return;
+    }
+    if (!selectedTime) {
+      setValidationError('Por favor selecciona un horario disponible para este servicio.');
+      return;
+    }
+    const time24 = convertTo24Hour(selectedTime);
+    if (!isWithinOperatingHours(time24, selectedService.durationMinutes)) {
+      setValidationError(
+        `El horario ${selectedTime} no permite terminar ${selectedService.name} (${selectedService.durationMinutes} min) antes del cierre de las 19:00. Por favor selecciona otro horario.`
+      );
+      return;
+    }
     setCurrentStep('contact');
   };
 
@@ -180,6 +204,26 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   };
 
   const handleFinalizeBooking = () => {
+    setValidationError(null);
+    if (!selectedDate) {
+      setValidationError('Por favor selecciona una fecha para tu cita.');
+      setCurrentStep('schedule');
+      return;
+    }
+    if (!selectedTime) {
+      setValidationError('Por favor selecciona un horario disponible para este servicio.');
+      setCurrentStep('schedule');
+      return;
+    }
+    const time24 = convertTo24Hour(selectedTime);
+    if (!isWithinOperatingHours(time24, selectedService.durationMinutes)) {
+      setValidationError(
+        `El horario ${selectedTime} no permite concluir ${selectedService.name} (${selectedService.durationMinutes} min) antes del cierre de las 19:00. Por favor selecciona un horario disponible.`
+      );
+      setCurrentStep('schedule');
+      return;
+    }
+
     const code = `MG-${Math.floor(1000 + Math.random() * 9000)}`;
     setBookingCode(code);
 
@@ -246,7 +290,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     let msg = `¡Hola Miller Greiseland! Deseo solicitar una cita previa:\n\n` +
       `📋 Código de solicitud: ${bookingCode || 'Pendiente'}\n` +
       `✨ Servicio: ${selectedService.name}\n` +
-      `📅 Fecha solicitada: ${selectedDate} a las ${selectedTime} (sujeta a confirmación)\n` +
+      `📅 Fecha solicitada: ${formatDateDisplay(selectedDate, { short: true })} (${selectedDate}) a las ${selectedTime} (sujeta a confirmación)\n` +
       `💳 Anticipo requerido (50%): $${amountToPay.toLocaleString('es-MX')} MXN\n` +
       `Nota: El saldo final se confirma en el salón tras la valoración.\n\n` +
       `🙋‍♀️ Clienta: ${clientName} (${clientPhone})\n` +
@@ -368,11 +412,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         ref={isSelected ? selectedServiceRef : undefined}
                         role="button"
                         tabIndex={0}
-                        onClick={() => setSelectedService(s)}
+                        onClick={() => handleSelectService(s)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            setSelectedService(s);
+                            handleSelectService(s);
                           }
                         }}
                         className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-1 ${
@@ -384,8 +428,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         <div className="flex items-center gap-3">
                           <img
                             src={s.image}
-                            alt={`${s.name} · Referencia visual ilustrativa`}
-                            className="w-12 h-12 rounded-xl object-cover shrink-0"
+                            alt={s.imageAlt || `${s.name} · Referencia visual ilustrativa`}
+                            className={`w-12 h-12 rounded-xl object-cover shrink-0 ${s.imageObjectPosition || 'object-center'}`}
                           />
                           <div>
                             <p className="text-sm font-bold text-[#231E1B] leading-tight">
@@ -620,26 +664,44 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <label className="block text-xs font-bold text-[#4A423B] uppercase tracking-wider mb-2">
                   Horario solicitado para {selectedDate}:
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                  {timeSlots.map((slot) => {
-                    const isSelected = selectedTime === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => setSelectedTime(slot)}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
-                          isSelected
-                            ? 'bg-[#68794E] text-white border-[#68794E] shadow-xs'
-                            : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#68794E]'
-                        }`}
-                      >
-                        <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#68794E]'}`} />
-                        <span>{slot}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+
+                {timeNotice && !selectedTime && (
+                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-2 mb-3">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>{timeNotice}</span>
+                  </div>
+                )}
+
+                {timeSlots.length === 0 ? (
+                  <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 text-amber-900 text-xs text-center">
+                    No hay horarios disponibles para este servicio ({selectedService.durationMinutes} min) que concluyan antes de las 19:00.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    {timeSlots.map((slot) => {
+                      const isSelected = selectedTime === slot;
+                      return (
+                        <button
+                          key={slot}
+                          type="button"
+                          onClick={() => {
+                            setSelectedTime(slot);
+                            setTimeNotice(null);
+                            setValidationError(null);
+                          }}
+                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
+                            isSelected
+                              ? 'bg-[#68794E] text-white border-[#68794E] shadow-xs'
+                              : 'bg-[#F9F6F0] border-[#99745A]/20 text-[#3D352F] hover:border-[#68794E]'
+                          }`}
+                        >
+                          <Clock className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#68794E]'}`} />
+                          <span>{slot}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
                 <p className="text-[11px] text-[#7A7067] mt-2 flex items-center gap-1.5">
                   <HelpCircle className="w-3.5 h-3.5 text-[#A87428] shrink-0" />
                   <span>

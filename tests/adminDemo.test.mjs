@@ -27,6 +27,10 @@ const {
   isWithinOperatingHours,
   getAvailableStartSlots,
   generateSeedBookings,
+  formatLocalDate,
+  parseLocalDate,
+  formatTimeDisplay,
+  getTodayLocalDate,
 } = await import('../src/lib/adminBookingLogic.ts');
 
 const {
@@ -678,6 +682,101 @@ test('validateAndSanitizeBooking conserva finalPriceMXN: null', () => {
   const sanitized = validateAndSanitizeBooking(bookingWithNullFinal);
   assert.ok(sanitized);
   assert.equal(sanitized.finalPriceMXN, null);
+});
+
+// ---------------------------------------------------------
+// 14. INVALIDACIÓN DE HORARIO AL CAMBIAR A SERVICIO MÁS LARGO
+// ---------------------------------------------------------
+console.log('\n14. Invalidación de horario al cambiar de servicio:');
+
+test('isWithinOperatingHours permite 18:00 para servicio de 60 min pero lo rechaza para 240 min', () => {
+  const corte = SERVICES.find((s) => s.id === 'corte-signature');
+  const balayage = SERVICES.find((s) => s.id === 'balayage-rubio');
+  assert.ok(corte, 'Corte Signature debe existir en catálogo');
+  assert.ok(balayage, 'Balayage Rubio debe existir en catálogo');
+
+  // Corte Signature (60 min) a las 18:00 -> concluye a las 19:00 (válido)
+  assert.equal(
+    isWithinOperatingHours('18:00', corte.durationMinutes),
+    true,
+    'Corte a las 18:00 (termina 19:00) es válido'
+  );
+
+  // Balayage Rubio (240 min / 4h) a las 18:00 -> terminaría a las 22:00 (inválido)
+  assert.equal(
+    isWithinOperatingHours('18:00', balayage.durationMinutes),
+    false,
+    'Balayage Rubio a las 18:00 excede el cierre de las 19:00 y debe ser rechazado'
+  );
+});
+
+test('getAvailableStartSlots para servicio de 240 minutos concluye a las 15:00 y excluye 18:00', () => {
+  const slots240 = getAvailableStartSlots(240, 30);
+  assert.ok(slots240.length > 0);
+  assert.equal(slots240[0], '11:00', 'Primer slot debe ser 11:00');
+  assert.equal(slots240[slots240.length - 1], '15:00', 'Último slot disponible para 4h debe ser 15:00');
+  assert.equal(slots240.includes('18:00'), false, '18:00 no debe estar en los slots disponibles para 4h');
+  assert.equal(slots240.includes('15:30'), false, '15:30 terminaría a las 19:30 y debe excluirse');
+});
+
+test('Lógica reactiva del selector: cambiar servicio con horario incompatible invalida la selección', () => {
+  const serviceCorte = SERVICES.find((s) => s.id === 'corte-signature');
+  const serviceBalayage = SERVICES.find((s) => s.id === 'balayage-rubio');
+
+  let selectedTime = '18:00';
+  let timeNotice = null;
+
+  // Cliente tenía 18:00 con Corte Signature
+  assert.equal(isWithinOperatingHours(selectedTime, serviceCorte.durationMinutes), true);
+
+  // Cliente cambia a Balayage Rubio (240 min)
+  const isValidForNew = isWithinOperatingHours(selectedTime, serviceBalayage.durationMinutes);
+  assert.equal(isValidForNew, false, '18:00 no es válido para 240 min');
+
+  if (!isValidForNew) {
+    selectedTime = '';
+    timeNotice = `El horario previamente seleccionado no está disponible para ${serviceBalayage.name} porque excede el horario de cierre (7:00 p. m.). Por favor selecciona un nuevo horario.`;
+  }
+
+  assert.equal(selectedTime, '', 'El horario debe limpiarse para forzar nueva selección');
+  assert.match(timeNotice, /excede el horario de cierre/i);
+});
+
+// ---------------------------------------------------------
+// 15. CÁLCULO DE FECHAS LOCALES Y PREVENCIÓN DE SALTO DE DÍA UTC
+// ---------------------------------------------------------
+console.log('\n15. Cálculo de fechas locales y prevención de salto de día UTC:');
+
+test('formatLocalDate en horario nocturno (20:30) preserva la fecha local y no adelanta el día', () => {
+  // Fecha local a las 20:30 horas (8 de octubre de 2026)
+  const localNightDate = new Date(2026, 9, 8, 20, 30, 0);
+  const formatted = formatLocalDate(localNightDate);
+
+  assert.equal(formatted, '2026-10-08', 'formatLocalDate debe preservar 2026-10-08 sin desfase');
+});
+
+test('parseLocalDate genera fecha a las 12:00 del mediodía local para consistencia horaria', () => {
+  const parsed = parseLocalDate('2026-10-09');
+  assert.equal(parsed.getFullYear(), 2026);
+  assert.equal(parsed.getMonth(), 9); // Octubre (0-indexed: 9)
+  assert.equal(parsed.getDate(), 9);
+  assert.equal(parsed.getHours(), 12, 'Debe fijarse al mediodía (12:00) para evitar saltos por DST o zona');
+  assert.equal(formatLocalDate(parsed), '2026-10-09');
+});
+
+test('Generación de fechas consecutivas a mediodía local produce días continuos sin saltos de huso horario', () => {
+  const base = new Date(2026, 9, 8, 12, 0, 0); // 8 de octubre de 2026
+  const generated = [];
+
+  for (let i = 1; i <= 10; i++) {
+    const nextDate = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i, 12, 0, 0);
+    generated.push(formatLocalDate(nextDate));
+  }
+
+  assert.equal(generated.length, 10);
+  assert.equal(generated[0], '2026-10-09', 'Día 1 debe ser 2026-10-09');
+  assert.equal(generated[1], '2026-10-10', 'Día 2 debe ser 2026-10-10');
+  assert.equal(generated[9], '2026-10-18', 'Día 10 debe ser 2026-10-18');
 });
 
 console.log('\n----------------------------------------------------');
