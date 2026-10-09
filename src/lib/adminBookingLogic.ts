@@ -84,6 +84,43 @@ export function calculateEndTime(startTimeStr: string, durationMinutes: number):
   return minutesToTime(startMins + (Number.isFinite(durationMinutes) ? durationMinutes : 60));
 }
 
+export const SALON_OPERATING_HOURS = {
+  openHour: 11,
+  closeHour: 19,
+  openTime: '11:00',
+  closeTime: '19:00',
+  openMinutes: 11 * 60, // 660
+  closeMinutes: 19 * 60, // 1140
+  scheduleText: '11:00 a. m. a 7:00 p. m.',
+};
+
+/**
+ * Checks whether a given start time and duration fits completely within the salon operating hours (11:00 - 19:00).
+ */
+export function isWithinOperatingHours(timeStr: string, durationMinutes: number = 60): boolean {
+  if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) return false;
+  const startMins = timeToMinutes(timeStr);
+  const duration = Math.max(1, Number.isFinite(durationMinutes) ? durationMinutes : 60);
+  const endMins = startMins + duration;
+  return startMins >= SALON_OPERATING_HOURS.openMinutes && endMins <= SALON_OPERATING_HOURS.closeMinutes;
+}
+
+/**
+ * Generates available start time slots that can accommodate the service duration without exceeding 19:00.
+ */
+export function getAvailableStartSlots(durationMinutes: number, intervalMinutes: number = 30): string[] {
+  const slots: string[] = [];
+  const duration = Math.max(1, Number.isFinite(durationMinutes) ? durationMinutes : 60);
+  for (
+    let mins = SALON_OPERATING_HOURS.openMinutes;
+    mins + duration <= SALON_OPERATING_HOURS.closeMinutes;
+    mins += intervalMinutes
+  ) {
+    slots.push(minutesToTime(mins));
+  }
+  return slots;
+}
+
 export function formatTimeDisplay(timeStr: string): string {
   if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) {
     return timeStr || 'Por confirmar';
@@ -432,7 +469,7 @@ export function generateSeedBookings(): AdminBooking[] {
       serviceId: morenaIluminada.id,
       serviceName: morenaIluminada.name,
       date: tomorrow,
-      time: '10:30',
+      time: '11:00',
       durationMinutes: morenaIluminada.durationMinutes, // 210
       status: 'pending_payment',
       requiredDepositMXN: morenaIluminada.depositMXN, // 1400

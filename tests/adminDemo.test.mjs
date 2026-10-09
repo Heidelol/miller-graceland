@@ -23,6 +23,10 @@ const {
   BOOKING_STATUS_LABELS,
   hasScheduleConflict,
   calculateAgendaSummary,
+  SALON_OPERATING_HOURS,
+  isWithinOperatingHours,
+  getAvailableStartSlots,
+  generateSeedBookings,
 } = await import('../src/lib/adminBookingLogic.ts');
 
 const {
@@ -31,6 +35,7 @@ const {
   loadBookingsFromStorage,
   saveBookingsToStorage,
   ADMIN_STORAGE_KEY,
+  sanitizeHairProfile,
 } = await import('../src/lib/adminStorage.ts');
 
 const { SERVICES } = await import('../src/data/salonData.ts');
@@ -543,6 +548,136 @@ test('calculateAgendaSummary calcula métricas semanales (lunes a domingo) refle
   assert.equal(weekSummary.pendingDepositCount, 1, 'Debe identificar 1 cita pendiente en la semana');
   assert.equal(weekSummary.receivedDepositsMXN, 3500, 'Debe sumar 1000 + 500 + 2000 = 3500 MXN en dinero real recibido');
   assert.match(weekSummary.scopeSubtitle, /Semana del/i, 'Debe describir el intervalo de la semana');
+});
+
+// ---------------------------------------------------------
+// 11. SANEAMIENTO Y VALIDACIÓN ESTRICTA DE HAIR PROFILE
+// ---------------------------------------------------------
+console.log('\n11. Saneamiento y validación estricta de hairProfile:');
+
+test('sanitizeHairProfile preserva campos de texto y enums válidos', () => {
+  const input = {
+    currentColor: 'Castaño medio natural',
+    desiredResult: 'Balayage avellana',
+    hairLength: 'medio',
+    previousColoring: 'si',
+    lastProcessDetails: 'Tinte hace 6 meses',
+    additionalComments: 'Sensibilidad en cuero cabelludo',
+  };
+  const sanitized = sanitizeHairProfile(input);
+  assert.deepEqual(sanitized, input);
+});
+
+test('sanitizeHairProfile descarta campos con objetos o tipos inválidos sin tumbar la aplicación', () => {
+  const corruptInput = {
+    currentColor: { malicious: 'objeto' }, // inválido
+    desiredResult: 'Rubio perlado', // válido
+    hairLength: 999, // inválido
+    previousColoring: 'inventado', // inválido
+    lastProcessDetails: ['arreglo'], // inválido
+    additionalComments: 'Comentario válido', // válido
+  };
+  const sanitized = sanitizeHairProfile(corruptInput);
+  assert.ok(sanitized);
+  assert.equal(sanitized.desiredResult, 'Rubio perlado');
+  assert.equal(sanitized.additionalComments, 'Comentario válido');
+  assert.equal(sanitized.currentColor, undefined);
+  assert.equal(sanitized.hairLength, undefined);
+  assert.equal(sanitized.previousColoring, undefined);
+});
+
+test('validateAndSanitizeBooking preserva la cita aún con hairProfile corrupto', () => {
+  const bookingWithCorruptHair = {
+    ...baseValidBooking,
+    id: 'MG-CORRUPT-HP',
+    hairProfile: {
+      currentColor: { hack: 1 },
+      hairLength: false,
+    },
+  };
+  const sanitizedBooking = validateAndSanitizeBooking(bookingWithCorruptHair);
+  assert.ok(sanitizedBooking, 'La cita debe conservarse válida');
+  assert.equal(sanitizedBooking.id, 'MG-CORRUPT-HP');
+  assert.equal(sanitizedBooking.hairProfile, undefined, 'El perfil completamente dañado debe quedar saneado como undefined');
+});
+
+// ---------------------------------------------------------
+// 12. UNIFICACIÓN DE HORARIOS (11:00 A 19:00)
+// ---------------------------------------------------------
+console.log('\n12. Unificación de horarios (11:00 a 19:00):');
+
+test('SALON_OPERATING_HOURS define constantes oficiales de 11:00 a 19:00', () => {
+  assert.equal(SALON_OPERATING_HOURS.openHour, 11);
+  assert.equal(SALON_OPERATING_HOURS.closeHour, 19);
+  assert.equal(SALON_OPERATING_HOURS.openTime, '11:00');
+  assert.equal(SALON_OPERATING_HOURS.closeTime, '19:00');
+  assert.equal(SALON_OPERATING_HOURS.scheduleText, '11:00 a. m. a 7:00 p. m.');
+});
+
+test('isWithinOperatingHours valida límites del salón (11:00 a 19:00)', () => {
+  // Inicio antes de apertura (11:00)
+  assert.equal(isWithinOperatingHours('10:30', 60), false, '10:30 inicia antes de apertura (11:00)');
+  assert.equal(isWithinOperatingHours('09:00', 60), false, '09:00 inicia antes de apertura (11:00)');
+
+  // Inicio válido
+  assert.equal(isWithinOperatingHours('11:00', 60), true, '11:00 con 60 min termina a las 12:00');
+
+  // Límite exacto de cierre (19:00)
+  assert.equal(isWithinOperatingHours('15:00', 240), true, '15:00 con 240 min (4h) concluye exactamente a las 19:00');
+  assert.equal(isWithinOperatingHours('18:00', 60), true, '18:00 con 60 min concluye a las 19:00');
+
+  // Excede horario de cierre (después de 19:00)
+  assert.equal(isWithinOperatingHours('15:30', 240), false, '15:30 con 240 min concluye a las 19:30 (excede 19:00)');
+  assert.equal(isWithinOperatingHours('18:30', 60), false, '18:30 con 60 min concluye a las 19:30 (excede 19:00)');
+  assert.equal(isWithinOperatingHours('19:00', 30), false, '19:00 no puede iniciar cita que termina después de cierre');
+});
+
+test('getAvailableStartSlots no ofrece horarios que terminen después de las 19:00', () => {
+  const slotsBalayage = getAvailableStartSlots(240, 30);
+  assert.ok(slotsBalayage.length > 0);
+  assert.equal(slotsBalayage[0], '11:00', 'Primer slot debe ser 11:00');
+  assert.equal(slotsBalayage[slotsBalayage.length - 1], '15:00', 'Último slot para 4 horas debe ser 15:00');
+  assert.ok(!slotsBalayage.includes('15:30'), 'No debe incluir 15:30');
+});
+
+test('generateSeedBookings tiene todas sus citas dentro del horario operativo 11:00 - 19:00', () => {
+  const seeds = generateSeedBookings();
+  for (const seed of seeds) {
+    if (seed.status !== 'cancelled') {
+      const valid = isWithinOperatingHours(seed.time, seed.durationMinutes);
+      assert.ok(
+        valid,
+        `Cita semilla ${seed.id} (${seed.clientName}) a las ${seed.time} (${seed.durationMinutes} min) debe estar dentro de 11:00 - 19:00`
+      );
+    }
+  }
+  const sofia = seeds.find((s) => s.id === 'MG-1044');
+  assert.ok(sofia);
+  assert.equal(sofia.time, '11:00', 'Sofía Larrondo debe estar agendada a las 11:00 (no 10:30)');
+});
+
+// ---------------------------------------------------------
+// 13. PRECIO FINAL PENDIENTE (finalPriceMXN: null)
+// ---------------------------------------------------------
+console.log('\n13. Precio final pendiente (finalPriceMXN: null):');
+
+test('Cita con finalPriceMXN: null muestra estado Por confirmar sin saldo inventado', () => {
+  const calc = calculateBalance(null, 1600);
+  assert.equal(calc.isPending, true);
+  assert.equal(calc.pendingBalanceMXN, null);
+  assert.equal(calc.balanceMXN, null);
+  assert.equal(calc.hasCredit, false);
+  assert.match(calc.explanation, /precio final/i);
+});
+
+test('validateAndSanitizeBooking conserva finalPriceMXN: null', () => {
+  const bookingWithNullFinal = {
+    ...baseValidBooking,
+    finalPriceMXN: null,
+  };
+  const sanitized = validateAndSanitizeBooking(bookingWithNullFinal);
+  assert.ok(sanitized);
+  assert.equal(sanitized.finalPriceMXN, null);
 });
 
 console.log('\n----------------------------------------------------');

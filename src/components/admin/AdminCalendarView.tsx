@@ -101,11 +101,10 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
     }
   };
 
-  // Operational hours for the day view grid
+  // Operational hours for the day view grid (11:00 to 19:00)
   const operationalHours = [
-    '09:00', '10:00', '11:00', '12:00', 
-    '13:00', '14:00', '15:00', '16:00', 
-    '17:00', '18:00', '19:00'
+    '11:00', '12:00', '13:00', '14:00', 
+    '15:00', '16:00', '17:00', '18:00', '19:00'
   ];
 
   // Calculate free slots count
@@ -416,8 +415,6 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                   className={`rounded-xl border flex flex-col min-h-[340px] overflow-hidden transition-all ${
                     isCurrentSelected
                       ? 'border-[#C8933E] bg-[#FFFDF9] shadow-2xs'
-                      : day.isSunday
-                      ? 'border-gray-200 bg-gray-50/50'
                       : 'border-[#99745A]/15 bg-white'
                   }`}
                 >
@@ -487,7 +484,7 @@ export const AdminCalendarView: React.FC<AdminCalendarViewProps> = ({
                     ) : (
                       <div className="h-full flex items-center justify-center p-2 text-center">
                         <span className="text-[10px] text-gray-400 italic">
-                          {day.isSunday ? 'Previa cita' : 'Sin citas'}
+                          Sin citas
                         </span>
                       </div>
                     )}

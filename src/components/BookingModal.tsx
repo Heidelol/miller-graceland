@@ -10,6 +10,8 @@ import { SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceItem } from '../types/salon';
 import type { AdminBooking } from '../types/admin';
 import { loadBookingsFromStorage, saveBookingsToStorage } from '../lib/adminStorage';
+import type { StorageSaveResult } from '../lib/adminStorage';
+import { isWithinOperatingHours } from '../lib/adminBookingLogic';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -23,14 +25,12 @@ const generateDates = () => {
   for (let i = 1; i <= 10; i++) {
     const nextDate = new Date(today);
     nextDate.setDate(today.getDate() + i);
-    // Sundays closed as per general salon operation
-    const isSunday = nextDate.getDay() === 0;
     dates.push({
       fullDate: nextDate.toISOString().split('T')[0],
       dayName: nextDate.toLocaleDateString('es-MX', { weekday: 'short' }),
       dayNumber: nextDate.getDate(),
       monthName: nextDate.toLocaleDateString('es-MX', { month: 'short' }),
-      available: !isSunday,
+      available: true,
     });
   }
   return dates;
@@ -93,14 +93,22 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [bookingCode, setBookingCode] = useState('');
   const [currentStep, setCurrentStep] = useState<StepId>('service');
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [storageSaveResult, setStorageSaveResult] = useState<StorageSaveResult | null>(null);
 
   if (!isOpen) return null;
 
-  // Operating hours: 11:00 a. m. a 7:00 p. m.
-  const timeSlots = [
-    '11:00 AM', '12:30 PM', '02:00 PM', 
-    '03:30 PM', '05:00 PM', '06:00 PM'
+  // Operating hours candidate slots (11:00 a. m. a 7:00 p. m.)
+  const candidateTimeSlots = [
+    '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM',
+    '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM',
+    '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
+    '05:00 PM', '05:30 PM', '06:00 PM'
   ];
+
+  // Dynamic filter: only show slots where service finishes before or at 19:00
+  const timeSlots = candidateTimeSlots.filter((slot) =>
+    isWithinOperatingHours(convertTo24Hour(slot), selectedService.durationMinutes)
+  );
 
   const amountToPay = selectedService.depositMXN;
 
@@ -175,6 +183,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     const code = `MG-${Math.floor(1000 + Math.random() * 9000)}`;
     setBookingCode(code);
 
+    let saveRes: StorageSaveResult = { success: false, error: 'No inicializado' };
+
     // Persist new booking as pending_payment in demo storage so it appears in /admin-demo
     try {
       const { bookings: existing } = loadBookingsFromStorage();
@@ -191,7 +201,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         status: 'pending_payment',
         requiredDepositMXN: selectedService.depositMXN,
         receivedDepositMXN: 0,
-        finalPriceMXN: selectedService.priceMXN,
+        finalPriceMXN: null, // Guardar null: precio final por confirmar en el salón
         createdAt: new Date().toISOString(),
         notes: notes.trim() || undefined,
         hairProfile: isColorService ? {
@@ -204,11 +214,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         } : undefined,
       };
 
-      saveBookingsToStorage([newBooking, ...existing]);
-    } catch (e) {
+      saveRes = saveBookingsToStorage([newBooking, ...existing]);
+    } catch (e: unknown) {
       console.warn('No se pudo guardar la reserva en almacenamiento local:', e);
+      const msg = e instanceof Error ? e.message : 'Error desconocido al guardar';
+      saveRes = { success: false, error: msg };
     }
 
+    setStorageSaveResult(saveRes);
     setCurrentStep('success');
 
     // Trigger celebration confetti
@@ -278,11 +291,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             </div>
             <div>
               <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B]">
-                {currentStep === 'success' ? 'Solicitud Registrada' : 'Solicitar Cita en Miller Greiseland'}
+                {currentStep === 'success' ? 'Solicitud preparada' : 'Solicitar Cita en Miller Greiseland'}
               </h3>
               <p className="text-xs text-[#6B6158]">
                 {currentStep === 'success'
-                  ? 'Cita pendiente de confirmación por el salón'
+                  ? 'Envía el mensaje por WhatsApp para que el salón reciba tu solicitud'
                   : 'Fecha y horario solicitados · Confirmación y anticipo previo'}
               </p>
             </div>
@@ -371,8 +384,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         <div className="flex items-center gap-3">
                           <img
                             src={s.image}
-                            alt={s.name}
-                            className="w-12 h-12 rounded-xl object-cover"
+                            alt={`${s.name} · Referencia visual ilustrativa`}
+                            className="w-12 h-12 rounded-xl object-cover shrink-0"
                           />
                           <div>
                             <p className="text-sm font-bold text-[#231E1B] leading-tight">
@@ -583,18 +596,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 <div className="grid grid-cols-5 sm:grid-cols-7 gap-2">
                   {datesList.map((d) => {
                     const isSelected = selectedDate === d.fullDate;
-                    if (!d.available) {
-                      return (
-                        <div
-                          key={d.fullDate}
-                          className="p-2 rounded-xl bg-gray-100 border border-gray-200 text-center opacity-40 cursor-not-allowed"
-                        >
-                          <span className="text-[10px] block uppercase text-gray-500">{d.dayName}</span>
-                          <span className="text-base font-bold text-gray-500">{d.dayNumber}</span>
-                          <span className="text-[9px] block text-red-500">Cerrado</span>
-                        </div>
-                      );
-                    }
                     return (
                       <button
                         key={d.fullDate}
@@ -899,13 +900,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-[#68794E]">
-                  Solicitud Registrada
+                  Solicitud preparada
                 </span>
                 <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#231E1B] mt-1">
                   ¡Gracias, {clientName.split(' ')[0]}!
                 </h3>
                 <p className="text-xs text-[#6B6158] mt-1 max-w-md mx-auto leading-relaxed">
-                  Tu solicitud ha sido registrada como <strong>pendiente de confirmación</strong>. Para formalizar el horario y cubrir el anticipo, envía la solicitud directamente por WhatsApp:
+                  Tu solicitud ha sido preparada. El salón la recibe en el momento en que envías el mensaje a través de WhatsApp. Envía el mensaje con el botón a continuación para acordar la confirmación y los detalles del anticipo.
                 </p>
               </div>
 
@@ -942,9 +943,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
               </div>
 
-              {/* Cancellation policy reminder */}
-              <div className="p-3 rounded-xl bg-[#FAF7F2] border border-[#99745A]/15 text-[11px] text-[#6B6158] max-w-md mx-auto text-left">
-                <strong>Recordatorio:</strong> Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.
+              {/* Local demo note & notice if storage save failed */}
+              {storageSaveResult && !storageSaveResult.success && (
+                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs text-left max-w-md mx-auto flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <p className="font-bold">Aviso de demostración en navegador</p>
+                    <p className="text-[11px] text-amber-800">
+                      No se pudo guardar la copia demostrativa en este navegador ({storageSaveResult.error || 'almacenamiento no disponible'}). Puedes enviar tu solicitud directamente al salón por WhatsApp con el botón de abajo.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Demo mode & Cancellation policy reminder */}
+              <div className="p-3.5 rounded-xl bg-[#FAF7F2] border border-[#99745A]/15 text-[11px] text-[#6B6158] max-w-md mx-auto text-left space-y-1.5">
+                <p>
+                  <strong>Demostración local:</strong> Esta solicitud queda guardada únicamente en este navegador para propósitos del panel demostrativo.
+                </p>
+                <p>
+                  <strong>Recordatorio:</strong> El salón confirmará la disponibilidad final al recibir tu mensaje por WhatsApp. Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.
+                </p>
               </div>
 
               {/* WhatsApp direct CTA */}

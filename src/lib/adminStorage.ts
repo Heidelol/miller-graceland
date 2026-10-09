@@ -1,4 +1,4 @@
-import type { AdminBooking, BookingStatus } from '../types/admin';
+import type { AdminBooking, BookingStatus, HairProfile } from '../types/admin';
 import { generateSeedBookings } from './adminBookingLogic';
 import { SERVICES } from '../data/salonData';
 
@@ -13,6 +13,97 @@ export interface StorageLoadResult {
 export interface StorageSaveResult {
   success: boolean;
   error?: string;
+}
+
+export const ALLOWED_HAIR_LENGTHS = ['corto', 'medio', 'largo'] as const;
+export const ALLOWED_PREVIOUS_COLORING = ['si', 'no', 'no_se'] as const;
+
+/**
+ * Validates and sanitizes a HairProfile object.
+ * Strictly verifies string types and allowed enum values.
+ * Discards damaged fields with a console warning without crashing the panel or discarding valid bookings.
+ */
+export function sanitizeHairProfile(raw: unknown): HairProfile | undefined {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return undefined;
+  }
+  const hp = raw as Record<string, unknown>;
+  const sanitized: HairProfile = {};
+  let hasValidField = false;
+
+  // Validate currentColor
+  if (hp.currentColor !== undefined && hp.currentColor !== null) {
+    if (typeof hp.currentColor === 'string') {
+      const trimmed = hp.currentColor.trim();
+      if (trimmed) {
+        sanitized.currentColor = trimmed;
+        hasValidField = true;
+      }
+    } else {
+      console.warn('hairProfile.currentColor descartado por tipo no válido (se esperaba texto):', hp.currentColor);
+    }
+  }
+
+  // Validate desiredResult
+  if (hp.desiredResult !== undefined && hp.desiredResult !== null) {
+    if (typeof hp.desiredResult === 'string') {
+      const trimmed = hp.desiredResult.trim();
+      if (trimmed) {
+        sanitized.desiredResult = trimmed;
+        hasValidField = true;
+      }
+    } else {
+      console.warn('hairProfile.desiredResult descartado por tipo no válido (se esperaba texto):', hp.desiredResult);
+    }
+  }
+
+  // Validate hairLength
+  if (hp.hairLength !== undefined && hp.hairLength !== null) {
+    if (typeof hp.hairLength === 'string' && (ALLOWED_HAIR_LENGTHS as readonly string[]).includes(hp.hairLength)) {
+      sanitized.hairLength = hp.hairLength as 'corto' | 'medio' | 'largo';
+      hasValidField = true;
+    } else {
+      console.warn('hairProfile.hairLength descartado por valor o tipo no permitido:', hp.hairLength);
+    }
+  }
+
+  // Validate previousColoring
+  if (hp.previousColoring !== undefined && hp.previousColoring !== null) {
+    if (typeof hp.previousColoring === 'string' && (ALLOWED_PREVIOUS_COLORING as readonly string[]).includes(hp.previousColoring)) {
+      sanitized.previousColoring = hp.previousColoring as 'si' | 'no' | 'no_se';
+      hasValidField = true;
+    } else {
+      console.warn('hairProfile.previousColoring descartado por valor o tipo no permitido:', hp.previousColoring);
+    }
+  }
+
+  // Validate lastProcessDetails
+  if (hp.lastProcessDetails !== undefined && hp.lastProcessDetails !== null) {
+    if (typeof hp.lastProcessDetails === 'string') {
+      const trimmed = hp.lastProcessDetails.trim();
+      if (trimmed) {
+        sanitized.lastProcessDetails = trimmed;
+        hasValidField = true;
+      }
+    } else {
+      console.warn('hairProfile.lastProcessDetails descartado por tipo no válido (se esperaba texto):', hp.lastProcessDetails);
+    }
+  }
+
+  // Validate additionalComments
+  if (hp.additionalComments !== undefined && hp.additionalComments !== null) {
+    if (typeof hp.additionalComments === 'string') {
+      const trimmed = hp.additionalComments.trim();
+      if (trimmed) {
+        sanitized.additionalComments = trimmed;
+        hasValidField = true;
+      }
+    } else {
+      console.warn('hairProfile.additionalComments descartado por tipo no válido (se esperaba texto):', hp.additionalComments);
+    }
+  }
+
+  return hasValidField ? sanitized : undefined;
 }
 
 const ALLOWED_STATUSES: readonly BookingStatus[] = [
@@ -159,10 +250,7 @@ export function validateAndSanitizeBooking(item: unknown): AdminBooking | null {
       ? (b.finalPriceMXN as number)
       : null;
 
-  const hairProfile =
-    typeof b.hairProfile === 'object' && b.hairProfile !== null
-      ? (b.hairProfile as import('../types/admin').HairProfile)
-      : undefined;
+  const hairProfile = sanitizeHairProfile(b.hairProfile);
 
   return {
     id: (b.id as string).trim(),

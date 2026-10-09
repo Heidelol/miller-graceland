@@ -3,7 +3,8 @@ import { X, Clock, AlertTriangle } from 'lucide-react';
 import type { AdminBooking } from '../../types/admin';
 import { 
   hasScheduleConflict, calculateEndTime, 
-  formatTimeDisplay, formatDateDisplay 
+  formatTimeDisplay, formatDateDisplay,
+  isWithinOperatingHours
 } from '../../lib/adminBookingLogic';
 
 interface AdminRescheduleModalProps {
@@ -33,6 +34,14 @@ export const AdminRescheduleModal: React.FC<AdminRescheduleModalProps> = ({
 
     if (!newDate || !newTime) {
       setConflictError('Por favor selecciona una fecha y hora válidas.');
+      return;
+    }
+
+    // Operating hours check (11:00 a. m. a 7:00 p. m.)
+    if (!isWithinOperatingHours(newTime, booking.durationMinutes)) {
+      setConflictError(
+        `Horario fuera de servicio. El salón opera de 11:00 a. m. a 7:00 p. m. (11:00 a 19:00). Con una duración de ${booking.durationMinutes} min, la cita debe iniciar a partir de las 11:00 y concluir a más tardar a las 19:00.`
+      );
       return;
     }
 

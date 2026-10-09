@@ -263,45 +263,49 @@ export const AdminBookingDetail: React.FC<AdminBookingDetailProps> = ({
         </div>
 
         {/* 4. Información previa del cabello (para servicios de color/rubios) */}
-        {booking.hairProfile && (
+        {booking.hairProfile && typeof booking.hairProfile === 'object' && (
           <div className="p-4 sm:p-5 space-y-2.5 bg-[#FAF7F2]/60">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#A87428] block">
               Cuéntanos sobre tu cabello · Diagnóstico previo
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-              {booking.hairProfile.currentColor && (
+              {typeof booking.hairProfile.currentColor === 'string' && booking.hairProfile.currentColor.trim() && (
                 <div>
                   <span className="text-[#7A7067] block text-[10px]">Color actual:</span>
                   <span className="font-semibold text-[#231E1B]">{booking.hairProfile.currentColor}</span>
                 </div>
               )}
-              {booking.hairProfile.desiredResult && (
+              {typeof booking.hairProfile.desiredResult === 'string' && booking.hairProfile.desiredResult.trim() && (
                 <div>
                   <span className="text-[#7A7067] block text-[10px]">Resultado que busca:</span>
                   <span className="font-semibold text-[#231E1B]">{booking.hairProfile.desiredResult}</span>
                 </div>
               )}
-              {booking.hairProfile.hairLength && (
+              {typeof booking.hairProfile.hairLength === 'string' && booking.hairProfile.hairLength.trim() && (
                 <div>
                   <span className="text-[#7A7067] block text-[10px]">Largo aproximado:</span>
                   <span className="font-semibold text-[#231E1B] capitalize">{booking.hairProfile.hairLength}</span>
                 </div>
               )}
-              {booking.hairProfile.previousColoring && (
+              {typeof booking.hairProfile.previousColoring === 'string' && booking.hairProfile.previousColoring.trim() && (
                 <div>
                   <span className="text-[#7A7067] block text-[10px]">Coloración / decoloración previa:</span>
                   <span className="font-semibold text-[#231E1B]">
-                    {booking.hairProfile.previousColoring === 'si' ? 'Sí' : booking.hairProfile.previousColoring === 'no' ? 'No' : 'No lo sé'}
+                    {booking.hairProfile.previousColoring === 'si'
+                      ? 'Sí'
+                      : booking.hairProfile.previousColoring === 'no'
+                      ? 'No'
+                      : 'No lo sé'}
                   </span>
                 </div>
               )}
-              {booking.hairProfile.lastProcessDetails && (
+              {typeof booking.hairProfile.lastProcessDetails === 'string' && booking.hairProfile.lastProcessDetails.trim() && (
                 <div className="sm:col-span-2">
                   <span className="text-[#7A7067] block text-[10px]">Último proceso y fecha aproximada:</span>
                   <span className="font-semibold text-[#231E1B]">{booking.hairProfile.lastProcessDetails}</span>
                 </div>
               )}
-              {booking.hairProfile.additionalComments && (
+              {typeof booking.hairProfile.additionalComments === 'string' && booking.hairProfile.additionalComments.trim() && (
                 <div className="sm:col-span-2">
                   <span className="text-[#7A7067] block text-[10px]">Comentarios adicionales:</span>
                   <span className="font-semibold text-[#231E1B]">{booking.hairProfile.additionalComments}</span>
