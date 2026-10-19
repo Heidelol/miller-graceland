@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, Sparkles, Palette, Layers, MessageCircle } from 'lucide-react';
 import { SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory, ServiceItem } from '../types/salon';
+import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
 
 interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
@@ -68,6 +69,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               href={SALON_INFO.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })}
               className="w-full py-2.5 px-4 rounded-xl bg-[#68794E] hover:bg-[#576641] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
             >
               <MessageCircle className="w-3.5 h-3.5" />
@@ -309,7 +311,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                   <div className="mt-auto pt-4">
                     <button
                       type="button"
-                      onClick={() => onSelectService(service)}
+                      onClick={() => {
+                        trackServiceInterest(service.id, service.name, service.priceMXN, service.category);
+                        onSelectService(service);
+                      }}
                       className="gold-button w-full px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
                     >
                       <span>Reservar</span>

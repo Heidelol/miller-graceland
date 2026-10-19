@@ -11,6 +11,7 @@ import { BookingModal } from './components/BookingModal';
 import { AdminDemoPage } from './pages/AdminDemoPage';
 import type { ServiceItem } from './types/salon';
 import { SERVICES } from './data/salonData';
+import { trackBookingModalOpen } from './lib/analytics';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState(
@@ -60,9 +61,11 @@ export function App() {
     return <AdminDemoPage />;
   }
 
-  const handleOpenBooking = (service?: ServiceItem) => {
-    setSelectedService(service || SERVICES[0]);
+  const handleOpenBooking = (service?: ServiceItem, triggerLocation: string = 'general') => {
+    const chosen = service || SERVICES[0];
+    setSelectedService(chosen);
     setIsBookingOpen(true);
+    trackBookingModalOpen(triggerLocation, chosen.name);
   };
 
   const handleCloseBooking = () => {
@@ -72,15 +75,15 @@ export function App() {
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B] flex flex-col selection:bg-[#C8933E]/20 selection:text-[#231E1B] overflow-x-hidden">
       {/* Top Navigation */}
-      <Navbar onOpenBooking={() => handleOpenBooking()} />
+      <Navbar onOpenBooking={() => handleOpenBooking(undefined, 'navbar')} />
 
       {/* Main Landing Sections */}
       <main className="flex-1">
-        <Hero onOpenBooking={() => handleOpenBooking()} />
-        <ServicesSection onSelectService={(service) => handleOpenBooking(service)} />
+        <Hero onOpenBooking={() => handleOpenBooking(undefined, 'hero_cta')} />
+        <ServicesSection onSelectService={(service) => handleOpenBooking(service, 'catalog_service_card')} />
         <ExperienceSection />
         <ConocemeSection />
-        <PaymentMethodsSection onOpenBooking={() => handleOpenBooking()} />
+        <PaymentMethodsSection onOpenBooking={() => handleOpenBooking(undefined, 'payment_methods')} />
         {/* TestimonialsSection is hidden from public site until verified real customer reviews are available */}
         <FAQSection />
       </main>

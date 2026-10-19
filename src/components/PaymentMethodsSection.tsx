@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, CreditCard, Banknote, Landmark, Clock, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
+import { trackWhatsAppClick } from '../lib/analytics';
 
 interface PaymentMethodsSectionProps {
   onOpenBooking?: () => void;
@@ -61,6 +62,7 @@ export const PaymentMethodsSection: React.FC<PaymentMethodsSectionProps> = ({ on
                   href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20anticipos%20y%20formas%20de%20pago`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick('payment_methods')}
                   className="px-6 py-3 rounded-full text-xs font-semibold text-[#3D352F] border border-[#99745A]/25 bg-white hover:border-[#C8933E] hover:text-[#231E1B] transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4 text-[#68794E]" />

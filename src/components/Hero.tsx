@@ -1,5 +1,6 @@
 import { Calendar, ChevronDown, Sparkles, Palette, Layers, CreditCard, MessageCircle, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
+import { trackWhatsAppClick } from '../lib/analytics';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -98,6 +99,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             href={SALON_INFO.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick('hero_card_tratamientos', { serviceName: 'Tratamientos Capilares' })}
             className="group flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#99745A]/20 hover:border-[#68794E] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
           >
             <div className="flex items-center gap-3">

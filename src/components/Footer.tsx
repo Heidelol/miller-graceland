@@ -1,5 +1,6 @@
 import { Phone, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
+import { trackWhatsAppClick, trackInstagramClick, trackPhoneCallClick, trackDirectionsClick } from '../lib/analytics';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -57,6 +58,7 @@ export const Footer: React.FC = () => {
                     href={SALON_INFO.googleMapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackDirectionsClick('footer')}
                     className="inline-flex items-center gap-1 text-[11px] text-[#A87428] hover:text-[#231E1B] font-semibold underline underline-offset-2 transition-colors"
                   >
                     <span>Cómo llegar en Google Maps</span>
@@ -65,7 +67,11 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#68794E] shrink-0" />
-                <a href={SALON_INFO.phoneCall} className="text-[#3D352E] hover:text-[#C8933E] font-medium transition-colors">
+                <a
+                  href={SALON_INFO.phoneCall}
+                  onClick={() => trackPhoneCallClick('footer')}
+                  className="text-[#3D352E] hover:text-[#C8933E] font-medium transition-colors"
+                >
                   {SALON_INFO.phone}
                 </a>
               </div>
@@ -77,6 +83,7 @@ export const Footer: React.FC = () => {
                   href={SALON_INFO.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackInstagramClick('footer')}
                   className="text-[#3D352E] hover:text-[#C8933E] font-medium transition-colors"
                 >
                   {SALON_INFO.instagram}
@@ -131,6 +138,7 @@ export const Footer: React.FC = () => {
         href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20asesor%C3%ADa%20personalizada`}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackWhatsAppClick('floating_button')}
         className="fixed bottom-6 right-6 z-40 group flex items-center gap-2 bg-[#25D366] text-black px-4 py-3 rounded-full shadow-2xl hover:bg-[#20BE5A] transition-all hover:scale-105"
         title="Chatear por WhatsApp"
       >

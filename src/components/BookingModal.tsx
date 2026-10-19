@@ -20,6 +20,12 @@ import {
   generateBookingDates,
   convertTo24Hour,
 } from '../lib/adminBookingLogic';
+import {
+  trackWhatsAppClick,
+  trackServiceInterest,
+  trackBookingStep,
+  trackBookingLeadPrepared,
+} from '../lib/analytics';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -69,6 +75,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   // Invalida el horario si el servicio seleccionado ya no permite terminar antes de las 19:00
   const handleSelectService = useCallback((service: ServiceItem) => {
     setSelectedService(service);
+    trackServiceInterest(service.id, service.name, service.priceMXN, service.category);
     setValidationError(null);
     if (selectedTime) {
       const time24 = convertTo24Hour(selectedTime);
@@ -142,8 +149,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const handleNextFromService = () => {
     setValidationError(null);
     if (isColorService) {
+      trackBookingStep(2, 'hair', selectedService.name);
       setCurrentStep('hair');
     } else {
+      trackBookingStep(2, 'schedule', selectedService.name);
       setCurrentStep('schedule');
     }
   };
@@ -158,6 +167,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       return;
     }
     setValidationError(null);
+    trackBookingStep(3, 'schedule', selectedService.name);
     setCurrentStep('schedule');
   };
 
@@ -178,6 +188,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       );
       return;
     }
+    trackBookingStep(isColorService ? 4 : 3, 'contact', selectedService.name);
     setCurrentStep('contact');
   };
 
@@ -187,6 +198,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       return;
     }
     setValidationError(null);
+    trackBookingStep(isColorService ? 5 : 4, 'summary', selectedService.name);
     setCurrentStep('summary');
   };
 
@@ -267,6 +279,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
     setStorageSaveResult(saveRes);
     setCurrentStep('success');
+
+    // Track completed lead preparation in analytics
+    trackBookingLeadPrepared(
+      selectedService.name,
+      code,
+      amountToPay,
+      selectedDate,
+      selectedTime
+    );
 
     // Trigger celebration confetti
     try {
@@ -1034,6 +1055,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   href={getWhatsAppMessageUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick('booking_modal_final', {
+                    serviceName: selectedService.name,
+                    bookingCode: bookingCode,
+                  })}
                   className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#25D366] hover:bg-[#20BE5A] text-black flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
                 >
                   <MessageCircle className="w-4 h-4" />

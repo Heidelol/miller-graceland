@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
+import { trackWhatsAppClick } from '../lib/analytics';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -76,6 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20sus%20servicios`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick('navbar_desktop')}
               className="flex items-center gap-2 text-xs font-semibold text-[#4A423B] hover:text-[#231E1B] px-3.5 py-2 rounded-full border border-[#99745A]/25 hover:border-[#C8933E] transition-all bg-white shadow-xs"
             >
               <Phone className="w-3.5 h-3.5 text-[#68794E]" />
@@ -174,6 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20agendar%20cita`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick('navbar_mobile')}
               className="w-full py-2.5 rounded-xl text-center text-xs font-semibold text-[#3D352F] border border-[#99745A]/25 bg-white flex items-center justify-center gap-2 shadow-xs"
             >
               <Phone className="w-4 h-4 text-[#68794E]" />
