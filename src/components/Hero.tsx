@@ -78,13 +78,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
           {/* Right Column: Hero Photograph (Desktop: right; Mobile: below actions, contained size) */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-[#99745A]/25 shadow-lg bg-[#E8E1D5]">
+            <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-[#99745A]/25 shadow-lg bg-[#FAF7F2]">
               <img
-                src="/images/hero/resultado-color.webp"
-                alt="Resultado de colorimetría y diseño capilar en Miller Greiseland Studio"
-                width={720}
-                height={1280}
-                className="w-full h-full object-cover object-[center_32%] transition-transform duration-700 hover:scale-[1.03]"
+                src="/images/hero/portada.webp"
+                alt="Miller Greiseland - Estilista profesional, colorimetrista y especialista en extensiones"
+                width={1122}
+                height={1402}
+                className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.03]"
               />
             </div>
           </div>
