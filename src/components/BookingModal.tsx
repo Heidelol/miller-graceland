@@ -6,7 +6,7 @@ import {
   Sparkles, HelpCircle, AlertCircle
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { SERVICES, SALON_INFO } from '../data/salonData';
+import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceItem } from '../types/salon';
 import type { AdminBooking } from '../types/admin';
 import { loadBookingsFromStorage, saveBookingsToStorage } from '../lib/adminStorage';
@@ -41,7 +41,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   initialService,
 }) => {
   const [selectedService, setSelectedService] = useState<ServiceItem>(
-    initialService || SERVICES[0]
+    initialService || PUBLIC_SERVICES[0]
   );
   
   const selectedServiceRef = useRef<HTMLDivElement | null>(null);
@@ -425,7 +425,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   1. Confirma o cambia tu servicio:
                 </label>
                 <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
-                  {SERVICES.map((s) => {
+                  {PUBLIC_SERVICES.map((s) => {
                     const isSelected = selectedService.id === s.id;
                     return (
                       <div

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, MessageCircle } from 'lucide-react';
-import { SERVICES, SALON_INFO } from '../data/salonData';
+import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory, ServiceItem } from '../types/salon';
 import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
 import { PhotoCarousel } from './PhotoCarousel';
@@ -20,7 +20,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
     { key: 'color', label: 'Color' },
     { key: 'blondes', label: 'Signature Blondes' },
     { key: 'extensions', label: 'Extensions' },
-    { key: 'cuts', label: 'Signature Cuts' },
   ];
 
   const toggleDetails = (serviceId: string) => {
@@ -31,8 +30,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
   };
 
   const filteredServices = activeCategory === 'todos'
-    ? SERVICES
-    : SERVICES.filter((s) => activeCategory === 'color-family'
+    ? PUBLIC_SERVICES
+    : PUBLIC_SERVICES.filter((s) => activeCategory === 'color-family'
       ? s.category === 'color' || s.category === 'blondes'
       : s.category === activeCategory);
 

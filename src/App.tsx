@@ -10,7 +10,7 @@ import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { AdminDemoPage } from './pages/AdminDemoPage';
 import type { ServiceItem } from './types/salon';
-import { SERVICES } from './data/salonData';
+import { PUBLIC_SERVICES } from './data/salonData';
 import { trackBookingModalOpen } from './lib/analytics';
 
 export function App() {
@@ -62,7 +62,7 @@ export function App() {
   }
 
   const handleOpenBooking = (service?: ServiceItem, triggerLocation: string = 'general') => {
-    const chosen = service || SERVICES[0];
+    const chosen = service || PUBLIC_SERVICES[0];
     setSelectedService(chosen);
     setIsBookingOpen(true);
     trackBookingModalOpen(triggerLocation, chosen.name);

@@ -3,7 +3,7 @@ import { STUDIO_PHOTOS } from './studioPhotos';
 
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
-  tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS · SIGNATURE CUTS',
+  tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS',
   heroSubtitle: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
   description: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
   servicesIntro: 'Una selección de servicios de colorimetría, rubios, extensiones y diseño capilar diseñados para preservar la salud del cabello con atención personalizada.',
@@ -305,6 +305,12 @@ export const SERVICES: ServiceItem[] = SERVICE_CATALOG.map((service) => ({
   depositMXN: service.priceMXN * RESERVATION_PERCENT / 100,
 }));
 
+// El catálogo completo conserva compatibilidad con registros anteriores.
+// El sitio y las nuevas solicitudes solo ofrecen los servicios vigentes.
+export const PUBLIC_SERVICES = SERVICES.filter(
+  (service) => service.id !== 'corte-signature' && service.id !== 'gentlemens-cut'
+);
+
 // Datos de muestra reservados para desarrollo interno (ocultos de la web pública hasta contar con reseñas verificadas del negocio)
 export const TESTIMONIALS_DEV_PREVIEW = [
   {
@@ -350,10 +356,6 @@ export const FAQS = [
   {
     question: '¿La bajada de extensiones es realmente gratis?',
     answer: '¡Sí! Al adquirir el servicio de Bajada + Recolocación de Extensiones, el retiro previo no tiene costo adicional. El precio se ajusta de acuerdo con los gramos de cabello (100g, 150-200g o más).'
-  },
-  {
-    question: '¿Qué incluye la asesoría visagista en el Corte Signature?',
-    answer: 'Analizamos las facciones de tu rostro, proporciones corporales, textura y caída natural del cabello, además de evaluar la salud cosmética de tu fibra para diseñar el corte más favorecedor y recomendarte una rutina de cuidado en casa.'
   },
   {
     question: '¿Qué política aplica para cambios de cita y anticipos?',

@@ -4,10 +4,12 @@ import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 register('./tsx-loader.mjs', import.meta.url);
 const { PhotoCarousel } = await import('../src/components/PhotoCarousel.tsx');
 const { ServicesSection } = await import('../src/components/ServicesSection.tsx');
+const { BookingModal } = await import('../src/components/BookingModal.tsx');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://millergreiseland.com' });
 Object.assign(globalThis, {
   window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
@@ -91,4 +93,19 @@ test('el acceso de Tintes incluye Color y Signature Blondes y conserva el filtro
   await click([...container.querySelectorAll('button')].find(b => b.textContent === 'Color'));
   assert.equal(container.querySelectorAll('[data-service-id]').length, 3);
   assert.equal(container.querySelector('[data-service-id="balayage-rubio"]'), null);
+});
+
+test('los cortes retirados no se ofrecen en el catálogo ni en la solicitud de cita', () => {
+  for (const component of [
+    createElement(ServicesSection, { onSelectService() {} }),
+    createElement(BookingModal, { isOpen: true, onClose() {}, initialService: null }),
+  ]) {
+    const page = new JSDOM(renderToStaticMarkup(component));
+    const text = page.window.document.body.textContent;
+    assert.doesNotMatch(text, /Corte Signature|Gentlemen.s Cut|Signature Cuts/i);
+    assert.match(text, /Retoque de Color/);
+    assert.match(text, /Balayage Rubio/);
+    assert.match(text, /Bajada de Extensiones/);
+    page.window.close();
+  }
 });
