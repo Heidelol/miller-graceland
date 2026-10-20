@@ -26,11 +26,21 @@ Al cambiar los datos del negocio, actualizar tanto `src/data/salonData.ts` como 
 - El rastreo mostrado corresponde al 19 de octubre de 2026, anterior a las mejoras de SEO local. El informe aún no refleja la declaración canónica añadida el día 20; Google ya identifica la URL inspeccionada como su canónica.
 - Los informes de rendimiento de la propiedad recién verificada siguen procesándose. Verificar la propiedad y enviar el sitemap no garantizan una posición determinada en las búsquedas.
 
+## Ficha de Google: 20 de octubre de 2026
+
+- Acceso de administración confirmado en la ficha existente de Miller Greiseland Studio.
+- Instagram corregido a `https://www.instagram.com/millergreiseland.studio/` y enlace al catálogo configurado como `https://millergreiseland.com/#servicios`.
+- WhatsApp configurado como contacto principal de chat: `https://wa.me/529831373038`.
+- Categoría principal conservada como `Beauty Salon`. Añadidas las categorías oficiales `Hairdresser` y `Hair extension technician`.
+- El editor de información muestra los contactos y las categorías guardados sin avisos de revisión pendientes. Los resultados públicos todavía pueden reflejar valores anteriores mientras se actualizan.
+- Añadidas y comprobadas al reabrir las descripciones en español de los servicios existentes `Hair extensions`, `Balayage`, `Tinte` y `Tratamientos para el cabello`. Se mantuvieron sin precio publicado; requieren valoración según el servicio.
+- No se eliminaron otros servicios de la ficha ni se alteraron horarios, atributos o reseñas. Las fotos reales para Google y la revisión de los horarios siguen pendientes.
+
 ## Siguientes pasos
 
 1. Revisar los informes de Search Console cuando haya datos y comprobar que un nuevo rastreo recoge el título, la descripción y los datos estructurados actuales.
 2. Revisar la medición: distinguir clics a WhatsApp, solicitud preparada y cita confirmada. El anticipo requerido no es dinero cobrado. Verificar los eventos recibidos en Analytics antes de utilizarlos como conversiones de Ads.
-3. Corregir el enlace de Instagram en la ficha de Maps si el perfil oficial es `@millergreiseland.studio`; revisar categorías, servicios, horarios semanales y directorios con direcciones anteriores.
+3. Incorporar fotografías reales autorizadas para Google, facilitar el enlace de reseñas a clientas y confirmar los horarios semanales. La ficha muestra atención presencial de lunes a sábado de 11:00 a 19:00, domingo cerrado, y atención en línea hasta las 21:00; confirmar esa diferencia antes de modificarla. Revisar también directorios con direcciones anteriores.
 4. Preparar páginas de servicios con contenido propio y fichas comerciales confirmadas. Validar demanda y costes estimados en el Planificador de palabras clave antes de acordar presupuesto y activar campañas de búsqueda locales.
 
 Los días semanales de apertura siguen pendientes de confirmación y no se han añadido al JSON-LD. No se incluyen coordenadas inferidas ni valoraciones de la propia empresa en el marcado. Todavía no se han configurado campañas ni corregido el seguimiento de conversiones.
