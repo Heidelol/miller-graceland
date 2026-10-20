@@ -8,6 +8,7 @@ interface PhotoCarouselProps {
   label: string;
   className?: string;
   frameClassName?: string;
+  fade?: boolean;
 }
 
 interface LightboxProps {
@@ -73,13 +74,21 @@ function PhotoLightbox({ image, label, onClose, onMove, multiple }: LightboxProp
   );
 }
 
-export function PhotoCarousel({ images, label, className = '', frameClassName = 'aspect-[16/10]' }: PhotoCarouselProps) {
+export function PhotoCarousel({ images, label, className = '', frameClassName = 'aspect-[16/10]', fade = false }: PhotoCarouselProps) {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [previousImage, setPreviousImage] = useState<StudioPhoto | null>(null);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const visibleImage = useRef<StudioPhoto | null>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const current = images[index] ?? images[0];
   const multiple = images.length > 1;
-  const move = (direction: number) => setIndex(previous => (previous + direction + images.length) % images.length);
+  const selectImage = (position: number) => {
+    if (position === index) return;
+    if (fade) setPreviousImage(visibleImage.current);
+    setIndex(position);
+  };
+  const move = (direction: number) => selectImage((index + direction + images.length) % images.length);
 
   if (!current) return null;
 
@@ -96,7 +105,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
           event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1);
         } else if (event.key === 'Home' || event.key === 'End') {
-          event.preventDefault(); setIndex(event.key === 'Home' ? 0 : images.length - 1);
+          event.preventDefault(); selectImage(event.key === 'Home' ? 0 : images.length - 1);
         }
       }}
       onPointerDown={(event) => {
@@ -114,6 +123,18 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         if (Math.abs(horizontal) > 50 && Math.abs(horizontal) > Math.abs(vertical) * 1.4) move(horizontal < 0 ? 1 : -1);
       }}
     >
+      {fade && previousImage && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url("${previousImage.src}")`,
+            backgroundSize: previousImage.fit ?? 'cover',
+            backgroundPosition: previousImage.objectPosition ?? 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+      )}
       <img
         key={current.src}
         src={current.src}
@@ -125,8 +146,16 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         loading="lazy"
         decoding="async"
         draggable={false}
+        data-ready={loadedSrc === current.src}
+        onLoad={(event) => {
+          if (!fade) return;
+          visibleImage.current = { ...current, src: event.currentTarget.currentSrc || current.src };
+          setLoadedSrc(current.src);
+          if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) setPreviousImage(null);
+        }}
+        onAnimationEnd={() => { if (fade) setPreviousImage(null); }}
         style={{ objectPosition: current.objectPosition ?? 'center', objectFit: current.fit ?? 'cover' }}
-        className="photo-carousel-image absolute inset-0 w-full h-full"
+        className={`photo-carousel-image absolute inset-0 w-full h-full${fade ? ' photo-carousel-fade' : ''}`}
       />
       {multiple && <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#F8F5EE]/95 text-[#231E1B] rounded-full text-[11px] tabular-nums" aria-hidden="true">{index + 1} / {images.length}</span>}
       {current.caption && <p className="photo-caption absolute top-3 left-3 right-16 rounded-lg bg-[#F8F5EE]/95 px-2 py-1 text-[10px] text-[#231E1B]">{current.caption}</p>}
@@ -137,7 +166,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
             <button type="button" className="photo-control photo-control-flat" aria-label={`Fotografía anterior de ${label}`} onClick={() => move(-1)}><ChevronLeft size={18} aria-hidden="true" /></button>
             <div className="flex items-center">
               {images.map((image, position) => (
-                <button key={image.src} type="button" className="photo-dot" aria-label={`Ver fotografía ${position + 1} de ${label}`} aria-current={index === position ? 'true' : undefined} onClick={() => setIndex(position)}>
+                <button key={image.src} type="button" className="photo-dot" aria-label={`Ver fotografía ${position + 1} de ${label}`} aria-current={index === position ? 'true' : undefined} onClick={() => selectImage(position)}>
                   <span className={`block w-1.5 h-1.5 rounded-full ${index === position ? 'bg-[#68794E]' : 'bg-[#99745A]/40'}`} />
                 </button>
               ))}

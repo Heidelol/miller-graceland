@@ -19,6 +19,7 @@ export const ConocemeSection: React.FC = () => {
               <PhotoCarousel
                 images={ABOUT_PHOTOS}
                 label="Miller Greiseland y formación internacional"
+                fade
                 frameClassName="aspect-[4/5]"
                 className="rounded-3xl border border-[#99745A]/20 shadow-lg"
               />

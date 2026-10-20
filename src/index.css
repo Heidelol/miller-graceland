@@ -172,6 +172,9 @@
 .photo-dot { display: grid; place-items: center; width: 28px; height: 36px; cursor: pointer; border-radius: 999px; }
 .photo-carousel-image { animation: photo-appear .18s ease-out; }
 @keyframes photo-appear { from { opacity: .6; } to { opacity: 1; } }
+.photo-carousel-fade { animation: none; opacity: 0; }
+.photo-carousel-fade[data-ready="true"] { animation: photo-crossfade .42s ease-in-out both; }
+@keyframes photo-crossfade { from { opacity: 0; } to { opacity: 1; } }
 .photo-lightbox {
   position: fixed;
   inset: 0;
@@ -195,4 +198,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .photo-carousel-image { animation: none; }
+  .photo-carousel-fade[data-ready="true"] { animation: none; opacity: 1; }
 }

@@ -34,6 +34,8 @@ Los saltos de numeración de los originales no representan archivos faltantes. T
 
 `PhotoCarousel` monta únicamente la foto seleccionada, sin reproducción automática. Permite flechas, indicadores, gestos táctiles horizontales y teclado (flechas, Inicio y Fin con el carrusel enfocado). Una foto individual conserva la ampliación y omite los controles de carrusel.
 
+En Sobre mí, el cambio usa un fundido de 420 ms. La foto anterior permanece de fondo hasta que carga la siguiente y termina la transición; después se retira. No se descargan las demás fotos por adelantado. Con movimiento reducido, la imagen aparece directamente al cargar.
+
 La ampliación utiliza un diálogo nativo: contiene el foco, admite Escape, bloquea el desplazamiento de fondo y devuelve el foco al control de origen. La foto completa se muestra sin recorte. Las transiciones respetan la preferencia de movimiento reducido.
 
 Las tarjetas destacadas mantienen proporción 4:3 y las fotografías de servicios 16:9. El carrusel principal de Sobre mí tiene proporción 4:5 y las fotos llenan el marco sin franjas laterales: primero el retrato, después las tres imágenes de formación. Cada imagen conserva su encuadre para mantener visibles los rostros; la ampliación permite ver la fotografía completa. Está junto a la presentación, fuera de la historia desplegable, y evita duplicar esa galería dentro del texto.
