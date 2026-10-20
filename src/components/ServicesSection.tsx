@@ -1,19 +1,22 @@
 import { useState } from 'react';
-import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, Sparkles, Palette, Layers, MessageCircle } from 'lucide-react';
+import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, MessageCircle } from 'lucide-react';
 import { SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory, ServiceItem } from '../types/salon';
 import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
+import { PhotoCarousel } from './PhotoCarousel';
+import { STUDIO_PHOTOS } from '../data/studioPhotos';
 
 interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectService }) => {
-  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('todos');
+  const [activeCategory, setActiveCategory] = useState<ServiceCategory | 'color-family'>('todos');
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({});
 
-  const categories: { key: ServiceCategory; label: string }[] = [
+  const categories: { key: ServiceCategory | 'color-family'; label: string }[] = [
     { key: 'todos', label: 'Todos' },
+    { key: 'color-family', label: 'Color y rubios' },
     { key: 'color', label: 'Color' },
     { key: 'blondes', label: 'Signature Blondes' },
     { key: 'extensions', label: 'Extensions' },
@@ -29,7 +32,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
 
   const filteredServices = activeCategory === 'todos'
     ? SERVICES
-    : SERVICES.filter((s) => s.category === activeCategory);
+    : SERVICES.filter((s) => activeCategory === 'color-family'
+      ? s.category === 'color' || s.category === 'blondes'
+      : s.category === activeCategory);
 
   return (
     <section id="servicios" className="py-24 bg-[#F2EDE3] relative">
@@ -50,78 +55,30 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           </p>
         </div>
 
-        {/* Commercial Priorities Access Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto mb-12">
-          {/* 1. Tratamientos Capilares (WhatsApp CTA) */}
-          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center mb-3">
-                <Sparkles className="w-5 h-5 text-[#68794E]" />
+        {/* Fotografías de las tres prioridades comerciales. */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-12">
+          {[
+            { title: 'Tratamientos Capilares', images: STUDIO_PHOTOS.treatments, description: 'Protocolos reconstructivos y nutrición profunda adaptados al estado de tu cabello.', action: 'Consultar Tratamientos', category: null },
+            { title: 'Tintes y Coloración', images: STUDIO_PHOTOS.color, description: 'Diseño de color, retoques y rubios personalizados según tu cabello y el resultado que buscas.', action: 'Ver color y rubios', category: 'color-family' as const },
+            { title: 'Extensiones de Cabello Humano', images: STUDIO_PHOTOS.extensions, description: '100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.', action: 'Ver Extensiones', category: 'extensions' as const },
+          ].map((priority) => (
+            <article key={priority.title} className="rounded-2xl overflow-hidden bg-white border border-[#99745A]/20 shadow-xs flex flex-col">
+              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/3]" />
+              <div className="p-5 flex flex-col flex-1">
+                <h3 className="font-serif-luxury text-xl font-bold text-[#231E1B] mb-2 md:min-h-14">{priority.title}</h3>
+                <p className="text-xs text-[#5C534B] leading-relaxed mb-5">{priority.description}</p>
+                {priority.category ? (
+                  <button type="button" onClick={() => setActiveCategory(priority.category)} className="mt-auto w-full py-3 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors">
+                    {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#C8933E]" aria-hidden="true" />
+                  </button>
+                ) : (
+                  <a href={SALON_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })} className="mt-auto w-full py-3 px-4 rounded-xl bg-[#68794E] hover:bg-[#576641] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors">
+                    <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />{priority.action}
+                  </a>
+                )}
               </div>
-              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
-                Tratamientos Capilares
-              </h3>
-              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
-                Protocolos reconstructivos y nutrición profunda adaptados al estado de tu cabello.
-              </p>
-            </div>
-            <a
-              href={SALON_INFO.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })}
-              className="w-full py-2.5 px-4 rounded-xl bg-[#68794E] hover:bg-[#576641] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Consultar Tratamientos</span>
-            </a>
-          </div>
-
-          {/* 2. Tintes y Coloración (Direct filter to Color) */}
-          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-[#C8933E]/10 border border-[#C8933E]/25 flex items-center justify-center mb-3">
-                <Palette className="w-5 h-5 text-[#C8933E]" />
-              </div>
-              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
-                Tintes y Coloración
-              </h3>
-              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
-                Balayage, diseño de color, rubios personalizados y retoque de color con K18.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setActiveCategory('color')}
-              className="w-full py-2.5 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
-            >
-              <span>Ver Servicios de Color</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#C8933E]" />
-            </button>
-          </div>
-
-          {/* 3. Extensiones de Cabello Humano (Direct filter to Extensions) */}
-          <div className="p-5 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs flex flex-col justify-between">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center mb-3">
-                <Layers className="w-5 h-5 text-[#68794E]" />
-              </div>
-              <h3 className="font-serif-luxury text-lg font-bold text-[#231E1B] mb-1">
-                Extensiones de Cabello Humano
-              </h3>
-              <p className="text-xs text-[#5C534B] leading-relaxed mb-4">
-                100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setActiveCategory('extensions')}
-              className="w-full py-2.5 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
-            >
-              <span>Ver Extensiones</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#68794E]" />
-            </button>
-          </div>
+            </article>
+          ))}
         </div>
 
         {/* Category Filter Pills (Solid palette colors, no emojis, accessible focus) */}
@@ -133,6 +90,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 key={cat.key}
                 type="button"
                 onClick={() => setActiveCategory(cat.key)}
+                aria-pressed={isActive}
                 className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2 ${
                   isActive
                     ? 'bg-[#68794E] text-white shadow-xs'
@@ -153,33 +111,38 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
             return (
               <div
                 key={service.id}
+                data-service-id={service.id}
                 className="bg-white rounded-3xl overflow-hidden flex flex-col group border border-[#99745A]/20 hover:border-[#C8933E]/50 shadow-xs hover:shadow-lg transition-all duration-300"
               >
                 {/* 1. Fotografía con proporción uniforme */}
                 <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-[#E8E1D5]">
-                  <img
+                  {service.photo ? (
+                    <PhotoCarousel images={[service.photo]} label={service.name} frameClassName="h-full" />
+                  ) : <img
                     src={service.image}
                     alt={service.imageAlt || `${service.name} · Referencia visual ilustrativa`}
                     className={`w-full h-full object-cover ${service.imageObjectPosition || 'object-center'} transition-transform duration-500 group-hover:scale-105`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    loading="lazy"
+                    decoding="async"
+                  />}
+                  {!service.photo && <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />}
 
                   {/* Signature Badge */}
                   {service.popular && (
-                    <div className="absolute top-3.5 left-3.5 bg-[#C8933E] text-[#231E1B] text-[11px] font-bold tracking-wider px-3 py-1 rounded-full shadow-xs">
+                    <div className="absolute pointer-events-none top-3.5 left-3.5 bg-[#C8933E] text-[#231E1B] text-[11px] font-bold tracking-wider px-3 py-1 rounded-full shadow-xs">
                       Signature
                     </div>
                   )}
 
                   {/* Referencia ilustrativa Badge (únicamente en fotos de stock) */}
                   {service.isIllustrative !== false && (
-                    <div className="absolute top-3.5 right-3.5 bg-black/65 backdrop-blur-xs text-white/95 text-[10px] font-medium tracking-wide px-2.5 py-0.5 rounded-full border border-white/20">
+                    <div className="absolute pointer-events-none top-3.5 right-3.5 bg-black/65 backdrop-blur-xs text-white/95 text-[10px] font-medium tracking-wide px-2.5 py-0.5 rounded-full border border-white/20">
                       Referencia ilustrativa
                     </div>
                   )}
 
                   {/* Duration Badge */}
-                  <div className="absolute bottom-3.5 right-3.5 bg-white/95 backdrop-blur-xs border border-[#99745A]/20 text-[#231E1B] text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-xs">
+                  <div className="absolute pointer-events-none bottom-3.5 right-3.5 bg-white/95 backdrop-blur-xs border border-[#99745A]/20 text-[#231E1B] text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-xs">
                     <Clock className="w-3.5 h-3.5 text-[#68794E]" />
                     <span>{service.durationMinutes} min</span>
                   </div>

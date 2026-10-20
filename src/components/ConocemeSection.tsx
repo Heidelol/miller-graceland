@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
+import { PhotoCarousel } from './PhotoCarousel';
+import { STUDIO_PHOTOS } from '../data/studioPhotos';
 
 export const ConocemeSection: React.FC = () => {
   const [isStoryOpen, setIsStoryOpen] = useState(false);
@@ -139,6 +141,10 @@ export const ConocemeSection: React.FC = () => {
               <p>
                 Cuento también con formación en corte bajo el sistema Pivot Point, una metodología de educación capilar reconocida internacionalmente.
               </p>
+              <div className="max-w-sm mx-auto pt-6">
+                <PhotoCarousel images={STUDIO_PHOTOS.training} label="Formación y trayectoria de Miller" frameClassName="aspect-[4/5]" className="rounded-2xl" />
+                <p className="mt-3 text-center text-xs text-[#7A7067]">Momentos de mi formación y trayectoria.</p>
+              </div>
             </div>
 
             {/* 3. Mis especialidades */}

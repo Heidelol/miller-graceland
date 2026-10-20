@@ -1,5 +1,7 @@
 import React from 'react';
 import { Sparkles, CheckCircle2, Globe, Heart, ShieldCheck } from 'lucide-react';
+import { PhotoCarousel } from './PhotoCarousel';
+import { STUDIO_PHOTOS } from '../data/studioPhotos';
 
 export const ExperienceSection: React.FC = () => {
   const confirmedBrands = [
@@ -63,21 +65,25 @@ export const ExperienceSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {confirmedBrands.map((brand) => (
-              <div
-                key={brand.name}
-                className="bg-white border border-[#99745A]/20 rounded-2xl p-5 text-center shadow-xs hover:border-[#C8933E]/50 transition-colors flex flex-col items-center justify-center min-h-[110px]"
-              >
-                <span className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B] tracking-wider block">
-                  {brand.name}
-                </span>
-                <span className="text-[11px] text-[#7A7067] mt-1.5 leading-snug">
-                  {brand.focus}
-                </span>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {[
+              { ...confirmedBrands[0], images: STUDIO_PHOTOS.avyna },
+              { ...confirmedBrands[1], images: STUDIO_PHOTOS.chocolatto },
+              { ...confirmedBrands[2], images: STUDIO_PHOTOS.schwarzkopf },
+            ].map((brand) => (
+              <article key={brand.name} className="bg-white border border-[#99745A]/20 rounded-2xl overflow-hidden shadow-xs">
+                <PhotoCarousel images={brand.images} label={brand.name} frameClassName="aspect-[4/3]" />
+                <div className="p-5 text-center">
+                  <h3 className="font-serif-luxury text-2xl font-bold text-[#231E1B]">{brand.name}</h3>
+                  <p className="text-xs text-[#7A7067] mt-1.5 leading-relaxed">{brand.focus}</p>
+                </div>
+              </article>
             ))}
           </div>
+          <p className="max-w-5xl mx-auto mt-6 text-center text-sm text-[#5C534B]">
+            También trabajamos con <span className="font-serif-luxury text-xl font-semibold text-[#231E1B]">Wella</span>
+            <span className="block mt-1 text-xs text-[#7A7067]">Formulación y matices profesionales</span>
+          </p>
         </div>
 
         {/* Methodology Pillars Grid */}

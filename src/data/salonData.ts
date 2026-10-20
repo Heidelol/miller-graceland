@@ -1,4 +1,5 @@
 import type { ServiceItem } from '../types/salon';
+import { STUDIO_PHOTOS } from './studioPhotos';
 
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
@@ -191,7 +192,10 @@ const SERVICE_CATALOG: Omit<ServiceItem, 'depositMXN'>[] = [
     priceMXN: 2500,
     priceDisplay: 'Desde $2,500',
     popular: true,
-    image: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1000&q=80',
+    image: STUDIO_PHOTOS.extensionServices.reposition.src,
+    imageAlt: STUDIO_PHOTOS.extensionServices.reposition.alt,
+    photo: STUDIO_PHOTOS.extensionServices.reposition,
+    isIllustrative: false,
     note: 'La bajada de extensiones es GRATIS al adquirir el servicio de recolocación. El precio final puede determinarse de acuerdo con la cantidad de cabello y extensiones a trabajar.',
     tiers: [
       { label: 'Hasta 100 g', priceMXN: 2500 },
@@ -215,7 +219,10 @@ const SERVICE_CATALOG: Omit<ServiceItem, 'depositMXN'>[] = [
     durationMinutes: 60,
     priceMXN: 850,
     priceDisplay: '$850 — $1,000',
-    image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1000&q=80',
+    image: STUDIO_PHOTOS.extensionServices.removal.src,
+    imageAlt: STUDIO_PHOTOS.extensionServices.removal.alt,
+    photo: STUDIO_PHOTOS.extensionServices.removal,
+    isIllustrative: false,
     includes: [
       'Retiro profesional y cuidadoso de las extensiones',
       'Prioridad en la integridad del cabello natural',
@@ -232,7 +239,10 @@ const SERVICE_CATALOG: Omit<ServiceItem, 'depositMXN'>[] = [
     durationMinutes: 50,
     priceMXN: 600,
     priceDisplay: '$600',
-    image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1000&q=80',
+    image: STUDIO_PHOTOS.extensionServices.wash.src,
+    imageAlt: STUDIO_PHOTOS.extensionServices.wash.alt,
+    photo: STUDIO_PHOTOS.extensionServices.wash,
+    isIllustrative: true,
     note: 'Para mantener las extensiones limpias, suaves, luminosas y perfectamente integradas al cabello natural.',
     includes: [
       'Lavado profesional',

@@ -1,3 +1,5 @@
+import type { StudioPhoto } from '../data/studioPhotos';
+
 export type ServiceCategory = 
   | 'todos'
   | 'color'
@@ -23,6 +25,7 @@ export interface ServiceItem {
   depositMXN: number; // 50% del precio mínimo publicado; el precio final se confirma en el salón
   popular?: boolean;
   image: string;
+  photo?: StudioPhoto;
   imageAlt?: string;
   imageObjectPosition?: string;
   isIllustrative?: boolean;

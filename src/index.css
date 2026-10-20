@@ -147,3 +147,52 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #C8933E;
 }
+
+/* Photography shares the warm palette and keeps a stable frame while navigating. */
+.photo-carousel { touch-action: pan-y pinch-zoom; container-type: inline-size; }
+.photo-carousel:focus-visible, .photo-control:focus-visible, .photo-dot:focus-visible {
+  outline: 2px solid #231E1B;
+  outline-offset: -3px;
+}
+.photo-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(153, 116, 90, .18);
+  background: rgba(248, 245, 238, .96);
+  color: #231E1B;
+  cursor: pointer;
+}
+.photo-control:hover { background: #EFE9DC; }
+.photo-control-flat { width: 36px; height: 36px; border: 0; background: transparent; }
+.photo-dot { display: grid; place-items: center; width: 28px; height: 36px; cursor: pointer; border-radius: 999px; }
+.photo-carousel-image { animation: photo-appear .18s ease-out; }
+@keyframes photo-appear { from { opacity: .6; } to { opacity: 1; } }
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  padding: 0;
+  width: min(94vw, 900px);
+  max-width: 94vw;
+  max-height: 94dvh;
+  border: 1px solid rgba(153, 116, 90, .25);
+  border-radius: 20px;
+  background: #F8F5EE;
+  color: #231E1B;
+  overflow: auto;
+}
+.photo-lightbox::backdrop { background: rgba(35, 30, 27, .78); }
+.photo-lightbox-content { width: 100%; }
+.photo-lightbox-image { display: block; width: 100%; height: min(75dvh, 850px); object-fit: contain; }
+@container (max-width: 260px) {
+  .photo-zoom { top: .75rem; bottom: auto; }
+  .photo-caption { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-carousel-image { animation: none; }
+}
