@@ -7,6 +7,7 @@
 - Datos `HairSalon` incluidos en el HTML inicial: nombre, dirección, teléfono, fotografía, logo, Instagram y enlace a la ficha de Google Maps.
 - Ciudad, estado y código postal coinciden con la ficha pública de Miller Greiseland Studio consultada el 20 de octubre de 2026. El enlace a Maps utiliza esa ficha; no se han inferido coordenadas.
 - `public/robots.txt` y `public/sitemap.xml` se publican como archivos estáticos reales. El sitemap contiene solo la portada, que actualmente reúne las secciones públicas del sitio. Los fragmentos como `#servicios` no son páginas independientes.
+- Icono de búsqueda derivado del logo oficial, sin deformarlo: `public/favicon.png` cuadrado de 96 × 96 y `public/favicon.ico` con versiones de 16, 32 y 48 píxeles. La portada declara ambos; el logo original de 1225 × 1284 se conserva para el sitio. Google debe volver a rastrear y procesar la portada para actualizar el icono y puede elegir otro texto para el resultado.
 - La exclusión de `/admin-demo` en robots es una indicación para rastreadores, no una medida de seguridad.
 
 Al cambiar los datos del negocio, actualizar tanto `src/data/salonData.ts` como el JSON-LD de `index.html` para mantenerlos coherentes. Actualizar `lastmod` del sitemap cuando cambie el contenido de la portada.
