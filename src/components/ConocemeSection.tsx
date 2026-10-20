@@ -16,18 +16,17 @@ export const ConocemeSection: React.FC = () => {
           {/* Columna Izquierda: Retrato fotográfico */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-[#99745A]/20 shadow-lg bg-[#E8E1D5]">
-              <picture>
-                <source srcSet="/miller-greiseland.webp" type="image/webp" />
                 <img
-                  src="/miller-greiseland.jpg"
+                  src="/images/studio/conoceme.webp"
+                  srcSet="/images/studio/conoceme-480.webp 480w, /images/studio/conoceme.webp 960w"
+                  sizes="(min-width: 1024px) 448px, (min-width: 640px) 448px, 94vw"
                   alt="Retrato de Miller Greiseland"
-                  width={1200}
-                  height={1500}
+                  width={960}
+                  height={1263}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover object-[center_28%] scale-[1.12] transition-transform duration-700 hover:scale-[1.15]"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100"
                 />
-              </picture>
             </div>
           </div>
 

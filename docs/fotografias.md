@@ -25,6 +25,7 @@ La selección procede de la carpeta Documentos/Miller. Los archivos originales s
 | Formacioninternacional2.PNG | Historia ampliada de Conóceme, foto 2 | formacion-2 |
 | FormacionInternacional3.PNG | Historia ampliada de Conóceme, foto 3 | formacion-3 |
 | Portada.PNG | Portada ya existente; mismo archivo original | images/hero/portada.webp |
+| conoceme.PNG | Retrato principal de Sobre mí | images/studio/conoceme.webp |
 | Logo-Miller.png | Logo ya existente; mismo archivo original | logo-miller.png |
 
 Los saltos de numeración de los originales no representan archivos faltantes. Todas las fotos de cada grupo están incluidas. Wella conserva su presentación tipográfica porque no hay foto suya en la carpeta.
