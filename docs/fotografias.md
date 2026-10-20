@@ -21,11 +21,11 @@ La selección procede de la carpeta Documentos/Miller. Los archivos originales s
 | Schwarzkopf1.PNG | Carrusel de Schwarzkopf, foto 1 | schwarzkopf-1 |
 | Shwarzkopf2.PNG | Carrusel de Schwarzkopf, foto 2 | schwarzkopf-2 |
 | schwarzkopf5.PNG | Carrusel de Schwarzkopf, foto 3; incluye Lendan | schwarzkopf-5 |
-| FormacionInternacional1.PNG | Historia ampliada de Conóceme, foto 1 | formacion-1 |
-| Formacioninternacional2.PNG | Historia ampliada de Conóceme, foto 2 | formacion-2 |
-| FormacionInternacional3.PNG | Historia ampliada de Conóceme, foto 3 | formacion-3 |
+| FormacionInternacional1.PNG | Carrusel principal de Sobre mí, foto 2 | formacion-1 |
+| Formacioninternacional2.PNG | Carrusel principal de Sobre mí, foto 3 | formacion-2 |
+| FormacionInternacional3.PNG | Carrusel principal de Sobre mí, foto 4 | formacion-3 |
 | Portada.PNG | Portada ya existente; mismo archivo original | images/hero/portada.webp |
-| conoceme.PNG | Retrato principal de Sobre mí | images/studio/conoceme.webp |
+| conoceme.PNG | Carrusel principal de Sobre mí, foto 1 | images/studio/conoceme.webp |
 | Logo-Miller.png | Logo ya existente; mismo archivo original | logo-miller.png |
 
 Los saltos de numeración de los originales no representan archivos faltantes. Todas las fotos de cada grupo están incluidas. Wella conserva su presentación tipográfica porque no hay foto suya en la carpeta.
@@ -36,7 +36,7 @@ Los saltos de numeración de los originales no representan archivos faltantes. T
 
 La ampliación utiliza un diálogo nativo: contiene el foco, admite Escape, bloquea el desplazamiento de fondo y devuelve el foco al control de origen. La foto completa se muestra sin recorte. Las transiciones respetan la preferencia de movimiento reducido.
 
-Las tarjetas destacadas mantienen proporción 4:3 y las fotografías de servicios 16:9. Los retratos tienen encuadres individuales. Las fotos de formación están dentro de la historia desplegable.
+Las tarjetas destacadas mantienen proporción 4:3 y las fotografías de servicios 16:9. El carrusel principal de Sobre mí tiene proporción 4:5 y presenta las fotos completas: primero el retrato, después las tres imágenes de formación. Está junto a la presentación, fuera de la historia desplegable, y evita duplicar esa galería dentro del texto.
 
 ## Comprobaciones reproducibles
 

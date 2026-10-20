@@ -90,6 +90,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
       aria-label={label}
       tabIndex={multiple ? 0 : undefined}
       className={`photo-carousel relative overflow-hidden bg-[#E8E1D5] ${frameClassName} ${className}`}
+      style={{ backgroundColor: current.fit === 'contain' ? '#F8F5EE' : undefined }}
       onKeyDown={(event) => {
         if (!multiple || event.target !== event.currentTarget) return;
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
@@ -124,8 +125,8 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         loading="lazy"
         decoding="async"
         draggable={false}
-        style={{ objectPosition: current.objectPosition ?? 'center' }}
-        className="photo-carousel-image absolute inset-0 w-full h-full object-cover"
+        style={{ objectPosition: current.objectPosition ?? 'center', objectFit: current.fit ?? 'cover' }}
+        className="photo-carousel-image absolute inset-0 w-full h-full"
       />
       {multiple && <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#F8F5EE]/95 text-[#231E1B] rounded-full text-[11px] tabular-nums" aria-hidden="true">{index + 1} / {images.length}</span>}
       {current.caption && <p className="photo-caption absolute top-3 left-3 right-16 rounded-lg bg-[#F8F5EE]/95 px-2 py-1 text-[10px] text-[#231E1B]">{current.caption}</p>}

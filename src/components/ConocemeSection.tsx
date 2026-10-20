@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { PhotoCarousel } from './PhotoCarousel';
-import { STUDIO_PHOTOS } from '../data/studioPhotos';
+import { ABOUT_PHOTOS } from '../data/studioPhotos';
 
 export const ConocemeSection: React.FC = () => {
   const [isStoryOpen, setIsStoryOpen] = useState(false);
@@ -13,20 +13,16 @@ export const ConocemeSection: React.FC = () => {
         {/* Presentación Editorial en Dos Columnas */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
-          {/* Columna Izquierda: Retrato fotográfico */}
+          {/* Retrato y formación visibles sin abrir la historia. */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-[#99745A]/20 shadow-lg bg-[#E8E1D5]">
-                <img
-                  src="/images/studio/conoceme.webp"
-                  srcSet="/images/studio/conoceme-480.webp 480w, /images/studio/conoceme.webp 960w"
-                  sizes="(min-width: 1024px) 448px, (min-width: 640px) 448px, 94vw"
-                  alt="Retrato de Miller Greiseland"
-                  width={960}
-                  height={1263}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.03] motion-reduce:transition-none motion-reduce:hover:scale-100"
-                />
+            <div className="w-full max-w-sm sm:max-w-md">
+              <PhotoCarousel
+                images={ABOUT_PHOTOS}
+                label="Miller Greiseland y formación internacional"
+                frameClassName="aspect-[4/5]"
+                className="rounded-3xl border border-[#99745A]/20 shadow-lg"
+              />
+              <p className="mt-3 text-center text-xs text-[#7A7067]">Mi formación internacional, en imágenes.</p>
             </div>
           </div>
 
@@ -140,10 +136,6 @@ export const ConocemeSection: React.FC = () => {
               <p>
                 Cuento también con formación en corte bajo el sistema Pivot Point, una metodología de educación capilar reconocida internacionalmente.
               </p>
-              <div className="max-w-sm mx-auto pt-6">
-                <PhotoCarousel images={STUDIO_PHOTOS.training} label="Formación y trayectoria de Miller" frameClassName="aspect-[4/5]" className="rounded-2xl" />
-                <p className="mt-3 text-center text-xs text-[#7A7067]">Momentos de mi formación y trayectoria.</p>
-              </div>
             </div>
 
             {/* 3. Mis especialidades */}

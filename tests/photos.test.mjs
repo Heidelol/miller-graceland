@@ -10,6 +10,7 @@ register('./tsx-loader.mjs', import.meta.url);
 const { PhotoCarousel } = await import('../src/components/PhotoCarousel.tsx');
 const { ServicesSection } = await import('../src/components/ServicesSection.tsx');
 const { BookingModal } = await import('../src/components/BookingModal.tsx');
+const { ConocemeSection } = await import('../src/components/ConocemeSection.tsx');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://millergreiseland.com' });
 Object.assign(globalThis, {
   window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
@@ -107,5 +108,19 @@ test('los cortes retirados no se ofrecen en el catálogo ni en la solicitud de c
     assert.match(text, /Balayage Rubio/);
     assert.match(text, /Bajada de Extensiones/);
     page.window.close();
+  }
+});
+
+test('Sobre mí muestra el retrato y las tres fotos de formación sin abrir la historia', async () => {
+  await act(() => root.render(createElement(ConocemeSection)));
+  const carousel = container.querySelector('[aria-label="Miller Greiseland y formación internacional"]');
+  assert.ok(carousel, 'El carrusel debe estar en la presentación de Sobre mí');
+  assert.equal(carousel.closest('details'), null, 'Las fotos no deben depender del desplegable');
+  assert.equal(carousel.querySelector('img').getAttribute('src'), '/images/studio/conoceme.webp');
+  for (const src of ['/images/studio/formacion-1.webp', '/images/studio/formacion-2.webp', '/images/studio/formacion-3.webp']) {
+    await click(button('Siguiente fotografía de Miller Greiseland y formación internacional'));
+    assert.equal(carousel.querySelector('img').getAttribute('src'), src);
+    assert.equal(carousel.querySelector('img').style.objectFit, 'contain', 'La foto completa conserva visibles a las personas');
+    assert.equal(container.querySelector('details').open, false);
   }
 });

@@ -5,6 +5,7 @@ export interface StudioPhoto {
   width: number;
   height: number;
   objectPosition?: string;
+  fit?: 'cover' | 'contain';
   caption?: string;
 }
 
@@ -46,3 +47,8 @@ export const STUDIO_PHOTOS = {
     wash: photo('hair-wash-extensiones', 'Lavado de cabello en un lavacabezas · Imagen ilustrativa', 'center 55%', 960, 1200),
   },
 };
+
+export const ABOUT_PHOTOS: StudioPhoto[] = [
+  photo('conoceme', 'Retrato de Miller Greiseland', 'center', 960, 1263),
+  ...STUDIO_PHOTOS.training,
+].map(image => ({ ...image, fit: 'contain' as const }));
