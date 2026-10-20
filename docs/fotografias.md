@@ -36,7 +36,7 @@ Los saltos de numeración de los originales no representan archivos faltantes. T
 
 La ampliación utiliza un diálogo nativo: contiene el foco, admite Escape, bloquea el desplazamiento de fondo y devuelve el foco al control de origen. La foto completa se muestra sin recorte. Las transiciones respetan la preferencia de movimiento reducido.
 
-Las tarjetas destacadas mantienen proporción 4:3 y las fotografías de servicios 16:9. El carrusel principal de Sobre mí tiene proporción 4:5 y presenta las fotos completas: primero el retrato, después las tres imágenes de formación. Está junto a la presentación, fuera de la historia desplegable, y evita duplicar esa galería dentro del texto.
+Las tarjetas destacadas mantienen proporción 4:3 y las fotografías de servicios 16:9. El carrusel principal de Sobre mí tiene proporción 4:5 y las fotos llenan el marco sin franjas laterales: primero el retrato, después las tres imágenes de formación. Cada imagen conserva su encuadre para mantener visibles los rostros; la ampliación permite ver la fotografía completa. Está junto a la presentación, fuera de la historia desplegable, y evita duplicar esa galería dentro del texto.
 
 ## Comprobaciones reproducibles
 

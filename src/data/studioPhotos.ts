@@ -51,4 +51,4 @@ export const STUDIO_PHOTOS = {
 export const ABOUT_PHOTOS: StudioPhoto[] = [
   photo('conoceme', 'Retrato de Miller Greiseland', 'center', 960, 1263),
   ...STUDIO_PHOTOS.training,
-].map(image => ({ ...image, fit: 'contain' as const }));
+].map(image => ({ ...image, fit: 'cover' as const }));

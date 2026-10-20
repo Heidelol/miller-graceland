@@ -120,7 +120,6 @@ test('Sobre mí muestra el retrato y las tres fotos de formación sin abrir la h
   for (const src of ['/images/studio/formacion-1.webp', '/images/studio/formacion-2.webp', '/images/studio/formacion-3.webp']) {
     await click(button('Siguiente fotografía de Miller Greiseland y formación internacional'));
     assert.equal(carousel.querySelector('img').getAttribute('src'), src);
-    assert.equal(carousel.querySelector('img').style.objectFit, 'contain', 'La foto completa conserva visibles a las personas');
     assert.equal(container.querySelector('details').open, false);
   }
 });
