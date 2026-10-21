@@ -1,14 +1,12 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
 import { PhotoCarousel } from './PhotoCarousel';
 import { STUDIO_PHOTOS } from '../data/studioPhotos';
 
 export const ExperienceSection: React.FC = () => {
   const confirmedBrands = [
-    { name: 'Avyna', focus: 'Cosmética y cuidado capilar profesional' },
-    { name: 'Chocolatto', focus: 'Nutrición y tratamientos capilares' },
-    { name: 'Schwarzkopf', focus: 'Coloración y tecnología de aclaración' },
-    { name: 'Wella', focus: 'Formulación y matices profesionales' },
+    { name: 'Avyna', focus: 'Cuidado capilar profesional', images: STUDIO_PHOTOS.avyna },
+    { name: 'Chocolatto', focus: 'Nutrición y tratamientos', images: STUDIO_PHOTOS.chocolatto },
+    { name: 'Schwarzkopf', focus: 'Coloración y aclaración', images: STUDIO_PHOTOS.schwarzkopf },
   ];
 
   const methodologyPillars = [
@@ -34,51 +32,30 @@ export const ExperienceSection: React.FC = () => {
     <section id="experiencia" className="py-20 sm:py-24 bg-[#F9F6F0] relative overflow-hidden border-t border-[#99745A]/15">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#C8933E]" />
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#42502E]">
-              Filosofía & Marcas Profesionales
-            </span>
-          </div>
-
-          <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] leading-tight mb-5">
-            Técnicas internacionales y <br className="hidden sm:inline" />
-            <span className="gold-accent-text italic font-normal">atención personalizada</span>
-          </h2>
-
-          <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
-            Especialistas en colorimetría y extensiones de cabello 100% humano. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.
+        <div className="max-w-5xl mx-auto mb-9 sm:mb-12 text-left">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#42502E] mb-4">
+            Selección profesional
           </p>
+          <h2 className="font-serif-luxury text-4xl sm:text-5xl lg:text-[3.5rem] font-medium leading-[1.08] text-[#231E1B]">
+            Elegidos para{' '}
+            <span className="block gold-accent-text italic font-normal">cuidar tu cabello.</span>
+          </h2>
         </div>
 
-        {/* Confirmed Brands Strip (Typographic, sober presentation without invented logos) */}
         <div className="mb-16">
-          <div className="text-center mb-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#7A7067]">
-              Líneas y Productos Profesionales Seleccionados
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-            {[
-              { ...confirmedBrands[0], images: STUDIO_PHOTOS.avyna },
-              { ...confirmedBrands[1], images: STUDIO_PHOTOS.chocolatto },
-              { ...confirmedBrands[2], images: STUDIO_PHOTOS.schwarzkopf },
-            ].map((brand) => (
-              <article key={brand.name} className="bg-white border border-[#99745A]/20 rounded-2xl overflow-hidden shadow-xs">
-                <PhotoCarousel images={brand.images} label={brand.name} frameClassName="aspect-[4/3]" />
-                <div className="p-5 text-center">
-                  <h3 className="font-serif-luxury text-2xl font-bold text-[#231E1B]">{brand.name}</h3>
-                  <p className="text-xs text-[#7A7067] mt-1.5 leading-relaxed">{brand.focus}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 lg:gap-x-8 gap-y-9 max-w-5xl mx-auto">
+            {confirmedBrands.map((brand) => (
+              <article key={brand.name} className="min-w-0">
+                <PhotoCarousel images={brand.images} label={brand.name} frameClassName="aspect-[4/3] rounded-xl" controlsPosition="below" />
+                <div className="pt-3 text-left">
+                  <h3 className="font-serif-luxury text-2xl font-semibold text-[#231E1B]">{brand.name}</h3>
+                  <p className="text-[13px] text-[#5C534B] mt-1 leading-6">{brand.focus}</p>
                 </div>
               </article>
             ))}
           </div>
-          <p className="max-w-5xl mx-auto mt-6 text-center text-sm text-[#5C534B]">
-            También trabajamos con <span className="font-serif-luxury text-xl font-semibold text-[#231E1B]">Wella</span>
-            <span className="block mt-1 text-xs text-[#7A7067]">Formulación y matices profesionales</span>
+          <p className="max-w-5xl mx-auto mt-8 border-t border-[#99745A]/25 pt-5 text-left text-sm leading-7 text-[#5C534B]">
+            Completamos nuestra selección con <span className="font-serif-luxury text-2xl font-semibold text-[#231E1B]">Wella</span>, para formulación y matices profesionales.
           </p>
         </div>
 

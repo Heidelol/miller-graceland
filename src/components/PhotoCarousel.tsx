@@ -9,6 +9,7 @@ interface PhotoCarouselProps {
   className?: string;
   frameClassName?: string;
   fade?: boolean;
+  controlsPosition?: 'overlay' | 'below';
 }
 
 interface LightboxProps {
@@ -74,7 +75,7 @@ function PhotoLightbox({ image, label, onClose, onMove, multiple }: LightboxProp
   );
 }
 
-export function PhotoCarousel({ images, label, className = '', frameClassName = 'aspect-[16/10]', fade = false }: PhotoCarouselProps) {
+export function PhotoCarousel({ images, label, className = '', frameClassName = 'aspect-[16/10]', fade = false, controlsPosition = 'overlay' }: PhotoCarouselProps) {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [previousImage, setPreviousImage] = useState<StudioPhoto | null>(null);
@@ -83,6 +84,8 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const current = images[index] ?? images[0];
   const multiple = images.length > 1;
+  const controlsBelow = controlsPosition === 'below';
+  const frameBackground = current?.fit === 'contain' ? '#F8F5EE' : undefined;
   const selectImage = (position: number) => {
     if (position === index) return;
     if (fade) setPreviousImage(visibleImage.current);
@@ -98,8 +101,8 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
       aria-roledescription={multiple ? 'carrusel' : undefined}
       aria-label={label}
       tabIndex={multiple ? 0 : undefined}
-      className={`photo-carousel relative overflow-hidden bg-[#E8E1D5] ${frameClassName} ${className}`}
-      style={{ backgroundColor: current.fit === 'contain' ? '#F8F5EE' : undefined }}
+      className={`photo-carousel relative ${controlsBelow ? '' : `overflow-hidden bg-[#E8E1D5] ${frameClassName}`} ${className}`}
+      style={{ backgroundColor: controlsBelow ? undefined : frameBackground }}
       onKeyDown={(event) => {
         if (!multiple || event.target !== event.currentTarget) return;
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
@@ -123,6 +126,10 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         if (Math.abs(horizontal) > 50 && Math.abs(horizontal) > Math.abs(vertical) * 1.4) move(horizontal < 0 ? 1 : -1);
       }}
     >
+      <div
+        className={controlsBelow ? `relative overflow-hidden bg-[#E8E1D5] ${frameClassName}` : 'contents'}
+        style={controlsBelow ? { backgroundColor: frameBackground } : undefined}
+      >
       {fade && previousImage && (
         <div
           aria-hidden="true"
@@ -159,10 +166,12 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
       />
       {multiple && <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#F8F5EE]/95 text-[#231E1B] rounded-full text-[11px] tabular-nums" aria-hidden="true">{index + 1} / {images.length}</span>}
       {current.caption && <p className="photo-caption absolute top-3 left-3 right-16 rounded-lg bg-[#F8F5EE]/95 px-2 py-1 text-[10px] text-[#231E1B]">{current.caption}</p>}
-      <button type="button" className={`photo-control absolute bottom-3 left-3 ${multiple ? 'photo-zoom' : ''}`} aria-label={`Ampliar fotografía de ${label}`} onClick={() => setExpanded(true)}><Maximize2 size={17} aria-hidden="true" /></button>
-      <div className="absolute bottom-3 inset-x-3 flex items-center justify-end pointer-events-none">
+      </div>
+      <div className={controlsBelow ? 'photo-editorial-controls mt-1 flex min-h-11 items-center justify-between gap-1' : 'contents'}>
+      <button type="button" className={`photo-control ${controlsBelow ? '' : `absolute bottom-3 left-3 ${multiple ? 'photo-zoom' : ''}`}`} aria-label={`Ampliar fotografía de ${label}`} onClick={() => setExpanded(true)}><Maximize2 size={17} aria-hidden="true" /></button>
+      <div className={controlsBelow ? 'flex items-center justify-end' : 'absolute bottom-3 inset-x-3 flex items-center justify-end pointer-events-none'}>
         {multiple && (
-          <div className="flex items-center gap-1 rounded-full bg-[#F8F5EE]/95 p-1 pointer-events-auto">
+          <div className={`flex items-center pointer-events-auto ${controlsBelow ? '' : 'gap-1 rounded-full bg-[#F8F5EE]/95 p-1'}`}>
             <button type="button" className="photo-control photo-control-flat" aria-label={`Fotografía anterior de ${label}`} onClick={() => move(-1)}><ChevronLeft size={18} aria-hidden="true" /></button>
             <div className="flex items-center">
               {images.map((image, position) => (
@@ -174,6 +183,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
             <button type="button" className="photo-control photo-control-flat" aria-label={`Siguiente fotografía de ${label}`} onClick={() => move(1)}><ChevronRight size={18} aria-hidden="true" /></button>
           </div>
         )}
+      </div>
       </div>
       {multiple && <span className="sr-only" aria-live="polite" aria-atomic="true">Fotografía {index + 1} de {images.length}: {current.alt}</span>}
       {expanded && <PhotoLightbox image={current} label={label} multiple={multiple} onClose={() => setExpanded(false)} onMove={move} />}

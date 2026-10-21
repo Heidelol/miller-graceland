@@ -179,6 +179,10 @@
 .photo-control:hover { background: #EFE9DC; }
 .photo-control-flat { width: 36px; height: 36px; border: 0; background: transparent; }
 .photo-dot { display: grid; place-items: center; width: 28px; height: 36px; cursor: pointer; border-radius: 999px; }
+.photo-editorial-controls .photo-control { border: 0; background: transparent; }
+.photo-editorial-controls .photo-control-flat { width: 44px; height: 44px; }
+.photo-editorial-controls .photo-dot { height: 44px; }
+.photo-editorial-controls .photo-control:hover { color: #95651F; }
 .photo-carousel-image { animation: photo-appear .18s ease-out; }
 @keyframes photo-appear { from { opacity: .6; } to { opacity: 1; } }
 .photo-carousel-fade { animation: none; opacity: 0; }
