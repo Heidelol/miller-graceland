@@ -4,7 +4,7 @@ import { STUDIO_PHOTOS } from './studioPhotos';
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
   tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS',
-  heroSubtitle: 'Especialistas en colorimetría y extensiones de cabello 100% humano en Chetumal. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
+  heroSubtitle: 'Colorimetría y extensiones de cabello 100% humano en Chetumal. Formación internacional y atención personalizada para diseñar tu próximo cambio.',
   description: 'Especialistas en colorimetría y extensiones de cabello 100% humano en Chetumal. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
   servicesIntro: 'Una selección de servicios de colorimetría, rubios, extensiones y diseño capilar diseñados para preservar la salud del cabello con atención personalizada.',
   manifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello.\n\nEl resultado comienza con un cabello sano.\nEl lujo está en cada detalle.',

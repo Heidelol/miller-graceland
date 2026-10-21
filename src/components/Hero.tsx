@@ -1,4 +1,4 @@
-import { Calendar, ChevronDown, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 
@@ -35,86 +35,68 @@ const heroShortcuts = [
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
-    <section className="relative min-h-[88vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-[#F9F6F0]">
-      {/* Elegant, luminous architectural gradient backdrop without stock salon photography */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#C8933E]/10 blur-3xl" />
-        <div className="absolute top-1/2 -right-32 w-96 h-96 rounded-full bg-[#68794E]/10 blur-3xl" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F9F6F0]/60 via-[#F9F6F0] to-[#F9F6F0]" />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <section className="relative min-h-[88vh] flex items-center justify-center pt-28 lg:pt-32 pb-16 overflow-hidden bg-[#F9F6F0]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         
         {/* Main Hero Grid: Left Content / Right Photograph (Desktop) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-14 lg:mb-20">
           
           {/* Left Column: Presentation & Actions */}
-          <div className="lg:col-span-7 flex flex-col text-center lg:text-left">
+          <div className="hero-enter lg:col-span-7 flex flex-col items-start text-left">
             
-            {/* Official Logo & Studio Subtitle */}
-            <div className="flex flex-col items-center lg:items-start mb-6">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-[#C8933E]/30 bg-white p-2 shadow-xs mb-3 flex items-center justify-center overflow-hidden">
-                <img
-                  src="/logo-miller.png"
-                  alt="Miller Greiseland"
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/logo-miller.jpeg';
-                  }}
-                />
-              </div>
-
-              <div className="inline-flex max-w-[95vw] px-3.5 py-1.5 rounded-2xl sm:rounded-full bg-[#68794E]/10 border border-[#68794E]/25 text-center">
-                <span className="text-[9px] sm:text-xs font-bold tracking-tight sm:tracking-[0.16em] uppercase text-[#42502E] leading-normal break-words">
-                  {SALON_INFO.tagline}
-                </span>
-              </div>
-            </div>
+            <p className="mb-6 lg:mb-8 text-[9px] sm:text-[11px] font-medium tracking-[0.1em] sm:tracking-[0.16em] uppercase text-[#42502E] leading-6">
+              {SALON_INFO.tagline}
+            </p>
 
             {/* Main Title */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#231E1B] font-serif-luxury leading-[1.15] mb-5">
-              El arte de sublimar tu cabello con <br className="hidden sm:inline" />
-              <span className="gold-accent-text italic font-normal">maestría y elegancia</span>
+            <h1 className="text-[2.1rem] min-[375px]:text-[2.5rem] sm:text-5xl lg:text-[clamp(2.75rem,4.5vw,4rem)] font-medium tracking-tight text-[#231E1B] font-serif-luxury leading-[1.08] mb-6 lg:mb-8">
+              <span className="block">El arte de sublimar</span>{' '}
+              <span className="block">tu cabello con</span>{' '}
+              <span className="block gold-accent-text italic font-normal">maestría y elegancia</span>
             </h1>
 
             {/* Dedicated Subtitle (Official business positioning) */}
-            <p className="max-w-2xl mx-auto lg:mx-0 text-sm sm:text-base lg:text-lg text-[#5C534B] font-normal leading-relaxed mb-8">
+            <p className="max-w-lg text-sm sm:text-base text-[#5C534B] font-normal leading-7 mb-7 lg:mb-9">
               {SALON_INFO.heroSubtitle}
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
               <button
                 onClick={onOpenBooking}
-                className="gold-button w-full sm:w-auto px-7 py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2.5 cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
+                className="gold-button min-h-12 px-6 py-3 rounded-lg text-sm font-semibold cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
               >
-                <Calendar className="w-4 h-4" />
                 <span>Solicitar Cita</span>
               </button>
 
               <a
                 href="#servicios"
-                className="gold-button-outline w-full sm:w-auto px-7 py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
+                className="min-h-12 py-3 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
               >
-                <span>Explorar Servicios</span>
-                <ChevronDown className="w-4 h-4 text-[#C8933E]" />
+                <span>Explorar servicios</span>
+                <ArrowUpRight className="w-4 h-4 text-[#A87428]" aria-hidden="true" />
               </a>
             </div>
 
           </div>
 
           {/* Right Column: Hero Photograph (Desktop: right; Mobile: below actions, contained size) */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-md aspect-[4/5] rounded-3xl overflow-hidden border border-[#99745A]/25 shadow-lg bg-[#FAF7F2]">
+          <figure className="hero-enter hero-enter-photo lg:col-span-5 w-full max-w-sm sm:max-w-md mx-auto lg:ml-auto lg:mr-0">
+            <div className="aspect-[4/5] rounded-lg overflow-hidden bg-[#FAF7F2]">
               <img
                 src="/images/hero/portada.webp"
                 alt="Miller Greiseland - Estilista profesional, colorimetrista y especialista en extensiones"
                 width={1122}
                 height={1402}
-                className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.03]"
+                fetchPriority="high"
+                className="w-full h-full object-cover object-center"
               />
             </div>
-          </div>
+            <figcaption className="mt-4 flex flex-col gap-1 text-left">
+              <span className="font-serif-luxury text-xl font-semibold text-[#231E1B]">Miller Greiseland</span>
+              <span className="text-[10px] sm:text-xs leading-5 text-[#5C534B]">Colorimetrista y especialista en extensiones</span>
+            </figcaption>
+          </figure>
 
         </div>
 

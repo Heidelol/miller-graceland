@@ -41,6 +41,15 @@
   color: #A87428;
 }
 
+.hero-enter {
+  animation: hero-appear .7s cubic-bezier(.22, 1, .36, 1) both;
+}
+.hero-enter-photo { animation-delay: .1s; }
+@keyframes hero-appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Solid Palette Buttons with High-Contrast Dark Text & Accessible Focus */
 .gold-button {
   background-color: #C8933E;
@@ -197,6 +206,7 @@
   .photo-caption { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-enter { animation: none; }
   .photo-carousel-image { animation: none; }
   .photo-carousel-fade[data-ready="true"] { animation: none; opacity: 1; }
 }
