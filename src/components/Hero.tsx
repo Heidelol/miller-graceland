@@ -1,10 +1,37 @@
-import { Calendar, ChevronDown, Sparkles, Palette, Layers, CreditCard, MessageCircle, ArrowRight } from 'lucide-react';
+import { Calendar, ChevronDown, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 
 interface HeroProps {
   onOpenBooking: () => void;
 }
+
+const heroShortcuts = [
+  {
+    title: 'Tratamientos',
+    description: 'Valoración por WhatsApp',
+    href: SALON_INFO.whatsappUrl,
+    isWhatsApp: true,
+  },
+  {
+    title: 'Coloración',
+    description: 'Tintes, rubios y balayage',
+    href: '#servicios',
+    isWhatsApp: false,
+  },
+  {
+    title: 'Extensiones',
+    description: '100% cabello humano',
+    href: '#servicios',
+    isWhatsApp: false,
+  },
+  {
+    title: 'Reservas',
+    description: 'Anticipos y formas de pago',
+    href: '#pagos',
+    isWhatsApp: false,
+  },
+];
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
@@ -91,81 +118,28 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
         </div>
 
-        {/* Commercial Priorities & Reservation Access */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-5xl mx-auto pt-8 border-t border-[#99745A]/15 text-left">
-          
-          {/* 1. Tratamientos Capilares (WhatsApp CTA) */}
-          <a
-            href={SALON_INFO.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackWhatsAppClick('hero_card_tratamientos', { serviceName: 'Tratamientos Capilares' })}
-            className="group flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#99745A]/20 hover:border-[#68794E] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4 text-[#68794E]" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#231E1B] group-hover:text-[#4B5935] transition-colors">Tratamientos Capilares</p>
-                <p className="text-[11px] text-[#7A7067]">Valoración por WhatsApp</p>
-              </div>
-            </div>
-            <MessageCircle className="w-4 h-4 text-[#68794E] opacity-70 group-hover:opacity-100 transition-opacity shrink-0 ml-1" />
-          </a>
-
-          {/* 2. Tintes y Coloración */}
-          <a
-            href="#servicios"
-            className="group flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#99745A]/20 hover:border-[#C8933E] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#C8933E]/10 border border-[#C8933E]/25 flex items-center justify-center shrink-0">
-                <Palette className="w-4 h-4 text-[#C8933E]" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#231E1B] group-hover:text-[#A87428] transition-colors">Tintes y Coloración</p>
-                <p className="text-[11px] text-[#7A7067]">Técnicas y balayage</p>
-              </div>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#C8933E] opacity-70 group-hover:opacity-100 transition-opacity shrink-0 ml-1" />
-          </a>
-
-          {/* 3. Extensiones de Cabello Humano */}
-          <a
-            href="#servicios"
-            className="group flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#99745A]/20 hover:border-[#C8933E] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#68794E]/10 border border-[#68794E]/25 flex items-center justify-center shrink-0">
-                <Layers className="w-4 h-4 text-[#68794E]" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#231E1B] group-hover:text-[#4B5935] transition-colors">Extensiones de Cabello</p>
-                <p className="text-[11px] text-[#7A7067]">100% cabello humano</p>
-              </div>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#68794E] opacity-70 group-hover:opacity-100 transition-opacity shrink-0 ml-1" />
-          </a>
-
-          {/* 4. Reservas y Formas de Pago */}
-          <a
-            href="#pagos"
-            className="group flex items-center justify-between p-3.5 rounded-2xl bg-white border border-[#99745A]/20 hover:border-[#68794E] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#C8933E]/10 border border-[#C8933E]/25 flex items-center justify-center shrink-0">
-                <CreditCard className="w-4 h-4 text-[#C8933E]" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#231E1B] group-hover:text-[#A87428] transition-colors">Reservas y Pagos</p>
-                <p className="text-[11px] text-[#7A7067]">Efectivo, trans. y terminal</p>
-              </div>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#C8933E] opacity-70 group-hover:opacity-100 transition-opacity shrink-0 ml-1" />
-          </a>
-
-        </div>
+        <nav aria-label="Accesos rápidos a servicios y reservas" className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 sm:gap-x-10 text-left">
+          {heroShortcuts.map((shortcut) => (
+            <a
+              key={shortcut.title}
+              href={shortcut.href}
+              target={shortcut.isWhatsApp ? '_blank' : undefined}
+              rel={shortcut.isWhatsApp ? 'noopener noreferrer' : undefined}
+              onClick={shortcut.isWhatsApp ? () => trackWhatsAppClick('hero_card_tratamientos', { serviceName: 'Tratamientos Capilares' }) : undefined}
+              className="group block border-t border-[#99745A]/25 py-5 text-[#231E1B] hover:border-[#A87428] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
+            >
+              <span className="flex items-center justify-between gap-2 min-[375px]:gap-3">
+                <span className="font-serif-luxury text-xl min-[375px]:text-2xl sm:text-[1.75rem] font-semibold leading-tight group-hover:text-[#42502E] transition-colors duration-200">
+                  {shortcut.title}
+                </span>
+                <ArrowRight aria-hidden="true" strokeWidth={1.5} className="w-3 h-3 min-[375px]:w-4 min-[375px]:h-4 shrink-0 text-[#68794E] group-hover:text-[#A87428] transition-colors duration-200" />
+              </span>
+              <span className="block mt-2 text-xs leading-6 text-[#5C534B]">
+                {shortcut.description}
+              </span>
+            </a>
+          ))}
+        </nav>
       </div>
     </section>
   );
