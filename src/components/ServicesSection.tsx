@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown, MessageCircle } from 'lucide-react';
+import { Clock, Check, ArrowRight, ShieldCheck, Tag, ChevronDown } from 'lucide-react';
 import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory, ServiceItem } from '../types/salon';
 import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
@@ -46,8 +46,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               {SALON_INFO.tagline}
             </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-bold font-serif-luxury text-[#231E1B] mb-4">
-            MILLER GREISELAND STUDIO
+          <h2 className="flex flex-col items-center text-[#231E1B] mb-5">
+            <span className="flex flex-col sm:flex-row items-center justify-center gap-y-1 gap-x-4">
+              <span className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-medium tracking-[0.04em] leading-tight">
+                MILLER
+              </span>
+              <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl sm:text-[2.75rem] lg:text-[3.5rem] italic font-normal leading-tight text-[#A87428]">
+                Greiseland
+              </span>
+            </span>
+            <span className="mt-3 font-sans text-[10px] sm:text-[11px] font-medium tracking-[0.4em] leading-6">
+              STUDIO
+            </span>
           </h2>
           <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
             {SALON_INFO.servicesIntro}
@@ -55,24 +65,24 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
         </div>
 
         {/* Fotografías de las tres prioridades comerciales. */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 lg:gap-x-8 gap-y-10 max-w-5xl mx-auto mb-14">
           {[
             { title: 'Tratamientos Capilares', images: STUDIO_PHOTOS.treatments, description: 'Protocolos reconstructivos y nutrición profunda adaptados al estado de tu cabello.', action: 'Consultar Tratamientos', category: null },
             { title: 'Tintes y Coloración', images: STUDIO_PHOTOS.color, description: 'Diseño de color, retoques y rubios personalizados según tu cabello y el resultado que buscas.', action: 'Ver color y rubios', category: 'color-family' as const },
             { title: 'Extensiones de Cabello Humano', images: STUDIO_PHOTOS.extensions, description: '100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.', action: 'Ver Extensiones', category: 'extensions' as const },
           ].map((priority) => (
-            <article key={priority.title} className="rounded-2xl overflow-hidden bg-white border border-[#99745A]/20 shadow-xs flex flex-col">
-              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/3]" />
-              <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-serif-luxury text-xl font-bold text-[#231E1B] mb-2 md:min-h-14">{priority.title}</h3>
-                <p className="text-xs text-[#5C534B] leading-relaxed mb-5">{priority.description}</p>
+            <article key={priority.title} className="flex flex-col min-w-0">
+              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/3] rounded-xl" />
+              <div className="pt-5 flex flex-col flex-1 items-start">
+                <h3 className="font-serif-luxury text-2xl font-semibold leading-tight text-[#231E1B] mb-3">{priority.title}</h3>
+                <p className="text-[13px] text-[#5C534B] leading-6 mb-3">{priority.description}</p>
                 {priority.category ? (
-                  <button type="button" onClick={() => setActiveCategory(priority.category)} className="mt-auto w-full py-3 px-4 rounded-xl bg-[#F8F5EE] hover:bg-[#EFE9DC] text-[#231E1B] border border-[#99745A]/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors">
-                    {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#C8933E]" aria-hidden="true" />
+                  <button type="button" onClick={() => setActiveCategory(priority.category)} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                    {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </button>
                 ) : (
-                  <a href={SALON_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })} className="mt-auto w-full py-3 px-4 rounded-xl bg-[#68794E] hover:bg-[#576641] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors">
-                    <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />{priority.action}
+                  <a href={SALON_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                    {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </a>
                 )}
               </div>
