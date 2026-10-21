@@ -281,18 +281,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
           </p>
         </div>
 
-        {/* Brand Manifesto Bottom Banner (Una sola vez al terminar el catálogo) */}
-        <div className="mt-16 p-8 rounded-3xl bg-white border border-[#99745A]/20 text-center max-w-3xl mx-auto shadow-xs">
-          <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#231E1B] mb-3">
+        {/* Cierre editorial del catálogo con el manifiesto oficial. */}
+        <div className="mt-16 sm:mt-20 text-center max-w-3xl mx-auto">
+          <div className="w-12 h-px mx-auto mb-6 bg-[#A87428]/50" aria-hidden="true" />
+          <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.14em] uppercase text-[#42502E] mb-4">
             MILLER GREISELAND SIGNATURE
+          </p>
+          <h3 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-medium text-[#231E1B] leading-[1.12] mb-5">
+            El resultado comienza{' '}
+            <span className="block">con un <em className="gold-accent-text font-normal">cabello sano.</em></span>
           </h3>
-          <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
+          <p className="max-w-2xl mx-auto text-sm text-[#5C534B] leading-7">
             Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello.
           </p>
-          <div className="mt-4 pt-4 border-t border-[#99745A]/15 text-sm sm:text-base font-medium text-[#231E1B] space-y-1">
-            <p>El resultado comienza con un cabello sano.</p>
-            <p className="italic text-[#8A5F20]">El lujo está en cada detalle.</p>
-          </div>
+          <p className="font-serif-luxury text-2xl italic text-[#8A5F20] leading-snug mt-5">El lujo está en cada detalle.</p>
         </div>
 
       </div>
