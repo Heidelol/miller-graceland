@@ -1,5 +1,4 @@
 import React from 'react';
-import { Calendar, CreditCard, Banknote, Landmark, Clock, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 
@@ -9,116 +8,89 @@ interface PaymentMethodsSectionProps {
 
 export const PaymentMethodsSection: React.FC<PaymentMethodsSectionProps> = ({ onOpenBooking }) => {
   return (
-    <section id="pagos" className="py-20 sm:py-24 bg-[#F2EDE3] relative overflow-hidden border-y border-[#99745A]/15">
-      {/* Anchor alias to support old links if needed */}
+    <section id="pagos" aria-labelledby="booking-information-title" className="py-16 sm:py-20 bg-[#F2EDE3] relative border-y border-[#99745A]/15">
       <div id="mercadopago" className="absolute -top-24 left-0" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="bg-white border border-[#99745A]/20 rounded-3xl p-8 sm:p-12 shadow-sm">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            {/* Left Column: Heading, description and policy */}
-            <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF7F2] border border-[#68794E]/30 text-[#42502E] text-xs font-bold uppercase tracking-wider shadow-2xs">
-                <CreditCard className="w-3.5 h-3.5 text-[#C8933E]" />
-                <span>Reservas y Formas de Pago</span>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
+          <div className="lg:col-span-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#68794E] mb-4">
+              Reservas y formas de pago
+            </p>
+            <h2 id="booking-information-title" className="font-serif-luxury text-4xl sm:text-5xl lg:text-[3.5rem] font-medium leading-[1.06] text-[#231E1B] max-w-sm">
+              Prepara tu<br />próxima visita.
+            </h2>
+            <p className="mt-5 text-sm leading-7 text-[#5C534B] max-w-sm">
+              Elige tu servicio y solicita tu horario. La disponibilidad se confirma con el salón.
+            </p>
 
-              <h2 className="text-3xl sm:text-4xl font-bold font-serif-luxury text-[#231E1B] leading-tight">
-                Claridad y transparencia en <br className="hidden sm:inline" />
-                <span className="gold-accent-text italic font-normal">cada reserva</span>
-              </h2>
-
-              <p className="text-sm text-[#5C534B] leading-relaxed">
-                Para asegurar tu fecha y horario, solicitamos un anticipo del <strong>50% sobre el precio mínimo publicado</strong> del servicio. En procedimientos con rangos orientativos o tarifas según longitud o gramaje, el precio final se confirma tras la valoración en el salón y se descuenta el anticipo efectivamente recibido.
-              </p>
-
-              {/* Exact Cancellation Policy Box */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#FAF7F2] border border-[#C8933E]/35 text-xs text-[#3D352F] space-y-1.5 shadow-2xs">
-                <div className="flex items-center gap-2 font-bold text-[#A87428]">
-                  <Clock className="w-4 h-4" />
-                  <span>Política de cambios de cita y anticipos</span>
-                </div>
-                <p className="leading-relaxed font-medium">
-                  {SALON_INFO.cancellationPolicy}
-                </p>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                {onOpenBooking && (
-                  <button
-                    type="button"
-                    onClick={onOpenBooking}
-                    className="gold-button px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer shadow-xs"
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span>Solicitar Cita</span>
-                  </button>
-                )}
-
-                <a
-                  href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20anticipos%20y%20formas%20de%20pago`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => trackWhatsAppClick('payment_methods')}
-                  className="px-6 py-3 rounded-full text-xs font-semibold text-[#3D352F] border border-[#99745A]/25 bg-white hover:border-[#C8933E] hover:text-[#231E1B] transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-5">
+              {onOpenBooking && (
+                <button
+                  type="button"
+                  onClick={onOpenBooking}
+                  className="gold-button px-7 py-3.5 rounded-full text-sm cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#68794E]" />
-                  <span>Consultar por WhatsApp</span>
-                </a>
-              </div>
+                  Solicitar cita
+                </button>
+              )}
+              <a
+                href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20anticipos%20y%20formas%20de%20pago`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick('payment_methods')}
+                className="text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/50 hover:decoration-[#42502E] transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
+              >
+                Consultar por WhatsApp
+              </a>
             </div>
-
-            {/* Right Column: 3 Real Payment Methods */}
-            <div className="lg:col-span-5 space-y-3.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#7A7067] block">
-                Métodos de pago disponibles:
-              </span>
-
-              {/* 1. Efectivo */}
-              <div className="p-4.5 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/20 flex items-start gap-3.5 hover:border-[#C8933E]/40 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#99745A]/20 flex items-center justify-center shrink-0 text-[#68794E] shadow-2xs">
-                  <Banknote className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#231E1B]">Efectivo</h4>
-                  <p className="text-xs text-[#6B6158] mt-0.5 leading-relaxed">
-                    Aceptado directamente en el salón para liquidar tu saldo al finalizar el servicio.
-                  </p>
-                </div>
-              </div>
-
-              {/* 2. Transferencia bancaria */}
-              <div className="p-4.5 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/20 flex items-start gap-3.5 hover:border-[#C8933E]/40 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#99745A]/20 flex items-center justify-center shrink-0 text-[#C8933E] shadow-2xs">
-                  <Landmark className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#231E1B]">Transferencia bancaria</h4>
-                  <p className="text-xs text-[#6B6158] mt-0.5 leading-relaxed">
-                    Ideal para cubrir tu anticipo. Los datos bancarios se solicitan directamente por WhatsApp al enviar tu solicitud.
-                  </p>
-                </div>
-              </div>
-
-              {/* 3. Terminal bancaria en el salón */}
-              <div className="p-4.5 rounded-2xl bg-[#FAF7F2] border border-[#99745A]/20 flex items-start gap-3.5 hover:border-[#C8933E]/40 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-white border border-[#99745A]/20 flex items-center justify-center shrink-0 text-[#42502E] shadow-2xs">
-                  <CreditCard className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#231E1B]">Terminal bancaria en el salón</h4>
-                  <p className="text-xs text-[#6B6158] mt-0.5 leading-relaxed">
-                    Aceptación de tarjetas bancarias físicas directamente en el salón durante tu cita.
-                  </p>
-                </div>
-              </div>
-            </div>
-
           </div>
 
+          <div className="lg:col-span-7 border-t lg:border-t-0 lg:border-l border-[#99745A]/25 pt-8 lg:pt-0 lg:pl-12">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <p className="font-serif-luxury text-7xl sm:text-8xl font-medium leading-none tracking-tight text-[#A87428]">
+                50%
+              </p>
+              <div className="max-w-60">
+                <h3 className="font-serif-luxury text-2xl font-semibold text-[#231E1B]">
+                  Anticipo para reservar
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-[#5C534B]">
+                  Sobre el precio mínimo publicado del servicio.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-5 text-sm leading-7 text-[#5C534B]">
+              En servicios con rango de precios o tarifas por longitud o gramaje, el precio final se confirma tras la valoración en el salón. Se descuenta el anticipo efectivamente recibido.
+            </p>
+
+            <div className="mt-6 pt-5 border-t border-[#99745A]/25">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#68794E]">
+                Formas de pago
+              </h3>
+              <ul className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm font-medium text-[#231E1B]">
+                {['Transferencia', 'Efectivo', 'Tarjeta en el salón'].map((method, index) => (
+                  <li key={method} className="flex items-baseline gap-4">
+                    {index > 0 && <span aria-hidden="true" className="text-[#99745A]">·</span>}
+                    {method}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs leading-6 text-[#5C534B]">
+                Los datos para transferencia se comparten por WhatsApp. Efectivo y tarjeta disponibles en el salón.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 sm:mt-12 pt-6 border-t border-[#99745A]/25 grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8">
+          <h3 className="md:col-span-4 lg:col-span-5 font-serif-luxury text-xl font-semibold text-[#231E1B]">
+            Cambios de cita y anticipos
+          </h3>
+          <p className="md:col-span-8 lg:col-span-7 text-sm leading-7 text-[#5C534B]">
+            {SALON_INFO.cancellationPolicy}
+          </p>
         </div>
       </div>
     </section>

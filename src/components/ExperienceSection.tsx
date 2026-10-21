@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, Globe, Heart, ShieldCheck } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { PhotoCarousel } from './PhotoCarousel';
 import { STUDIO_PHOTOS } from '../data/studioPhotos';
 
@@ -13,24 +13,20 @@ export const ExperienceSection: React.FC = () => {
 
   const methodologyPillars = [
     {
-      icon: <Globe className="w-5 h-5 text-[#68794E]" />,
-      title: 'Formación Internacional',
-      description: 'Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones con un estándar riguroso.'
+      title: 'Formación internacional',
+      description: 'Técnicas de color, decoloración y extensiones aprendidas en más de 20 países.'
     },
     {
-      icon: <Sparkles className="w-5 h-5 text-[#C8933E]" />,
-      title: 'Colorimetría & Decoloración',
-      description: 'Diseño de color, rubios y matices a la medida de tu objetivo, evaluando el historial químico y la resistencia de tu cabello.'
+      title: 'Diseño de color',
+      description: 'Tu historial químico y la condición de tu cabello guían el diseño de cada color, rubio y matiz.'
     },
     {
-      icon: <Heart className="w-5 h-5 text-[#A87428]" />,
-      title: 'Extensiones 100% Cabello Humano',
-      description: 'Colocación, mantenimiento y bajada profesional priorizando la salud del cabello natural y el movimiento impecable de las extensiones.'
+      title: 'Extensiones a tu medida',
+      description: 'Cabello 100% humano. Colocación, mantenimiento y retiro cuidando tu cabello natural.'
     },
     {
-      icon: <ShieldCheck className="w-5 h-5 text-[#42502E]" />,
-      title: 'Atención con Cita Previa',
-      description: 'Cada servicio se agenda con tiempo dedicado para brindarte una atención personalizada, cuidando cada detalle de tu proceso.'
+      title: 'Tiempo para ti',
+      description: 'Trabajamos con cita previa para dedicar a tu servicio el tiempo y la atención que necesita.'
     }
   ];
 
@@ -86,31 +82,31 @@ export const ExperienceSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Methodology Pillars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {methodologyPillars.map((pillar, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-2xl bg-white border border-[#99745A]/20 shadow-xs hover:border-[#C8933E]/50 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] border border-[#99745A]/20 flex items-center justify-center mb-4">
-                  {pillar.icon}
-                </div>
-                <h4 className="text-base font-bold text-[#231E1B] mb-2 font-serif-luxury">
-                  {pillar.title}
-                </h4>
-                <p className="text-xs text-[#61574E] leading-relaxed">
-                  {pillar.description}
-                </p>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16" aria-labelledby="studio-approach-title">
+          <div className="lg:col-span-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#68794E] mb-4">
+              Nuestra forma de trabajar
+            </p>
+            <h3 id="studio-approach-title" className="font-serif-luxury text-4xl sm:text-5xl font-medium leading-[1.08] text-[#231E1B] max-w-xs">
+              Tu cabello,<br />el punto de partida.
+            </h3>
+            <p className="mt-5 text-sm leading-7 text-[#5C534B] max-w-xs">
+              Escuchamos lo que buscas y elegimos cada técnica de acuerdo con tu cabello.
+            </p>
+          </div>
 
-              <div className="mt-4 pt-4 border-t border-[#99745A]/10 flex items-center gap-1.5 text-[11px] font-semibold text-[#68794E]">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Atención especializada</span>
+          <dl className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10">
+            {methodologyPillars.map((pillar) => (
+              <div key={pillar.title} className="border-t border-[#99745A]/25 py-6">
+                <dt className="font-serif-luxury text-2xl font-semibold leading-tight text-[#231E1B]">
+                  {pillar.title}
+                </dt>
+                <dd className="mt-3 text-sm leading-7 text-[#5C534B] max-w-sm">
+                  {pillar.description}
+                </dd>
               </div>
-            </div>
-          ))}
+            ))}
+          </dl>
         </div>
 
       </div>
