@@ -50,6 +50,33 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.service-catalog {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 32px;
+  row-gap: 40px;
+}
+.service-catalog-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.service-catalog-pricing { margin-top: auto; }
+@media (min-width: 768px) {
+  .service-catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .service-catalog { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@supports (grid-template-rows: subgrid) {
+  .service-catalog-card {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+}
+
 /* Solid Palette Buttons with High-Contrast Dark Text & Accessible Focus */
 .gold-button {
   background-color: #C8933E;
