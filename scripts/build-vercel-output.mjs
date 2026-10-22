@@ -11,7 +11,6 @@ await writeFile(new URL('config.json', output), JSON.stringify({
     { src: '/extensiones-cabello-chetumal/', headers: { Location: '/extensiones-cabello-chetumal' }, status: 308 },
     { src: '/extensiones-cabello-chetumal', dest: '/extensiones-cabello-chetumal/index.html' },
     { handle: 'filesystem' },
-    { src: '/admin-demo(?:/.*)?', dest: '/index.html' },
     { src: '/.*', dest: '/404.html', status: 404 },
   ],
 }, null, 2));

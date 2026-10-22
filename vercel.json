@@ -1,13 +1,20 @@
 {
   "redirects": [
-    { "source": "/extensiones-cabello-chetumal/index.html", "destination": "/extensiones-cabello-chetumal", "permanent": true },
-    { "source": "/extensiones-cabello-chetumal/", "destination": "/extensiones-cabello-chetumal", "permanent": true }
+    {
+      "source": "/extensiones-cabello-chetumal/index.html",
+      "destination": "/extensiones-cabello-chetumal",
+      "permanent": true
+    },
+    {
+      "source": "/extensiones-cabello-chetumal/",
+      "destination": "/extensiones-cabello-chetumal",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/extensiones-cabello-chetumal", "destination": "/extensiones-cabello-chetumal/index.html" },
     {
-      "source": "/admin-demo/:path*",
-      "destination": "/index.html"
+      "source": "/extensiones-cabello-chetumal",
+      "destination": "/extensiones-cabello-chetumal/index.html"
     }
   ]
 }

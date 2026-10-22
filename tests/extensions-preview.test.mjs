@@ -21,3 +21,12 @@ for (const suffix of ['/', '/index.html']) {
     assert.equal(new URL(response.headers.get('location'), base).pathname, path);
   });
 }
+
+test('el panel retirado y sus subrutas responden 404 sin mostrar la portada', async () => {
+  for (const retiredPath of ['/admin-demo', '/admin-demo/agenda']) {
+    const response = await fetch(`${base}${retiredPath}`, { redirect: 'manual' });
+    assert.equal(response.status, 404, `${retiredPath} sigue disponible`);
+    const document = new JSDOM(await response.text()).window.document;
+    assert.doesNotMatch(document.querySelector('h1')?.textContent ?? '', /El arte de sublimar/);
+  }
+});

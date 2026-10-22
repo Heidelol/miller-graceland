@@ -56,3 +56,26 @@ Los días semanales de apertura siguen pendientes de confirmación y no se han a
 - Se corrigen los avisos de contraste en etiquetas pequeñas y se ordenan los encabezados del pie manteniendo sus tamaños y tipografía.
 - Analytics distingue clics de intención de contacto; no hay formulario público ni cobro. La propiedad Miller está vinculada con Search Console y se verificaron los informes de consultas y tráfico orgánico.
 - La prueba móvil inicial de PageSpeed registró rendimiento 89, accesibilidad 95, buenas prácticas 100 y SEO 100; FCP/LCP 2.9 s, TBT 90 ms y CLS 0. Es una medición de laboratorio, no datos de usuarios reales ni posición en Google.
+
+
+## Carga inicial: corrección posterior del 22 de octubre de 2026
+
+Esta actualización sustituye el estado anterior de la carga tipográfica; no cambia el diseño ni los datos comerciales.
+
+- La portada se genera ahora con su contenido completo y sus enlaces de valoración en el HTML inicial, igual que la página de extensiones. React hidrata el contenido existente. El marcador de ruta evita hidratar HTML de otra página y conserva las rutas previas sin modificarlas.
+- El texto principal se muestra desde el inicio; la fotografía conserva su animación discreta. El carrusel de Conóceme muestra el retrato también si la imagen terminó de cargar antes de la hidratación y mantiene la transición entre fotografías.
+- Se conservan Cormorant Garamond, Plus Jakarta Sans y Playfair Display. Sus declaraciones oficiales de Google Fonts se incluyen en el HTML, con Latin y Latin Extended, pesos originales y `font-display: swap`. Los archivos continúan alojados en Google; tres fuentes críticas se precargan. Se elimina la petición bloqueante de `fonts.googleapis.com`, sin reemplazar tipografías. El experimento posterior de incrustar el binario de la fuente del cuerpo aumentó el peso inicial y se revirtió (`71f1bef` / `e50d03e`); no forma parte del estado publicado.
+- La fotografía original de portada se conserva. Las versiones WebP de 480 y 768 píxeles pesan 18,102 y 35,356 bytes; `srcset` y `sizes` permiten elegir según el espacio y la densidad de pantalla. El logo de cabecera y pie mantiene dimensiones y transparencia con una copia WebP de 7,178 bytes.
+- Verificación: compilación, 65 pruebas funcionales existentes, 13 de SEO/renderizado inicial e hidratación y 3 comprobaciones HTTP contra producción. Sin errores de linter; permanecen dos advertencias antiguas del archivo de pruebas administrativo. Revisión independiente de los cambios y comprobación de igualdad entre HTML/recursos publicados y la compilación local.
+- Commits: `544bd12` (Acelerar carga inicial), `c567485` (Agilizar tipografías) , `f83139e` (Aligerar imágenes de portada) y `71f1bef` (Estabilizar fuente del texto).
+- La medición compartida por el propietario registraba 69 de rendimiento, FCP 3.9 s y LCP 5.2 s. El paso intermedio de HTML inicial marcó 74; las pruebas con tipografías optimizadas marcaron 70 y 82. Las pruebas conjuntas con imágenes adaptadas registraron 93 y 78; FCP 2.1–2.2 s, LCP 2.9–5.1 s. La llegada tardía de la fuente del párrafo seguía causando variación; la hipótesis de atribuir toda la variación a una descarga de fuente no quedó demostrada. No se conservaron los cambios experimentales que empeoraron el resultado. Accesibilidad, buenas prácticas y SEO: 100.
+- Informe de la primera medición final: https://pagespeed.web.dev/analysis/https-millergreiseland-com/8fiqerkanr?form_factor=mobile . Las cifras son pruebas de laboratorio variables; no equivalen a una posición en Google ni a aprobar las métricas de usuarios reales. PageSpeed todavía no presenta datos de campo para esta página.
+
+
+## Retirada del panel administrativo
+
+- A petición expresa del propietario se retira la demostración administrativa: página, componentes, almacenamiento, lógica, tipos y pruebas exclusivos de la demo. La recuperación del experimento queda disponible en el historial de Git.
+- Se eliminan sus reglas de acceso en Vercel. `/admin-demo` y sus subrutas responden con HTTP 404 real, tanto en producción como en los servidores locales. La antigua exclusión en robots se elimina para que los buscadores puedan procesar su retirada.
+- Se conserva la portada, la página de extensiones, las fotografías, el catálogo y los enlaces de valoración por WhatsApp.
+- El código inicial pasa de 410.13 KB a 313.62 KB sin comprimir (112.73 KB a 93.08 KB con gzip); los estilos pasan de 56.49 KB a 44.71 KB (11.19 KB a 9.31 KB con gzip).
+- Comprobaciones actuales: 27 pruebas funcionales públicas, 13 de SEO/hidratación y 4 HTTP, incluido el rechazo de las rutas retiradas. Linter sin advertencias y compilación de producción correcta.

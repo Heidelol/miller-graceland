@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin-demo
 
 Sitemap: https://millergreiseland.com/sitemap.xml
