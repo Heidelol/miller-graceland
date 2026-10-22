@@ -2,7 +2,7 @@
 
 Se conservan Cormorant Garamond, Plus Jakarta Sans y Playfair Display. Archivos WOFF2 variables oficiales de Google Fonts, descargados el 22 de octubre de 2026. Se conservan subconjuntos latin y latin-ext (incluidos acentos y ñ), estilos normal y cursiva y pesos existentes. Las licencias OFL se distribuyen en `public/fonts/`.
 
-Declaraciones en `index.html`, con `font-display: swap`. Se precargan únicamente los subconjuntos latinos de Cormorant normal y Plus Jakarta normal. Las páginas generadas conservan estas declaraciones y la precarga. No se realizan peticiones externas para cargar fuentes.
+Declaraciones en `index.html`, con `font-display: swap`. Se precargan únicamente los subconjuntos latinos de Cormorant normal, Plus Jakarta normal y Playfair italic. Playfair italic evita que el nombre Greiseland del encabezado se renderice tarde. Las páginas generadas conservan estas declaraciones y la precarga. No se realizan peticiones externas para cargar fuentes.
 
 ## Fuentes originales
 
