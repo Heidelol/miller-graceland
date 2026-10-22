@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 import type { StudioPhoto } from '../data/studioPhotos';
@@ -79,8 +79,8 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [previousImage, setPreviousImage] = useState<StudioPhoto | null>(null);
-  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
-  const visibleImage = useRef<StudioPhoto | null>(null);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(images[0]?.src ?? null);
+  const visibleImage = useRef<StudioPhoto | null>(images[0] ?? null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const current = images[index] ?? images[0];
   const multiple = images.length > 1;
@@ -92,6 +92,13 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
     setIndex(position);
   };
   const move = (direction: number) => selectImage((index + direction + images.length) % images.length);
+
+  const registerImage = useCallback((image: HTMLImageElement | null) => {
+    if (!fade || !current || !image?.complete || image.naturalWidth === 0) return;
+    visibleImage.current = { ...current, src: image.currentSrc || current.src };
+    setLoadedSrc(current.src);
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) setPreviousImage(null);
+  }, [current, fade]);
 
   if (!current) return null;
 
@@ -144,6 +151,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
       )}
       <img
         key={current.src}
+        ref={registerImage}
         src={current.src}
         srcSet={current.smallSrc ? `${current.smallSrc} 480w, ${current.src} ${current.width}w` : undefined}
         sizes="(min-width: 1280px) 400px, (min-width: 768px) 45vw, 94vw"

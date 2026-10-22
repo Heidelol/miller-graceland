@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot, hydrateRoot } from 'react-dom/client'
+import { mountApp } from './lib/mountApp'
 import './index.css'
 import App from './App.tsx'
 
@@ -10,8 +10,4 @@ const app = (
   </StrictMode>
 )
 
-if (root.hasChildNodes()) {
-  hydrateRoot(root, app)
-} else {
-  createRoot(root).render(app)
-}
+mountApp(root, app, window.location.pathname)

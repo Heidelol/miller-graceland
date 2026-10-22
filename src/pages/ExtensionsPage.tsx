@@ -33,7 +33,7 @@ export const ExtensionsPage: React.FC = () => (
           <span aria-hidden="true">/</span><span aria-current="page">Extensiones</span>
         </nav>
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] items-center gap-10 lg:gap-20">
-          <div className="hero-enter max-w-xl">
+          <div className="max-w-xl">
             <p className={eyebrow}>Miller Greiseland Studio · Chetumal</p>
             <h1 className="font-serif-luxury text-[42px] min-[375px]:text-5xl sm:text-6xl lg:text-[68px] font-medium leading-[1.06] my-6">
               Extensiones de cabello en Chetumal

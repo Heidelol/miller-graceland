@@ -41,7 +41,7 @@ export const Hero: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-14 lg:mb-20">
           
           {/* Left Column: Presentation & Actions */}
-          <div className="hero-enter lg:col-span-7 flex flex-col items-start text-left">
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
             
             <p className="mb-6 lg:mb-8 text-[9px] sm:text-[11px] font-medium tracking-[0.1em] sm:tracking-[0.16em] uppercase text-[#42502E] leading-6">
               {SALON_INFO.tagline}
