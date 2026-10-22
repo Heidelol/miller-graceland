@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node --test tests/photos.test.mjs tests/navigation.test.mjs tests/analytics.test.mjs tests/valuation.test.mjs",
     "test:seo": "node --test tests/extensions.test.mjs tests/initial-render.test.mjs",
-    "test:seo:preview": "node --test tests/extensions-preview.test.mjs"
+    "test:seo:preview": "node --test tests/extensions-preview.test.mjs",
+    "test:domain": "node --test tests/domain-redirect.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",

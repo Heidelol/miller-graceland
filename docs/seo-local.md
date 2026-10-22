@@ -79,3 +79,14 @@ Esta actualización sustituye el estado anterior de la carga tipográfica; no ca
 - Se conserva la portada, la página de extensiones, las fotografías, el catálogo y los enlaces de valoración por WhatsApp.
 - El código inicial pasa de 410.13 KB a 313.62 KB sin comprimir (112.73 KB a 93.08 KB con gzip); los estilos pasan de 56.49 KB a 44.71 KB (11.19 KB a 9.31 KB con gzip).
 - Comprobaciones actuales: 27 pruebas funcionales públicas, 13 de SEO/hidratación y 4 HTTP, incluido el rechazo de las rutas retiradas. Linter sin advertencias y compilación de producción correcta.
+
+
+## Dominio unificado: 22 de octubre de 2026
+
+- Dirección principal conservada: `https://millergreiseland.com/`.
+- El dominio verificado `www.millergreiseland.com` del proyecto `miller-graceland-demo` se configura en Vercel con `redirect: millergreiseland.com` y `redirectStatusCode: 308` (permanente).
+- El ajuste se aplica en la configuración del dominio del proyecto, por delante del despliegue: no requiere reconstruir la web y se conserva en futuras publicaciones. No se modifican DNS, verificación de Google ni certificados.
+- Se verifican la portada, extensiones, su variante con barra final, sitemap y rutas inexistentes. Se mantienen rutas, parámetros UTM, espacios codificados y parámetros repetidos. La portada y extensiones responden 200 en el destino; las rutas retiradas e inexistentes mantienen 404, sin convertirse en la portada.
+- Canónicas y sitemap siguen apuntando al dominio sinwww. La actualización de la versión elegida por Google depende de sus siguientes rastreos; no se enviaron nuevas solicitudes de indexación.
+- Verificación reproducible de la configuración pública: `npm run test:domain`. Estas pruebas usan la web real y se mantienen separadas de `npm test` para que las pruebas locales no dependan de Internet.
+- Para revertir el cambio de infraestructura, restablecer únicamente `redirect: null` y `redirectStatusCode: null` en ese dominio mediante la API de proyecto de Vercel, conservando su asignación. Revertir el commit de pruebas/documentación no modifica por sí mismo la configuración alojada.
