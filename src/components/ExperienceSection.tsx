@@ -61,7 +61,7 @@ export const ExperienceSection: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16" aria-labelledby="studio-approach-title">
           <div className="lg:col-span-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#68794E] mb-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#42502E] mb-4">
               Nuestra forma de trabajar
             </p>
             <h3 id="studio-approach-title" className="font-serif-luxury text-4xl sm:text-5xl font-medium leading-[1.08] text-[#231E1B] max-w-xs">

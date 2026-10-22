@@ -10,7 +10,7 @@ export const PaymentMethodsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20">
           <div className="lg:col-span-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#68794E] mb-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#42502E] mb-4">
               Reservas y formas de pago
             </p>
             <h2 id="booking-information-title" className="font-serif-luxury text-4xl sm:text-5xl lg:text-[3.5rem] font-medium leading-[1.06] text-[#231E1B] max-w-sm">
@@ -56,7 +56,7 @@ export const PaymentMethodsSection: React.FC = () => {
             </p>
 
             <div className="mt-6 pt-5 border-t border-[#99745A]/25">
-              <h3 className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#68794E]">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#42502E]">
                 Formas de pago
               </h3>
               <ul className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm font-medium text-[#231E1B]">

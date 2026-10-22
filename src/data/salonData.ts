@@ -15,7 +15,7 @@ export const SALON_INFO = {
   whatsappUrl: 'https://wa.me/529831373038',
   address: 'Av. Venustiano Carranza #163, entre Héroes y 16 de Septiembre. Chetumal, Quintana Roo, C.P. 77000.',
   googleMapsUrl: 'https://www.google.com/maps/place/Miller+Greiseland+Studio/data=!4m2!3m1!1s0x0:0x839aabe645cb762a',
-  schedule: '11:00 a. m. a 7:00 p. m.',
+  schedule: 'Lunes a sábado, de 11:00 a. m. a 7:00 p. m. Domingo cerrado.',
   currency: 'MXN',
   instagram: '@millergreiseland.studio',
   instagramUrl: 'https://www.instagram.com/millergreiseland.studio/',

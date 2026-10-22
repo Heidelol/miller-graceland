@@ -18,7 +18,9 @@ export const Footer: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full border border-[#C8933E]/50 flex items-center justify-center bg-white p-1.5 shadow-sm overflow-hidden">
                   <img
-                    src="/logo-miller.png"
+                    src="/logo-miller-small.png"
+                    width={137}
+                    height={144}
                     alt="Logo Miller Greiseland"
                     className="w-full h-full object-contain"
                     onError={(e) => {
@@ -30,7 +32,7 @@ export const Footer: React.FC = () => {
                   <span className="font-serif-luxury text-xl font-bold tracking-widest text-[#231E1B] uppercase leading-none">
                     Miller Greiseland
                   </span>
-                  <span className="text-[10px] tracking-[0.2em] text-[#68794E] uppercase font-bold mt-1">
+                  <span className="text-[10px] tracking-[0.2em] text-[#42502E] uppercase font-bold mt-1">
                     Studio
                   </span>
                 </div>
@@ -40,7 +42,7 @@ export const Footer: React.FC = () => {
               </p>
               <a href={EXTENSIONS_PATH} className="inline-flex min-h-11 items-center text-xs font-medium text-[#42502E] underline underline-offset-4 hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">Extensiones de cabello en Chetumal</a>
               <div className="pt-1">
-                <span className="text-[11px] text-[#7A7067] font-medium">
+                <span className="text-[11px] text-[#63584F] font-medium">
                   Atención exclusiva con cita previa
                 </span>
               </div>
@@ -48,9 +50,9 @@ export const Footer: React.FC = () => {
 
             {/* Column 2: Ubicación & Contacto */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
+              <h2 className="font-sans text-xs font-bold uppercase tracking-wider text-[#231E1B]">
                 Ubicación & Contacto
-              </h4>
+              </h2>
               <div className="space-y-1">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-[#C8933E] shrink-0 mt-0.5" />
@@ -62,7 +64,7 @@ export const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackDirectionsClick('footer')}
-                    className="inline-flex items-center gap-1 text-[11px] text-[#A87428] hover:text-[#231E1B] font-semibold underline underline-offset-2 transition-colors"
+                    className="inline-flex items-center gap-1 text-[11px] text-[#80551F] hover:text-[#231E1B] font-semibold underline underline-offset-2 transition-colors"
                   >
                     <span>Cómo llegar en Google Maps</span>
                   </a>
@@ -96,24 +98,24 @@ export const Footer: React.FC = () => {
 
             {/* Column 3: Horarios de Atención */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
+              <h2 className="font-sans text-xs font-bold uppercase tracking-wider text-[#231E1B]">
                 Horario de Estudio
-              </h4>
+              </h2>
               <div className="flex items-start gap-2.5">
                 <Clock className="w-4 h-4 text-[#68794E] shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p className="text-[#231E1B] font-bold">Atención general:</p>
                   <p className="text-[#3D352E]">{SALON_INFO.schedule}</p>
-                  <p className="text-[11px] text-[#7A7067] pt-1">Previa cita programada</p>
+                  <p className="text-[11px] text-[#63584F] pt-1">Previa cita programada</p>
                 </div>
               </div>
             </div>
 
             {/* Column 4: Reservas & Formas de Pago */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#231E1B]">
+              <h2 className="font-sans text-xs font-bold uppercase tracking-wider text-[#231E1B]">
                 Reservas & Pagos
-              </h4>
+              </h2>
               <ul className="space-y-1.5 text-[11px] text-[#554C44]">
                 <li>• Anticipo del 50% sobre el precio mínimo para reservar.</li>
                 <li>• Formas de pago: efectivo, transferencia bancaria y terminal en el salón.</li>

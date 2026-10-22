@@ -45,3 +45,14 @@ Al cambiar los datos del negocio, actualizar tanto `src/data/salonData.ts` como 
 4. Preparar páginas de servicios con contenido propio y fichas comerciales confirmadas. Validar demanda y costes estimados en el Planificador de palabras clave antes de acordar presupuesto y activar campañas de búsqueda locales.
 
 Los días semanales de apertura siguen pendientes de confirmación y no se han añadido al JSON-LD. No se incluyen coordenadas inferidas ni valoraciones de la propia empresa en el marcado. Todavía no se han configurado campañas ni corregido el seguimiento de conversiones.
+
+
+## Actualización del 22 de octubre de 2026
+
+- El sitio público conserva 9 servicios; los cortes se retiraron previamente. La página de extensiones ya está publicada y el sitemap incluye dos URLs.
+- Horarios presenciales confirmados por el propietario: lunes a sábado, 11:00–19:00; domingo cerrado. Se incorporan al texto visible y a `openingHoursSpecification` del HTML inicial de ambas páginas. La atención en línea hasta las 21:00 de la ficha se conserva como horario distinto.
+- Se sustituye el logotipo de 562,238 bytes por una copia de 13,261 bytes (137 × 144), manteniendo el original para marcado y otros usos. Se reservan dimensiones en el encabezado y pie.
+- Las mismas tres tipografías se sirven como WOFF2 desde el dominio, con licencias OFL y subconjuntos latinos. Ver `docs/fuentes-locales.md`. Se elimina la hoja bloqueante de Google Fonts.
+- Se corrigen los avisos de contraste en etiquetas pequeñas y se ordenan los encabezados del pie manteniendo sus tamaños y tipografía.
+- Analytics distingue clics de intención de contacto; no hay formulario público ni cobro. La propiedad Miller está vinculada con Search Console y se verificaron los informes de consultas y tráfico orgánico.
+- La prueba móvil inicial de PageSpeed registró rendimiento 89, accesibilidad 95, buenas prácticas 100 y SEO 100; FCP/LCP 2.9 s, TBT 90 ms y CLS 0. Es una medición de laboratorio, no datos de usuarios reales ni posición en Google.

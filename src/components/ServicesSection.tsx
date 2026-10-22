@@ -272,7 +272,7 @@ export const ServicesSection: React.FC = () => {
 
         {/* Catalog photography disclaimer */}
         <div className="mt-8 text-center max-w-2xl mx-auto px-4">
-          <p className="text-xs text-[#7A7067] italic leading-relaxed">
+          <p className="text-xs text-[#63584F] italic leading-relaxed">
             * Algunas imágenes del catálogo son referencias ilustrativas.
           </p>
         </div>
