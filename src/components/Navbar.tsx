@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
+import { ServicesNav } from './ServicesNav';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -62,9 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix
 
           {/* Desktop Navigation */}
           <nav aria-label="Navegación principal" className="hidden xl:flex items-center gap-6 text-[13px] font-medium text-[#5C534B]">
-            <a href={`${sectionLinkPrefix}#servicios`} className={desktopLinkClassName}>
-              Servicios
-            </a>
+            <ServicesNav sectionLinkPrefix={sectionLinkPrefix} triggerClassName={desktopLinkClassName} />
             <a href={`${sectionLinkPrefix}#experiencia`} className={desktopLinkClassName}>
               Experiencia
             </a>
@@ -138,16 +137,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix
       {mobileMenuOpen && (
         <div
           id="mobile-menu-drawer"
-          className="xl:hidden bg-[#F9F6F0] border-t border-[#99745A]/15 px-6 py-5 space-y-4"
+          className="xl:hidden max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain bg-[#F9F6F0] border-t border-[#99745A]/15 px-6 py-5 space-y-4"
         >
           <nav aria-label="Navegación móvil" className="flex flex-col space-y-1 text-base font-medium text-[#3D352F] [&>a]:min-h-11 [&>a]:flex [&>a]:items-center [&>a]:focus-visible:outline-2 [&>a]:focus-visible:outline-[#231E1B] [&>a]:focus-visible:outline-offset-2">
-            <a
-              href={`${sectionLinkPrefix}#servicios`}
-              onClick={() => setMobileMenuOpen(false)}
-              className="py-1 hover:text-[#95651F] transition-colors"
-            >
-              Servicios Especializados
-            </a>
+            <ServicesNav mobile sectionLinkPrefix={sectionLinkPrefix} onNavigate={() => setMobileMenuOpen(false)}
+              triggerClassName="min-h-11 flex items-center py-1 hover:text-[#95651F] transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2" />
             <a
               href={`${sectionLinkPrefix}#experiencia`}
               onClick={() => setMobileMenuOpen(false)}
