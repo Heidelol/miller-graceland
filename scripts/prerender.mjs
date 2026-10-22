@@ -7,11 +7,7 @@ register('./tsx-loader.mjs', import.meta.url);
 const { ExtensionsPage } = await import('../src/pages/ExtensionsPage.tsx');
 const { App } = await import('../src/App.tsx');
 const { EXTENSIONS_PATH, EXTENSIONS_CANONICAL, EXTENSIONS_SEO } = await import('../src/data/extensionsPage.ts');
-// Embed the critical body font so a late external download cannot repaint the LCP text.
-// Keep the local URL in development and the bundled font/license for reproducible builds.
-const bodyFont = await readFile(new URL('../public/fonts/plus-jakarta-sans-latin.woff2', import.meta.url));
-const template = (await readFile(new URL('../dist/index.html', import.meta.url), 'utf8'))
-  .replaceAll('/fonts/plus-jakarta-sans-latin.woff2', `data:font/woff2;base64,${bodyFont.toString('base64')}`);
+const template = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
 if (!template.includes('<div id="root"></div>')) throw new Error('El HTML base no contiene el punto de montaje esperado.');
 
 const attribute = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
