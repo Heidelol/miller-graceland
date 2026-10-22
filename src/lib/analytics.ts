@@ -55,18 +55,22 @@ export function trackEvent(
 }
 
 /**
- * 1. Track WhatsApp Clicks across the site (Floating, Navbar, Footer, Catalog, Booking Modal)
+ * Track contact intent across the public site. A click is not a confirmed appointment.
  */
 export function trackWhatsAppClick(
   location:
     | 'floating_button'
     | 'navbar_desktop'
     | 'navbar_mobile'
+    | 'navbar_valuation'
+    | 'navbar_mobile_valuation'
+    | 'hero_valuation'
+    | 'services_valuation'
+    | 'payment_valuation'
     | 'hero_card_tratamientos'
     | 'services_card_tratamientos'
     | 'payment_methods'
     | 'footer'
-    | 'booking_modal_final'
     | 'extensions_hero'
     | 'extensions_valuation'
     | 'extensions_location'
@@ -79,76 +83,12 @@ export function trackWhatsAppClick(
   trackEvent('whatsapp_click', {
     click_location: location,
     service_name: details?.serviceName || 'General',
-    contact_intent: location === 'booking_modal_final' ? 'prepared_request' : 'inquiry',
+    contact_intent: 'inquiry',
   });
 }
 
 /**
- * 2. Track Interest in Services (clicks on "Reservar" or selecting a service in catalog)
- */
-export function trackServiceInterest(
-  serviceId: string,
-  serviceName: string,
-  priceMXN: number,
-  category: string
-) {
-  trackEvent('service_interest', {
-    service_id: serviceId,
-    service_name: serviceName,
-    price_mxn: priceMXN,
-    category: category,
-  });
-
-  // Standard GA4 e-commerce / selection item
-  trackEvent('select_item', {
-    item_list_name: 'Catálogo de Servicios',
-    items: [
-      {
-        item_id: serviceId,
-        item_name: serviceName,
-        price: priceMXN,
-        item_category: category,
-      },
-    ],
-  });
-}
-
-/**
- * 3. Track Opening of the Booking Modal
- */
-export function trackBookingModalOpen(triggerLocation: string, serviceName?: string) {
-  trackEvent('booking_modal_open', {
-    trigger_location: triggerLocation,
-    initial_service: serviceName || 'default',
-  });
-}
-
-/**
- * 4. Track Booking Modal Funnel Steps (1: Service, 2: Hair, 3: Schedule, 4: Contact, 5: Summary)
- */
-export function trackBookingStep(stepNumber: number, stepName: string, serviceName?: string) {
-  trackEvent('booking_step', {
-    step_number: stepNumber,
-    step_name: stepName,
-    service_name: serviceName,
-  });
-}
-
-/**
- * 5. Track Completion of Booking Form (Step 6 / Solicitud preparada)
- */
-export function trackBookingLeadPrepared(serviceName: string) {
-  // The request exists only in this browser; no payment or salon confirmation occurred.
-  // Keep contact information, hair history, appointment details and booking IDs out of GA.
-  trackEvent('booking_lead_prepared', {
-    service_name: serviceName,
-    request_status: 'prepared_locally',
-    contact_channel: 'whatsapp',
-  });
-}
-
-/**
- * 6. Track Outbound Social / Phone / Directions Clicks
+ * Track Outbound Social / Phone / Directions Clicks
  */
 export function trackInstagramClick(location: string = 'footer') {
   trackEvent('instagram_click', {

@@ -2,16 +2,14 @@ import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
-
-interface HeroProps {
-  onOpenBooking: () => void;
-}
+import { ValuationLink } from './ValuationLink';
+import { VALUATION_WHATSAPP_URL } from '../data/valuation';
 
 const heroShortcuts = [
   {
     title: 'Tratamientos',
     description: 'Valoración por WhatsApp',
-    href: SALON_INFO.whatsappUrl,
+    href: VALUATION_WHATSAPP_URL,
     isWhatsApp: true,
   },
   {
@@ -34,7 +32,7 @@ const heroShortcuts = [
   },
 ];
 
-export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
+export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-[88vh] flex items-center justify-center pt-28 lg:pt-32 pb-16 overflow-hidden bg-[#F9F6F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -63,12 +61,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-              <button
-                onClick={onOpenBooking}
+              <ValuationLink
+                location="hero_valuation"
                 className="gold-button min-h-12 px-6 py-3 rounded-lg text-sm font-semibold cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
               >
-                <span>Solicitar Cita</span>
-              </button>
+                <span>Solicitar valoración</span>
+              </ValuationLink>
 
               <a
                 href="#servicios"

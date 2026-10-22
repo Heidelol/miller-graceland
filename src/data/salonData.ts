@@ -347,7 +347,7 @@ export const TESTIMONIALS = TESTIMONIALS_DEV_PREVIEW;
 export const FAQS = [
   {
     question: '¿Cómo funcionan las reservas de citas y las formas de pago?',
-    answer: 'Eliges el servicio en nuestro catálogo y seleccionas tu fecha y horario solicitados. Para agendar, se requiere un anticipo del 50% sobre el precio mínimo publicado. Aceptamos efectivo, transferencia bancaria (los datos se proporcionan por WhatsApp) y terminal bancaria en el salón al momento de tu cita. Para servicios con rango o tarifas según longitud o gramaje, el precio final se confirma tras la valoración presencial en el salón y se descuenta el anticipo efectivamente recibido.'
+    answer: 'Pulsa «Solicitar valoración» para escribirle a Miller por WhatsApp y acordar una visita al salón. No necesitas elegir un servicio ni completar un formulario en la web. Durante la valoración, Miller te orienta sobre el servicio y confirma el precio final. Para reservar los servicios del catálogo se requiere un anticipo del 50% sobre el precio mínimo publicado, que se descuenta del importe acordado. Aceptamos efectivo, transferencia bancaria y terminal bancaria en el salón; los datos para transferencia se comparten por WhatsApp.'
   },
   {
     question: '¿Qué es el Ritual K18 incluido en los servicios de Signature Blondes?',

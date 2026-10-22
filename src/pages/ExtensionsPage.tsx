@@ -2,32 +2,30 @@ import { ArrowDown, ArrowUpRight, ChevronDown, MapPin } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { SALON_INFO } from '../data/salonData';
-import { EXTENSIONS_QUESTIONS, EXTENSIONS_WHATSAPP_URL } from '../data/extensionsPage';
-import { trackWhatsAppClick, trackDirectionsClick } from '../lib/analytics';
+import { EXTENSIONS_QUESTIONS } from '../data/extensionsPage';
+import { trackDirectionsClick } from '../lib/analytics';
+import { ValuationLink } from '../components/ValuationLink';
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4';
 const eyebrow = 'text-[11px] font-medium uppercase tracking-[0.18em] text-[#42502E]';
 const textLink = `min-h-11 inline-flex items-center gap-2 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#95651F] transition-colors ${focus}`;
 
-function AppointmentLink({ location, className = '', children = 'Haz tu cita' }: {
+function AppointmentLink({ location, className = '', children = 'Solicitar valoración' }: {
   location: 'extensions_hero' | 'extensions_valuation' | 'extensions_location';
   className?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <a href={EXTENSIONS_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-      onClick={() => trackWhatsAppClick(location, { serviceName: 'Valoración de extensiones' })}
+    <ValuationLink location={location}
       className={`gold-button min-h-11 inline-flex items-center justify-center gap-3 rounded-lg px-5 py-3 text-sm font-semibold ${focus} ${className}`}>
       {children}<ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-    </a>
+    </ValuationLink>
   );
 }
 
 export const ExtensionsPage: React.FC = () => (
   <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B]">
-    <Navbar sectionLinkPrefix="/" bookingHref={EXTENSIONS_WHATSAPP_URL} bookingLabel="Haz tu cita"
-      whatsappHref={EXTENSIONS_WHATSAPP_URL}
-      onOpenBooking={() => trackWhatsAppClick('extensions_navbar', { serviceName: 'Valoración de extensiones' })} />
+    <Navbar sectionLinkPrefix="/" valuationLocation="extensions_navbar" />
     <main id="contenido-extensiones" className="pt-28 sm:pt-32">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         <nav aria-label="Ruta de navegación" className="flex items-center gap-3 text-xs text-[#5C534B] mb-8 sm:mb-10">
@@ -148,6 +146,6 @@ export const ExtensionsPage: React.FC = () => (
         </div>
       </section>
     </main>
-    <Footer whatsappHref={EXTENSIONS_WHATSAPP_URL} whatsappServiceName="Valoración de extensiones" />
+    <Footer />
   </div>
 );

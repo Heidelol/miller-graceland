@@ -1,12 +1,8 @@
 import React from 'react';
 import { SALON_INFO } from '../data/salonData';
-import { trackWhatsAppClick } from '../lib/analytics';
+import { ValuationLink } from './ValuationLink';
 
-interface PaymentMethodsSectionProps {
-  onOpenBooking?: () => void;
-}
-
-export const PaymentMethodsSection: React.FC<PaymentMethodsSectionProps> = ({ onOpenBooking }) => {
+export const PaymentMethodsSection: React.FC = () => {
   return (
     <section id="pagos" aria-labelledby="booking-information-title" className="py-16 sm:py-20 bg-[#F2EDE3] relative border-y border-[#99745A]/15">
       <div id="mercadopago" className="absolute -top-24 left-0" />
@@ -21,28 +17,22 @@ export const PaymentMethodsSection: React.FC<PaymentMethodsSectionProps> = ({ on
               Prepara tu<br />próxima visita.
             </h2>
             <p className="mt-5 text-sm leading-7 text-[#5C534B] max-w-sm">
-              Elige tu servicio y solicita tu horario. La disponibilidad se confirma con el salón.
+              Solicita una valoración por WhatsApp. En el salón, Miller te orienta sobre el servicio y confirma contigo el precio final.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-5">
-              {onOpenBooking && (
-                <button
-                  type="button"
-                  onClick={onOpenBooking}
-                  className="gold-button px-7 py-3.5 rounded-full text-sm cursor-pointer"
-                >
-                  Solicitar cita
-                </button>
-              )}
-              <a
-                href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20anticipos%20y%20formas%20de%20pago`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick('payment_methods')}
+              <ValuationLink
+                location="payment_valuation"
+                className="gold-button px-7 py-3.5 rounded-full text-sm cursor-pointer"
+              >
+                Solicitar valoración
+              </ValuationLink>
+              <ValuationLink
+                location="payment_methods"
                 className="text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/50 hover:decoration-[#42502E] transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
               >
                 Consultar por WhatsApp
-              </a>
+              </ValuationLink>
             </div>
           </div>
 

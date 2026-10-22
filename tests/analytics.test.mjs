@@ -1,8 +1,7 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  trackEvent, trackWhatsAppClick, trackBookingModalOpen,
-  trackBookingLeadPrepared,
+  trackEvent, trackWhatsAppClick,
 } from '../src/lib/analytics.ts';
 
 let commands;
@@ -21,27 +20,12 @@ test('un clic a WhatsApp mide intención de contacto sin generar una venta ni un
   }]]);
 });
 
-test('WhatsApp del formulario identifica una solicitud preparada sin enviar su código privado', () => {
-  trackWhatsAppClick('booking_modal_final', { serviceName: 'Balayage Rubio', bookingCode: 'MG-1234' });
+test('la valoración no envía datos privados adicionales ni importes a Google', () => {
+  trackWhatsAppClick('hero_valuation', { serviceName: 'Valoración en salón', bookingCode: 'MG-1234', price: 1600 });
   assert.deepEqual(commands, [['event', 'whatsapp_click', {
-    click_location: 'booking_modal_final',
-    service_name: 'Balayage Rubio',
-    contact_intent: 'prepared_request',
-  }]]);
-});
-
-test('abrir una solicitud no inicia un checkout ni un pago', () => {
-  trackBookingModalOpen('navbar', 'Retoque de Color');
-  assert.deepEqual(commands, [['event', 'booking_modal_open', {
-    trigger_location: 'navbar', initial_service: 'Retoque de Color',
-  }]]);
-});
-
-test('preparar el formulario registra solo su estado local, sin ingresos ni confirmación', () => {
-  trackBookingLeadPrepared('Balayage Rubio', 'MG-1234', 1600, '2026-10-22', '11:00 AM');
-  assert.deepEqual(commands, [['event', 'booking_lead_prepared', {
-    service_name: 'Balayage Rubio', request_status: 'prepared_locally',
-    contact_channel: 'whatsapp',
+    click_location: 'hero_valuation',
+    service_name: 'Valoración en salón',
+    contact_intent: 'inquiry',
   }]]);
 });
 

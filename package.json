@@ -8,19 +8,17 @@
     "build": "tsc -b && vite build && node scripts/prerender.mjs && node scripts/build-vercel-output.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "node tests/adminDemo.test.mjs && node --test tests/photos.test.mjs tests/navigation.test.mjs tests/analytics.test.mjs",
+    "test": "node tests/adminDemo.test.mjs && node --test tests/photos.test.mjs tests/navigation.test.mjs tests/analytics.test.mjs tests/valuation.test.mjs",
     "test:seo": "node --test tests/extensions.test.mjs",
     "test:seo:preview": "node --test tests/extensions-preview.test.mjs"
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.4",
     "lucide-react": "^1.52.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

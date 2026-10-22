@@ -13,7 +13,7 @@ Object.assign(globalThis, { window: dom.window, document: dom.window.document, H
 let container, root;
 beforeEach(() => { container = document.createElement('div'); document.body.append(container); root = createRoot(container); });
 afterEach(async () => { await act(() => root.unmount()); container.remove(); });
-async function render(props = {}) { await act(() => root.render(createElement(Navbar, { onOpenBooking() {}, ...props }))); }
+async function render(props = {}) { await act(() => root.render(createElement(Navbar, props))); }
 function trigger(prefix = 'desktop') {
   const button = container.querySelector(`button[aria-controls="${prefix}-services-panel"]`);
   assert.ok(button, 'Servicios debe ser un control desplegable');
@@ -78,11 +78,13 @@ test('desde una página interna Ver todos los servicios apunta a la portada', as
   assert.equal(panel('mobile').querySelector('a').getAttribute('href'), '/#servicios');
 });
 
-test('Reservar cita conserva su acción de la portada después de usar Servicios', async () => {
-  let calls = 0;
-  await render({ onOpenBooking() { calls++; } });
+test('Solicitar valoración mantiene el enlace a WhatsApp después de usar Servicios', async () => {
+  await render();
   await click(trigger()); await click(trigger());
-  const booking = [...container.querySelectorAll('button')].find(b => b.textContent.trim() === 'Reservar cita');
-  await click(booking);
-  assert.equal(calls, 1);
+  const valuation = [...container.querySelectorAll('a')].find(a => a.textContent.trim() === 'Solicitar valoración');
+  assert.ok(valuation);
+  const url = new URL(valuation.href);
+  assert.equal(url.origin, 'https://wa.me');
+  assert.equal(url.pathname, '/529831373038');
+  assert.match(url.searchParams.get('text'), /valoración en el salón/);
 });

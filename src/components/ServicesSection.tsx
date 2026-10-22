@@ -1,17 +1,13 @@
 import { useState } from 'react';
 import { Clock, Check, ArrowRight, ArrowUpRight, Tag, ChevronDown } from 'lucide-react';
 import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
-import type { ServiceCategory, ServiceItem } from '../types/salon';
-import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
+import type { ServiceCategory } from '../types/salon';
 import { PhotoCarousel } from './PhotoCarousel';
 import { STUDIO_PHOTOS } from '../data/studioPhotos';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
+import { ValuationLink } from './ValuationLink';
 
-interface ServicesSectionProps {
-  onSelectService: (service: ServiceItem) => void;
-}
-
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectService }) => {
+export const ServicesSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<ServiceCategory | 'color-family'>('todos');
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({});
 
@@ -86,9 +82,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </button>
                 ) : (
-                  <a href={SALON_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('services_card_tratamientos', { serviceName: 'Tratamientos Capilares' })} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                  <ValuationLink location="services_card_tratamientos" className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
-                  </a>
+                  </ValuationLink>
                 )}
               </div>
             </article>
@@ -198,18 +194,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                         aria-hidden="true"
                       />
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        trackServiceInterest(service.id, service.name, service.priceMXN, service.category);
-                        onSelectService(service);
-                      }}
-                      aria-label={`Reservar ${service.name}`}
+                    <ValuationLink
+                      location="services_valuation"
                       className="gold-button min-h-11 px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
                     >
-                      <span>Reservar</span>
+                      <span>Solicitar valoración</span>
                       <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
-                    </button>
+                    </ValuationLink>
                   </div>
                 </div>
 

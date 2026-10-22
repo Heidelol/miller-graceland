@@ -1,11 +1,12 @@
 import { Phone, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
-import { trackWhatsAppClick, trackInstagramClick, trackPhoneCallClick, trackDirectionsClick } from '../lib/analytics';
+import { trackInstagramClick, trackPhoneCallClick, trackDirectionsClick } from '../lib/analytics';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
+import { ValuationLink } from './ValuationLink';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export const Footer: React.FC<{ whatsappHref?: string; whatsappServiceName?: string }> = ({ whatsappHref, whatsappServiceName }) => {
+export const Footer: React.FC = () => {
   return (
     <>
       <footer className="bg-[#EAE3D6] border-t border-[#99745A]/25 pt-16 pb-12 text-[#554C44] text-xs">
@@ -136,17 +137,15 @@ export const Footer: React.FC<{ whatsappHref?: string; whatsappServiceName?: str
       </footer>
 
       {/* Floating WhatsApp Action Button */}
-      <a
-        href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20asesor%C3%ADa%20personalizada`}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackWhatsAppClick('floating_button', { serviceName: whatsappServiceName })}
+      <ValuationLink
+        location="floating_button"
+        aria-label="Solicitar valoración por WhatsApp"
         className="fixed bottom-6 right-6 z-40 group flex items-center gap-2 bg-[#25D366] text-black px-4 py-3 rounded-full shadow-2xl hover:bg-[#20BE5A] transition-all hover:scale-105"
         title="Chatear por WhatsApp"
       >
         <MessageCircle className="w-5 h-5 fill-current" />
-        <span className="text-xs font-bold hidden sm:inline">¿Dudas? Escríbenos</span>
-      </a>
+        <span className="text-xs font-bold hidden sm:inline">Solicitar valoración</span>
+      </ValuationLink>
     </>
   );
 };

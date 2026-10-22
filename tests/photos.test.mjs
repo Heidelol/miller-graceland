@@ -9,7 +9,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 register('./tsx-loader.mjs', import.meta.url);
 const { PhotoCarousel } = await import('../src/components/PhotoCarousel.tsx');
 const { ServicesSection } = await import('../src/components/ServicesSection.tsx');
-const { BookingModal } = await import('../src/components/BookingModal.tsx');
 const { ConocemeSection } = await import('../src/components/ConocemeSection.tsx');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://millergreiseland.com' });
 Object.assign(globalThis, {
@@ -85,7 +84,7 @@ test('dos carruseles conservan su selección de forma independiente', async () =
 });
 
 test('el acceso de Tintes incluye Color y Signature Blondes y conserva el filtro individual', async () => {
-  await act(() => root.render(createElement(ServicesSection, { onSelectService() {} })));
+  await act(() => root.render(createElement(ServicesSection)));
   const findButton = text => [...container.querySelectorAll('button')].find(b => b.textContent.includes(text));
   await click(findButton('Ver color y rubios'));
   assert.equal(container.querySelectorAll('[data-service-id]').length, 6);
@@ -96,10 +95,9 @@ test('el acceso de Tintes incluye Color y Signature Blondes y conserva el filtro
   assert.equal(container.querySelector('[data-service-id="balayage-rubio"]'), null);
 });
 
-test('los cortes retirados no se ofrecen en el catálogo ni en la solicitud de cita', () => {
+test('los cortes retirados no se ofrecen en el catálogo público', () => {
   for (const component of [
-    createElement(ServicesSection, { onSelectService() {} }),
-    createElement(BookingModal, { isOpen: true, onClose() {}, initialService: null }),
+    createElement(ServicesSection),
   ]) {
     const page = new JSDOM(renderToStaticMarkup(component));
     const text = page.window.document.body.textContent;

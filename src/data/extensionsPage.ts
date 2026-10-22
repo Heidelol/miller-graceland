@@ -1,15 +1,9 @@
-import { SALON_INFO } from './salonData';
-
 export const EXTENSIONS_PATH = '/extensiones-cabello-chetumal';
 export const EXTENSIONS_CANONICAL = `https://millergreiseland.com${EXTENSIONS_PATH}`;
 export const EXTENSIONS_SEO = {
   title: 'Extensiones de cabello en Chetumal | Miller Greiseland',
   description: 'Extensiones de cabello 100 % humano en Chetumal. Conoce las opciones, mantenimiento y retiro en Miller Greiseland Studio. Solicita una valoración.',
 };
-
-export const EXTENSIONS_WHATSAPP_URL = `${SALON_INFO.whatsappUrl}?text=${encodeURIComponent(
-  'Hola, Miller. Vi la página de extensiones de cabello en Chetumal y me gustaría solicitar una valoración y acordar una cita.'
-)}`;
 
 export const EXTENSIONS_QUESTIONS = [
   {

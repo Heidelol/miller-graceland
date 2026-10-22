@@ -7,11 +7,7 @@ import { ConocemeSection } from './components/ConocemeSection';
 import { PaymentMethodsSection } from './components/PaymentMethodsSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
-import { BookingModal } from './components/BookingModal';
 import { AdminDemoPage } from './pages/AdminDemoPage';
-import type { ServiceItem } from './types/salon';
-import { PUBLIC_SERVICES } from './data/salonData';
-import { trackBookingModalOpen } from './lib/analytics';
 import { ExtensionsPage } from './pages/ExtensionsPage';
 import { EXTENSIONS_PATH } from './data/extensionsPage';
 
@@ -19,9 +15,6 @@ export function App() {
   const [currentPath, setCurrentPath] = useState(
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
-
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -67,45 +60,24 @@ export function App() {
     return <AdminDemoPage />;
   }
 
-  const handleOpenBooking = (service?: ServiceItem, triggerLocation: string = 'general') => {
-    const chosen = service || PUBLIC_SERVICES[0];
-    setSelectedService(chosen);
-    setIsBookingOpen(true);
-    trackBookingModalOpen(triggerLocation, chosen.name);
-  };
-
-  const handleCloseBooking = () => {
-    setIsBookingOpen(false);
-  };
-
   return (
     <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B] flex flex-col selection:bg-[#C8933E]/20 selection:text-[#231E1B] overflow-x-hidden">
       {/* Top Navigation */}
-      <Navbar onOpenBooking={() => handleOpenBooking(undefined, 'navbar')} />
+      <Navbar />
 
       {/* Main Landing Sections */}
       <main className="flex-1">
-        <Hero onOpenBooking={() => handleOpenBooking(undefined, 'hero_cta')} />
-        <ServicesSection onSelectService={(service) => handleOpenBooking(service, 'catalog_service_card')} />
+        <Hero />
+        <ServicesSection />
         <ExperienceSection />
         <ConocemeSection />
-        <PaymentMethodsSection onOpenBooking={() => handleOpenBooking(undefined, 'payment_methods')} />
+        <PaymentMethodsSection />
         {/* TestimonialsSection is hidden from public site until verified real customer reviews are available */}
         <FAQSection />
       </main>
 
       {/* Footer & Floating WhatsApp */}
       <Footer />
-
-      {/* Booking Wizard with reservation and diagnostic flow */}
-      {isBookingOpen && (
-        <BookingModal
-          key={selectedService ? selectedService.id : 'default'}
-          isOpen={isBookingOpen}
-          onClose={handleCloseBooking}
-          initialService={selectedService}
-        />
-      )}
     </div>
   );
 }

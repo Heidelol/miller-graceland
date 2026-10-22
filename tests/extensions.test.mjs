@@ -27,12 +27,12 @@ test('la inversión se presenta por valoración sin inventar precios ni anticipo
   assert.ok(section);
   assert.match(section.textContent, /Requiere valoración/);
   assert.doesNotMatch(section.textContent, /\$\s*\d|\d+\s*MXN/);
-  const link = [...section.querySelectorAll('a')].find(a => a.textContent.includes('Haz tu cita'));
+  const link = [...section.querySelectorAll('a')].find(a => a.textContent.includes('Solicitar valoración'));
   assert.ok(link);
   const url = new URL(link.href);
   assert.equal(url.origin, 'https://wa.me');
   assert.equal(url.pathname, '/529831373038');
-  assert.match(url.searchParams.get('text'), /extensiones.*valoración/i);
+  assert.match(url.searchParams.get('text'), /valoración en el salón/i);
 });
 
 test('las dos imágenes generadas conservan identificación visible, alt, dimensiones y archivos locales', () => {

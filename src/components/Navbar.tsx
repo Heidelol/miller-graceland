@@ -1,23 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Phone, Menu, X } from 'lucide-react';
-import { SALON_INFO } from '../data/salonData';
-import { trackWhatsAppClick } from '../lib/analytics';
 import { ServicesNav } from './ServicesNav';
+import { ValuationLink } from './ValuationLink';
 
 interface NavbarProps {
-  onOpenBooking: () => void;
   sectionLinkPrefix?: '' | '/';
-  bookingHref?: string;
-  bookingLabel?: string;
-  whatsappHref?: string;
+  valuationLocation?: 'navbar_valuation' | 'extensions_navbar';
 }
 
 const desktopLinkClassName = "relative inline-flex min-h-11 items-center py-3 transition-colors hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4 after:absolute after:bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-[#A87428] after:transition-transform after:duration-200 after:content-[''] hover:after:scale-x-100 focus-visible:after:scale-x-100";
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix = '', bookingHref, bookingLabel = 'Reservar cita', whatsappHref }) => {
+export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuationLocation = 'navbar_valuation' }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const BookingAction = bookingHref ? 'a' : 'button';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,44 +75,34 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix
 
           {/* Right Action Buttons */}
           <div className="hidden xl:flex items-center gap-5 shrink-0">
-            <a
-              href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20sus%20servicios`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsAppClick('navbar_desktop')}
+            <ValuationLink
+              location="navbar_desktop"
               className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-[#42502E] hover:text-[#95651F] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
             >
               <Phone className="w-3.5 h-3.5 text-[#68794E]" aria-hidden="true" />
               <span>WhatsApp</span>
-            </a>
+            </ValuationLink>
 
-            <BookingAction
-              type={bookingHref ? undefined : 'button'}
-              href={bookingHref}
-              target={bookingHref ? '_blank' : undefined}
-              rel={bookingHref ? 'noopener noreferrer' : undefined}
-              onClick={onOpenBooking}
+            <ValuationLink
+              location={valuationLocation}
               className="gold-button min-h-11 flex items-center gap-2 px-4 py-3 rounded-lg text-xs font-semibold cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{bookingLabel}</span>
-            </BookingAction>
+              <span>Solicitar valoración</span>
+            </ValuationLink>
           </div>
 
           {/* Mobile & Tablet Compact Menu Trigger */}
           <div className="flex xl:hidden items-center gap-1 sm:gap-2 shrink-0">
-            <BookingAction
-              type={bookingHref ? undefined : 'button'}
-              href={bookingHref}
-              target={bookingHref ? '_blank' : undefined}
-              rel={bookingHref ? 'noopener noreferrer' : undefined}
-              onClick={onOpenBooking}
+            <ValuationLink
+              location="navbar_mobile_valuation"
+              aria-label="Solicitar valoración"
               className="gold-button min-h-11 min-w-11 px-2 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Calendar className="hidden sm:block w-3.5 h-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">{bookingLabel}</span>
+              <span className="hidden sm:inline">Solicitar valoración</span>
               <span className="sm:hidden">Cita</span>
-            </BookingAction>
+            </ValuationLink>
             <button
               type="button"
               id="mobile-menu-trigger"
@@ -173,30 +158,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix
           </nav>
 
           <div className="pt-4 border-t border-[#99745A]/15 flex flex-col gap-3">
-            <BookingAction
-              type={bookingHref ? undefined : 'button'}
-              href={bookingHref}
-              target={bookingHref ? '_blank' : undefined}
-              rel={bookingHref ? 'noopener noreferrer' : undefined}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenBooking();
-              }}
+            <ValuationLink
+              location="navbar_mobile_valuation"
+              onNavigate={() => setMobileMenuOpen(false)}
               className="gold-button min-h-11 w-full py-3 rounded-lg text-center text-sm font-semibold flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" aria-hidden="true" />
-              <span>{bookingLabel}</span>
-            </BookingAction>
-            <a
-              href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20agendar%20cita`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackWhatsAppClick('navbar_mobile')}
+              <span>Solicitar valoración</span>
+            </ValuationLink>
+            <ValuationLink
+              location="navbar_mobile"
+              onNavigate={() => setMobileMenuOpen(false)}
               className="min-h-11 w-full py-2.5 text-sm font-medium text-[#42502E] hover:text-[#95651F] flex items-center justify-center gap-2 transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
             >
               <Phone className="w-4 h-4 text-[#68794E]" aria-hidden="true" />
               <span>Contactar por WhatsApp</span>
-            </a>
+            </ValuationLink>
           </div>
         </div>
       )}
