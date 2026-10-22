@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full border border-[#C8933E]/50 flex items-center justify-center bg-white p-1.5 shadow-sm overflow-hidden">
                   <img
-                    src="/logo-miller-small.png"
+                    src="/logo-miller-small.webp"
                     width={137}
                     height={144}
                     alt="Logo Miller Greiseland"

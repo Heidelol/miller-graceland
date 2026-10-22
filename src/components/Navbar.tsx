@@ -36,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
           <a href={sectionLinkPrefix || '#'} aria-label="Miller Greiseland Studio · Inicio" className="flex items-center gap-1.5 min-[375px]:gap-2 sm:gap-2.5 group shrink-0 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
             <div className="w-7 h-7 min-[375px]:w-9 min-[375px]:h-9 sm:w-11 sm:h-11 rounded-full border border-[#C8933E]/30 flex items-center justify-center bg-white p-1 group-hover:border-[#A87428] transition-colors duration-200 overflow-hidden shrink-0">
               <img
-                src="/logo-miller-small.png"
+                src="/logo-miller-small.webp"
                 width={137}
                 height={144}
                 alt="Logo Miller Greiseland"

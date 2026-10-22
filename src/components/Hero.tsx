@@ -84,6 +84,8 @@ export const Hero: React.FC = () => {
             <div className="aspect-[4/5] rounded-lg overflow-hidden bg-[#FAF7F2]">
               <img
                 src="/images/hero/portada.webp"
+                srcSet="/images/hero/portada-480.webp 480w, /images/hero/portada-768.webp 768w, /images/hero/portada.webp 1122w"
+                sizes="(min-width: 1280px) 448px, (min-width: 1024px) 40vw, (min-width: 640px) 448px, min(384px, calc(100vw - 32px))"
                 alt="Miller Greiseland - Estilista profesional, colorimetrista y especialista en extensiones"
                 width={1122}
                 height={1402}
