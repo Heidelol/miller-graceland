@@ -5,13 +5,18 @@ import { trackWhatsAppClick } from '../lib/analytics';
 
 interface NavbarProps {
   onOpenBooking: () => void;
+  sectionLinkPrefix?: '' | '/';
+  bookingHref?: string;
+  bookingLabel?: string;
+  whatsappHref?: string;
 }
 
 const desktopLinkClassName = "relative inline-flex min-h-11 items-center py-3 transition-colors hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4 after:absolute after:bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-[#A87428] after:transition-transform after:duration-200 after:content-[''] hover:after:scale-x-100 focus-visible:after:scale-x-100";
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, sectionLinkPrefix = '', bookingHref, bookingLabel = 'Reservar cita', whatsappHref }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const BookingAction = bookingHref ? 'a' : 'button';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-2 sm:gap-6">
           {/* Brand Logo with Image */}
-          <a href="#" aria-label="Miller Greiseland Studio · Inicio" className="flex items-center gap-1.5 min-[375px]:gap-2 sm:gap-2.5 group shrink-0 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+          <a href={sectionLinkPrefix || '#'} aria-label="Miller Greiseland Studio · Inicio" className="flex items-center gap-1.5 min-[375px]:gap-2 sm:gap-2.5 group shrink-0 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
             <div className="w-7 h-7 min-[375px]:w-9 min-[375px]:h-9 sm:w-11 sm:h-11 rounded-full border border-[#C8933E]/30 flex items-center justify-center bg-white p-1 group-hover:border-[#A87428] transition-colors duration-200 overflow-hidden shrink-0">
               <img
                 src="/logo-miller.png"
@@ -57,19 +62,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
           {/* Desktop Navigation */}
           <nav aria-label="Navegación principal" className="hidden xl:flex items-center gap-6 text-[13px] font-medium text-[#5C534B]">
-            <a href="#servicios" className={desktopLinkClassName}>
+            <a href={`${sectionLinkPrefix}#servicios`} className={desktopLinkClassName}>
               Servicios
             </a>
-            <a href="#experiencia" className={desktopLinkClassName}>
+            <a href={`${sectionLinkPrefix}#experiencia`} className={desktopLinkClassName}>
               Experiencia
             </a>
-            <a href="#conoceme" className={desktopLinkClassName}>
+            <a href={`${sectionLinkPrefix}#conoceme`} className={desktopLinkClassName}>
               Conóceme
             </a>
-            <a href="#pagos" className={desktopLinkClassName}>
+            <a href={`${sectionLinkPrefix}#pagos`} className={desktopLinkClassName}>
               Formas de pago
             </a>
-            <a href="#faq" className={desktopLinkClassName}>
+            <a href={`${sectionLinkPrefix}#faq`} className={desktopLinkClassName}>
               Preguntas
             </a>
           </nav>
@@ -77,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           {/* Right Action Buttons */}
           <div className="hidden xl:flex items-center gap-5 shrink-0">
             <a
-              href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20sus%20servicios`}
+              href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20informaci%C3%B3n%20sobre%20sus%20servicios`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWhatsAppClick('navbar_desktop')}
@@ -87,27 +92,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <span>WhatsApp</span>
             </a>
 
-            <button
-              type="button"
+            <BookingAction
+              type={bookingHref ? undefined : 'button'}
+              href={bookingHref}
+              target={bookingHref ? '_blank' : undefined}
+              rel={bookingHref ? 'noopener noreferrer' : undefined}
               onClick={onOpenBooking}
               className="gold-button min-h-11 flex items-center gap-2 px-4 py-3 rounded-lg text-xs font-semibold cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Reservar cita</span>
-            </button>
+              <span>{bookingLabel}</span>
+            </BookingAction>
           </div>
 
           {/* Mobile & Tablet Compact Menu Trigger */}
           <div className="flex xl:hidden items-center gap-1 sm:gap-2 shrink-0">
-            <button
-              type="button"
+            <BookingAction
+              type={bookingHref ? undefined : 'button'}
+              href={bookingHref}
+              target={bookingHref ? '_blank' : undefined}
+              rel={bookingHref ? 'noopener noreferrer' : undefined}
               onClick={onOpenBooking}
               className="gold-button min-h-11 min-w-11 px-2 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Calendar className="hidden sm:block w-3.5 h-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Reservar cita</span>
+              <span className="hidden sm:inline">{bookingLabel}</span>
               <span className="sm:hidden">Cita</span>
-            </button>
+            </BookingAction>
             <button
               type="button"
               id="mobile-menu-trigger"
@@ -131,35 +142,35 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         >
           <nav aria-label="Navegación móvil" className="flex flex-col space-y-1 text-base font-medium text-[#3D352F] [&>a]:min-h-11 [&>a]:flex [&>a]:items-center [&>a]:focus-visible:outline-2 [&>a]:focus-visible:outline-[#231E1B] [&>a]:focus-visible:outline-offset-2">
             <a
-              href="#servicios"
+              href={`${sectionLinkPrefix}#servicios`}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
               Servicios Especializados
             </a>
             <a
-              href="#experiencia"
+              href={`${sectionLinkPrefix}#experiencia`}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
               Experiencia Miller Greiseland
             </a>
             <a
-              href="#conoceme"
+              href={`${sectionLinkPrefix}#conoceme`}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
               Conóceme
             </a>
             <a
-              href="#pagos"
+              href={`${sectionLinkPrefix}#pagos`}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
               Reservas y formas de pago
             </a>
             <a
-              href="#faq"
+              href={`${sectionLinkPrefix}#faq`}
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
@@ -168,8 +179,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </nav>
 
           <div className="pt-4 border-t border-[#99745A]/15 flex flex-col gap-3">
-            <button
-              type="button"
+            <BookingAction
+              type={bookingHref ? undefined : 'button'}
+              href={bookingHref}
+              target={bookingHref ? '_blank' : undefined}
+              rel={bookingHref ? 'noopener noreferrer' : undefined}
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenBooking();
@@ -177,10 +191,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               className="gold-button min-h-11 w-full py-3 rounded-lg text-center text-sm font-semibold flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" aria-hidden="true" />
-              <span>Reservar cita</span>
-            </button>
+              <span>{bookingLabel}</span>
+            </BookingAction>
             <a
-              href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20agendar%20cita`}
+              href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20agendar%20cita`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWhatsAppClick('navbar_mobile')}

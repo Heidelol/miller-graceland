@@ -12,6 +12,8 @@ import { AdminDemoPage } from './pages/AdminDemoPage';
 import type { ServiceItem } from './types/salon';
 import { PUBLIC_SERVICES } from './data/salonData';
 import { trackBookingModalOpen } from './lib/analytics';
+import { ExtensionsPage } from './pages/ExtensionsPage';
+import { EXTENSIONS_PATH } from './data/extensionsPage';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState(
@@ -30,6 +32,10 @@ export function App() {
   }, []);
 
   const isAdminRoute = currentPath === '/admin-demo' || currentPath.startsWith('/admin-demo');
+
+  if (currentPath === EXTENSIONS_PATH || currentPath === `${EXTENSIONS_PATH}/`) {
+    return <ExtensionsPage />;
+  }
 
   // Accessible on /admin-demo during local development or when VITE_ENABLE_ADMIN_DEMO is true
   if (isAdminRoute) {

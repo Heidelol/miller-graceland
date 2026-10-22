@@ -66,7 +66,11 @@ export function trackWhatsAppClick(
     | 'services_card_tratamientos'
     | 'payment_methods'
     | 'footer'
-    | 'booking_modal_final',
+    | 'booking_modal_final'
+    | 'extensions_hero'
+    | 'extensions_valuation'
+    | 'extensions_location'
+    | 'extensions_navbar',
   details?: {
     serviceName?: string;
     bookingCode?: string;

@@ -1,6 +1,7 @@
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
+import { EXTENSIONS_PATH } from '../data/extensionsPage';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -22,7 +23,7 @@ const heroShortcuts = [
   {
     title: 'Extensiones',
     description: '100% cabello humano',
-    href: '#servicios',
+    href: EXTENSIONS_PATH,
     isWhatsApp: false,
   },
   {

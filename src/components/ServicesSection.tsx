@@ -5,6 +5,7 @@ import type { ServiceCategory, ServiceItem } from '../types/salon';
 import { trackWhatsAppClick, trackServiceInterest } from '../lib/analytics';
 import { PhotoCarousel } from './PhotoCarousel';
 import { STUDIO_PHOTOS } from '../data/studioPhotos';
+import { EXTENSIONS_PATH } from '../data/extensionsPage';
 
 interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
@@ -76,7 +77,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
               <div className="pt-5 flex flex-col flex-1 items-start">
                 <h3 className="font-serif-luxury text-2xl font-semibold leading-tight text-[#231E1B] mb-3">{priority.title}</h3>
                 <p className="text-[13px] text-[#5C534B] leading-6 mb-3">{priority.description}</p>
-                {priority.category ? (
+                {priority.category === 'extensions' ? (
+                  <a href={EXTENSIONS_PATH} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                    {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
+                  </a>
+                ) : priority.category ? (
                   <button type="button" onClick={() => setActiveCategory(priority.category)} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </button>

@@ -1,10 +1,11 @@
 import { Phone, MapPin, Clock, Heart, MessageCircle } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick, trackInstagramClick, trackPhoneCallClick, trackDirectionsClick } from '../lib/analytics';
+import { EXTENSIONS_PATH } from '../data/extensionsPage';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC<{ whatsappHref?: string; whatsappServiceName?: string }> = ({ whatsappHref, whatsappServiceName }) => {
   return (
     <>
       <footer className="bg-[#EAE3D6] border-t border-[#99745A]/25 pt-16 pb-12 text-[#554C44] text-xs">
@@ -36,6 +37,7 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-[#63584F] leading-relaxed">
                 {SALON_INFO.footerAbout}
               </p>
+              <a href={EXTENSIONS_PATH} className="inline-flex min-h-11 items-center text-xs font-medium text-[#42502E] underline underline-offset-4 hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">Extensiones de cabello en Chetumal</a>
               <div className="pt-1">
                 <span className="text-[11px] text-[#7A7067] font-medium">
                   Atención exclusiva con cita previa
@@ -135,10 +137,10 @@ export const Footer: React.FC = () => {
 
       {/* Floating WhatsApp Action Button */}
       <a
-        href={`https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20asesor%C3%ADa%20personalizada`}
+        href={whatsappHref || `https://wa.me/${SALON_INFO.whatsapp}?text=Hola%20Miller%20Greiseland,%20quisiera%20asesor%C3%ADa%20personalizada`}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={() => trackWhatsAppClick('floating_button')}
+        onClick={() => trackWhatsAppClick('floating_button', { serviceName: whatsappServiceName })}
         className="fixed bottom-6 right-6 z-40 group flex items-center gap-2 bg-[#25D366] text-black px-4 py-3 rounded-full shadow-2xl hover:bg-[#20BE5A] transition-all hover:scale-105"
         title="Chatear por WhatsApp"
       >
