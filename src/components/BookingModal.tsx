@@ -281,13 +281,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setCurrentStep('success');
 
     // Track completed lead preparation in analytics
-    trackBookingLeadPrepared(
-      selectedService.name,
-      code,
-      amountToPay,
-      selectedDate,
-      selectedTime
-    );
+    trackBookingLeadPrepared(selectedService.name);
 
     // Trigger celebration confetti
     try {
@@ -1057,7 +1051,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   rel="noopener noreferrer"
                   onClick={() => trackWhatsAppClick('booking_modal_final', {
                     serviceName: selectedService.name,
-                    bookingCode: bookingCode,
                   })}
                   className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#25D366] hover:bg-[#20BE5A] text-black flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
                 >

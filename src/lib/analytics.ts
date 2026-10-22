@@ -48,7 +48,7 @@ export function trackEvent(
     }
   } catch (err) {
     // Fail silently in production so analytics never interrupts user UX
-    if (import.meta.env.DEV) {
+    if (import.meta.env?.DEV) {
       console.warn('[Analytics Error]', err);
     }
   }
@@ -73,22 +73,13 @@ export function trackWhatsAppClick(
     | 'extensions_navbar',
   details?: {
     serviceName?: string;
-    bookingCode?: string;
   }
 ) {
-  // Custom intuitive event
+  // Opening WhatsApp does not prove that a message was sent or a booking confirmed.
   trackEvent('whatsapp_click', {
     click_location: location,
     service_name: details?.serviceName || 'General',
-    booking_code: details?.bookingCode,
-  });
-
-  // Standard Google recommended event for conversion tracking
-  trackEvent('generate_lead', {
-    currency: 'MXN',
-    lead_type: 'whatsapp',
-    location: location,
-    service_name: details?.serviceName,
+    contact_intent: location === 'booking_modal_final' ? 'prepared_request' : 'inquiry',
   });
 }
 
@@ -130,10 +121,6 @@ export function trackBookingModalOpen(triggerLocation: string, serviceName?: str
     trigger_location: triggerLocation,
     initial_service: serviceName || 'default',
   });
-
-  trackEvent('begin_checkout', {
-    items: serviceName ? [{ item_name: serviceName }] : undefined,
-  });
 }
 
 /**
@@ -150,26 +137,13 @@ export function trackBookingStep(stepNumber: number, stepName: string, serviceNa
 /**
  * 5. Track Completion of Booking Form (Step 6 / Solicitud preparada)
  */
-export function trackBookingLeadPrepared(
-  serviceName: string,
-  bookingCode: string,
-  depositMXN: number,
-  requestedDate: string,
-  requestedTime: string
-) {
+export function trackBookingLeadPrepared(serviceName: string) {
+  // The request exists only in this browser; no payment or salon confirmation occurred.
+  // Keep contact information, hair history, appointment details and booking IDs out of GA.
   trackEvent('booking_lead_prepared', {
     service_name: serviceName,
-    booking_code: bookingCode,
-    deposit_mxn: depositMXN,
-    requested_date: requestedDate,
-    requested_time: requestedTime,
-  });
-
-  trackEvent('conversion', {
-    send_to: GA_MEASUREMENT_ID,
-    value: depositMXN,
-    currency: 'MXN',
-    transaction_id: bookingCode,
+    request_status: 'prepared_locally',
+    contact_channel: 'whatsapp',
   });
 }
 
