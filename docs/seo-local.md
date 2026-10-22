@@ -52,7 +52,7 @@ Los días semanales de apertura siguen pendientes de confirmación y no se han a
 - El sitio público conserva 9 servicios; los cortes se retiraron previamente. La página de extensiones ya está publicada y el sitemap incluye dos URLs.
 - Horarios presenciales confirmados por el propietario: lunes a sábado, 11:00–19:00; domingo cerrado. Se incorporan al texto visible y a `openingHoursSpecification` del HTML inicial de ambas páginas. La atención en línea hasta las 21:00 de la ficha se conserva como horario distinto.
 - Se sustituye el logotipo de 562,238 bytes por una copia de 13,261 bytes (137 × 144), manteniendo el original para marcado y otros usos. Se reservan dimensiones en el encabezado y pie.
-- Las mismas tres tipografías se sirven como WOFF2 desde el dominio, con licencias OFL y subconjuntos latinos. Ver `docs/fuentes-locales.md`. Se elimina la hoja bloqueante de Google Fonts.
+- Se probó servir las fuentes desde el dominio; las mediciones móviles bajaron a 74, por lo que se conservó el mecanismo original de Google Fonts. La prueba y su corrección permanecen documentadas en el historial. La recomendación de bloqueo tipográfico queda como oportunidad futura, no como mejora lograda.
 - Se corrigen los avisos de contraste en etiquetas pequeñas y se ordenan los encabezados del pie manteniendo sus tamaños y tipografía.
 - Analytics distingue clics de intención de contacto; no hay formulario público ni cobro. La propiedad Miller está vinculada con Search Console y se verificaron los informes de consultas y tráfico orgánico.
 - La prueba móvil inicial de PageSpeed registró rendimiento 89, accesibilidad 95, buenas prácticas 100 y SEO 100; FCP/LCP 2.9 s, TBT 90 ms y CLS 0. Es una medición de laboratorio, no datos de usuarios reales ni posición en Google.
