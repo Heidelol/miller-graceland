@@ -37,11 +37,11 @@
 
 - [x] Probar políticas para bundles con hash, imágenes de URL estable, HTML y rutas inexistentes.
 - [x] Generar reglas exactas de archivos antes de filesystem; no aplicar políticas a rutas inexistentes.
-- [ ] Revisar diff, guardar commit, publicar y comprobar cabeceras públicas y metadatos.
+- [x] Revisar diff, guardar commit, publicar y comprobar cabeceras públicas y metadatos. Commit `4493aa8`; cabeceras y ambas fichas OG verificadas en el dominio real, incluido 404 sin caché prolongada.
 
 ## Task 3: Diagnóstico de LCP
 
 - [x] Obtener una medición móvil actual e identificar elemento LCP/desglose. Tres referencias: 79/79/79 y LCP 5.1/5.1/5.1 s; párrafo de presentación. API pública sin cuota; mediciones realizadas en PageSpeed Insights mediante navegador.
-- [ ] Comparar varias mediciones de base con una variante que precargue Cormorant Garamond cursiva en lugar de Playfair Display cursiva, sin cambiar fuentes ni diseño.
-- [ ] Conservar y registrar el cambio solo con mejora consistente; si no, restaurar la base y documentar la incertidumbre.
-- [ ] Entregar URLs, commits, pruebas y resultados medidos, sin prometer una subida de ranking.
+- [x] Comparar varias mediciones de base con una variante que precargue Cormorant Garamond cursiva en lugar de Playfair Display cursiva, sin cambiar fuentes ni diseño. Control técnico: 95/95/93 (LCP 2.7/2.7/2.9 s); variante: 78/93/78 (LCP 5.1/3.0/5.1 s).
+- [x] Conservar y registrar el cambio solo con mejora consistente; si no, restaurar la base y documentar la incertidumbre. Se descarta la variante y se restaura el despliegue `dpl_7r4AJUfb2SAGEcHCDD8FKLiCP9kU`, con HTML idéntico a la compilación local y sin cambios tipográficos pendientes.
+- [x] Entregar URLs, commits, pruebas y resultados medidos, sin prometer una subida de ranking. Restauración medida: 93/79/79 (LCP 3.0/5.1/5.1 s). El LCP sigue pendiente; las 53 pruebas y las cabeceras/metadatos públicos están verificados.
