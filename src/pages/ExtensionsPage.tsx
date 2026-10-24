@@ -66,11 +66,26 @@ export const ExtensionsPage: React.FC = () => (
             <figcaption className="text-[11px] leading-5 text-[#5C534B] mt-3">Imagen ilustrativa generada con IA. No representa un producto específico del estudio.</figcaption>
           </figure>
           <div>
-            <p className={eyebrow}>Una elección personal</p>
+            <p className={eyebrow}>Fabricación artesanal · Cabello 100 % humano</p>
             <h2 className="font-serif-luxury font-medium text-4xl sm:text-5xl leading-tight mt-4 mb-6">El detalle está en <span className="italic text-[#A87428]">la integración.</span></h2>
             <p className="text-sm leading-7 text-[#5C534B]">El punto de partida es tu cabello: su tono, densidad, textura y el resultado que deseas. La valoración nos permite diseñar contigo una propuesta de largo y volumen, además de orientarte sobre su mantenimiento.</p>
-            <p className="text-sm leading-7 text-[#5C534B] mt-4">Miller combina su experiencia en colorimetría con la creación artesanal de extensiones personalizadas de cabello humano.</p>
+            <p className="text-sm leading-7 text-[#5C534B] mt-4">Con ocho años de experiencia en la fabricación artesanal de extensiones, Miller combina su trabajo en colorimetría con la creación de piezas de cabello 100 % humano. En el estudio elaboramos coletas personalizadas, desde cabello virgen hasta diseños con efectos balayage.</p>
+            <p className="text-sm leading-7 text-[#5C534B] mt-4">La propuesta se prepara para cada persona: buscamos que el color, el largo y el volumen acompañen su estilo y el movimiento de su cabello.</p>
             <a href="/#conoceme" className={`${textLink} mt-5`}>Conoce a Miller<ArrowUpRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" /></a>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24" aria-labelledby="sistemas-extensiones">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-20 border-b border-[#99745A]/25 pb-10 sm:pb-12">
+          <div>
+            <p className={eyebrow}>Sistemas que trabajamos</p>
+            <h2 id="sistemas-extensiones" className="font-serif-luxury font-medium text-4xl sm:text-5xl leading-tight mt-4">Tape, Tape Invisible <span className="italic text-[#A87428]">y Mega Hair.</span></h2>
+          </div>
+          <div className="md:pt-7 max-w-xl">
+            <p className="text-sm leading-7 text-[#5C534B]">Estos sistemas forman parte del trabajo del estudio. La elección comienza con una valoración de la condición, el historial químico, la densidad y la textura de tu cabello, junto con el resultado que buscas.</p>
+            <p className="text-sm leading-7 text-[#5C534B] mt-4">No necesitas decidir una técnica antes de tu cita. Miller te orienta sobre las opciones y el mantenimiento de tu propuesta en el salón.</p>
+            <a href="#valoracion" className={`${textLink} mt-4`}>Cómo solicitar tu valoración<ArrowDown className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" /></a>
           </div>
         </div>
       </section>
@@ -101,6 +116,7 @@ export const ExtensionsPage: React.FC = () => (
             <p className={eyebrow}>Precio de tu servicio</p>
             <h2 id="precio-extensiones" className="font-serif-luxury text-4xl sm:text-5xl leading-tight font-medium mt-4">Requiere <span className="italic text-[#A87428]">valoración</span></h2>
             <p className="text-sm leading-7 text-[#5C534B] mt-6 max-w-lg">Cada cabello necesita una propuesta diferente. El importe se confirma según tu cabello, el resultado que buscas y el servicio a realizar. Te explicamos lo que incluye antes de acordar tu cita.</p>
+            <p className="text-sm leading-7 text-[#5C534B] mt-4 max-w-lg">La colocación de extensiones nuevas, la bajada y recolocación, y el retiro son servicios distintos. Las tarifas de mantenimiento no representan el precio de unas extensiones nuevas.</p>
             <AppointmentLink location="extensions_valuation" className="mt-7" />
             <p className="text-xs leading-6 text-[#5C534B] mt-4">Solicita tu valoración por WhatsApp. El salón confirma contigo la disponibilidad y las condiciones de tu cita.</p>
           </div>

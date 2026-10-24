@@ -90,3 +90,12 @@ Esta actualización sustituye el estado anterior de la carga tipográfica; no ca
 - Canónicas y sitemap siguen apuntando al dominio sinwww. La actualización de la versión elegida por Google depende de sus siguientes rastreos; no se enviaron nuevas solicitudes de indexación.
 - Verificación reproducible de la configuración pública: `npm run test:domain`. Estas pruebas usan la web real y se mantienen separadas de `npm test` para que las pruebas locales no dependan de Internet.
 - Para revertir el cambio de infraestructura, restablecer únicamente `redirect: null` y `redirectStatusCode: null` en ese dominio mediante la API de proyecto de Vercel, conservando su asignación. Revertir el commit de pruebas/documentación no modifica por sí mismo la configuración alojada.
+
+## Contenido de extensiones: 24 de octubre de 2026
+
+- Se amplía la página existente con información proporcionada por Miller: ocho años de fabricación artesanal, coletas de cabello 100 % humano personalizadas, cabello virgen y diseños con efectos balayage.
+- Se presentan Tape, Tape Invisible y Mega Hair en una sección editorial y en las preguntas frecuentes. La elección se remite a la valoración; no se publican indicaciones técnicas, tiempos ni intervalos de mantenimiento no confirmados.
+- Se aclara que las tarifas de mantenimiento no equivalen al precio de colocación de extensiones nuevas. Se conserva el precio sujeto a valoración y el contacto directo por WhatsApp.
+- La descripción de búsqueda se actualiza para reflejar el contenido. Se mantienen título, canónica y ruta; no se crean páginas duplicadas, testimonios ni fotografías de resultados ficticios.
+- Pendiente: respuestas al cuestionario y fotografías reales autorizadas. No se modifican reseñas, categorías ni otros datos de Google Maps en esta entrega.
+- Verificación previa: compilación y linter correctos; 27 pruebas públicas y 13 de SEO/renderizado. El nuevo contenido está en el HTML inicial, las preguntas funcionan con teclado y la vista móvil no presenta desbordamiento horizontal.
