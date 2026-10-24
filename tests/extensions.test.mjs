@@ -9,6 +9,50 @@ const builtFile = new URL(`../dist${route}/index.html`, import.meta.url);
 const html = existsSync(builtFile) ? readFileSync(builtFile, 'utf8') : '';
 const document = new JSDOM(html).window.document;
 
+test('cada página comparte una única ficha Open Graph con sus propios datos e imagen', () => {
+  const home = new JSDOM(readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8')).window.document;
+  const images = [];
+  for (const page of [home, document]) {
+    for (const property of ['type', 'title', 'description', 'url', 'image', 'image:alt', 'image:width', 'image:height', 'image:type', 'site_name', 'locale']) {
+      const tags = page.querySelectorAll(`meta[property="og:${property}"]`);
+      assert.equal(tags.length, 1, `Propiedad og:${property} ausente o duplicada en ${page.title}`);
+      assert.ok(tags[0].content.trim());
+    }
+    assert.equal(page.querySelector('meta[property="og:title"]').content, page.title);
+    assert.equal(page.querySelector('meta[property="og:description"]').content, page.querySelector('meta[name="description"]').content);
+    assert.equal(page.querySelector('meta[property="og:url"]').content, page.querySelector('link[rel="canonical"]').href);
+    const image = new URL(page.querySelector('meta[property="og:image"]').content);
+    assert.equal(image.origin, 'https://millergreiseland.com');
+    assert.ok(existsSync(new URL(`../public${image.pathname}`, import.meta.url)));
+    images.push(image.href);
+  }
+  assert.notEqual(images[0], images[1], 'La portada y extensiones deben tener imágenes propias');
+});
+
+test('el logo del marcado conserva un archivo real de dimensiones suficientes y menos de 30 KB', () => {
+  const salon = [...document.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)).find(s => s['@type'] === 'HairSalon');
+  const url = new URL(salon.logo);
+  const logo = readFileSync(new URL(`../public${url.pathname}`, import.meta.url));
+  assert.ok(logo.length < 30_000, 'El logo del marcado sigue siendo demasiado pesado');
+  assert.equal(logo.subarray(1, 4).toString(), 'PNG');
+  assert.ok(logo.readUInt32BE(16) >= 112);
+  assert.ok(logo.readUInt32BE(20) >= 112);
+});
+
+test('la caché larga se limita a bundles versionados publicados y las imágenes pueden actualizarse', () => {
+  const home = new JSDOM(readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8')).window.document;
+  const { routes } = JSON.parse(readFileSync(new URL('../.vercel/output/config.json', import.meta.url), 'utf8'));
+  const headers = path => routes.filter(r => r.src && new RegExp(`^(?:${r.src})$`).test(path)).map(r => r.headers?.['Cache-Control']).filter(Boolean);
+  const bundles = [...home.querySelectorAll('script[src],link[rel="stylesheet"]')].map(el => el.getAttribute('src') || el.getAttribute('href')).filter(path => path.startsWith('/assets/'));
+  assert.ok(bundles.length >= 2);
+  for (const path of bundles) assert.deepEqual(headers(path), ['public, max-age=31536000, immutable']);
+  assert.deepEqual(headers('/images/hero/portada-480.webp'), ['public, max-age=3600, must-revalidate']);
+  assert.deepEqual(headers('/logo-miller-small.png'), ['public, max-age=3600, must-revalidate']);
+  for (const path of ['/', '/extensiones-cabello-chetumal', '/robots.txt', '/sitemap.xml', '/assets/no-existe-ABC12345.js', '/assets/unversioned.js', '/images/no-existe.webp']) {
+    assert.deepEqual(headers(path), [], `Caché prolongada en una URL no permitida: ${path}`);
+  }
+});
+
 test('la compilación publica una página de extensiones con contenido visible sin ejecutar JavaScript', () => {
   assert.ok(html, 'Falta el HTML independiente de extensiones');
   assert.equal(document.querySelectorAll('h1').length, 1);

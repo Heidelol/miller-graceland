@@ -22,6 +22,13 @@ function trigger(prefix = 'desktop') {
 function panel(prefix = 'desktop') { return container.querySelector(`#${prefix}-services-panel`); }
 async function click(element) { assert.ok(element); await act(() => element.click()); }
 
+test('el logo vuelve a la portada sin añadir un fragmento vacío', async () => {
+  for (const sectionLinkPrefix of ['', '/']) {
+    await render({ sectionLinkPrefix });
+    assert.equal(container.querySelector('a[aria-label="Miller Greiseland Studio · Inicio"]').getAttribute('href'), '/');
+  }
+});
+
 test('Servicios comienza cerrado y conserva enlaces rastreables al catálogo y a extensiones', async () => {
   await render();
   assert.equal(trigger().getAttribute('aria-expanded'), 'false');
