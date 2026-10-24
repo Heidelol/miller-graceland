@@ -99,3 +99,13 @@ Esta actualización sustituye el estado anterior de la carga tipográfica; no ca
 - La descripción de búsqueda se actualiza para reflejar el contenido. Se mantienen título, canónica y ruta; no se crean páginas duplicadas, testimonios ni fotografías de resultados ficticios.
 - Pendiente: respuestas al cuestionario y fotografías reales autorizadas. No se modifican reseñas, categorías ni otros datos de Google Maps en esta entrega.
 - Verificación previa: compilación y linter correctos; 27 pruebas públicas y 13 de SEO/renderizado. El nuevo contenido está en el HTML inicial, las preguntas funcionan con teclado y la vista móvil no presenta desbordamiento horizontal.
+
+## Portada para búsquedas generales: 24 de octubre de 2026
+
+- Título de la portada: «Salón de belleza en Chetumal | Miller Greiseland Studio». La página interna conserva su título y canónica propios de extensiones.
+- Descripción de búsqueda y `HairSalon.description` coherentes. Se incorpora «salón de belleza en Chetumal» en el párrafo de presentación sin cambiar el título editorial principal, fotografías, colores ni composición.
+- La introducción del catálogo enumera servicios reales: coloración, balayage, morena iluminada, tratamientos capilares y mantenimiento de extensiones.
+- Dos preguntas prácticas añaden dirección/horario tomados de los datos centrales, enlace a Google Maps, resumen de servicios y acceso a la página especializada de extensiones.
+- Las respuestas se entregan completas en el HTML inicial, ocultas visualmente cuando corresponde. Los botones indican `aria-expanded` y controlan regiones identificadas. No se agrega marcado de reseñas ni se promete un resultado enriquecido de FAQ.
+- Se actualiza solo la fecha de portada en el sitemap. No se crean nuevas rutas ni se modifican Google Maps, Analytics, los precios o las condiciones de reserva. Los resultados de búsqueda pueden tardar en reflejar el contenido y Google puede reescribir título y descripción.
+- Verificación previa: compilación/linter correctos, 27 pruebas públicas y 14 de SEO/renderizado. La prueba de las respuestas falló antes de corregir su entrega inicial y pasó después. Navegación desde FAQ hacia extensiones comprobada en navegador, preguntas operables con Enter y vista móvil sin desbordamiento horizontal.

@@ -35,12 +35,16 @@ export const FAQSection: React.FC = () => {
             const isOpen = openIndex === index;
             return (
               <div
-                key={index}
+                key={faq.question}
                 className="rounded-2xl bg-white border border-[#99745A]/20 shadow-xs overflow-hidden transition-all duration-300"
               >
                 <button
+                  type="button"
+                  id={`faq-question-${index}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${index}`}
                   onClick={() => toggleIndex(index)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#FAF7F2] transition-colors"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#FAF7F2] transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-[-2px]"
                 >
                   <span className="text-sm sm:text-base font-bold text-[#231E1B] flex items-center gap-3">
                     <Sparkles className="w-4 h-4 text-[#C8933E] shrink-0" />
@@ -53,11 +57,17 @@ export const FAQSection: React.FC = () => {
                   />
                 </button>
 
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-[#5C534B] leading-relaxed border-t border-[#99745A]/15 bg-[#FAF7F2]">
+                  <div id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`} hidden={!isOpen} className="px-5 pb-5 pt-1 text-xs sm:text-sm text-[#5C534B] leading-relaxed border-t border-[#99745A]/15 bg-[#FAF7F2]">
                     <p className="pl-7">{faq.answer}</p>
+                    {faq.link && (
+                      <p className="pl-7 mt-3">
+                        <a href={faq.link.href} target={faq.link.external ? '_blank' : undefined} rel={faq.link.external ? 'noopener noreferrer' : undefined}
+                          className="inline-flex min-h-11 items-center py-2 font-medium text-[#42502E] underline underline-offset-4 hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                          {faq.link.label}
+                        </a>
+                      </p>
+                    )}
                   </div>
-                )}
               </div>
             );
           })}

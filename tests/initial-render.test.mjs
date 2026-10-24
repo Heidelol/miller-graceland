@@ -4,9 +4,43 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 import { act, createElement, StrictMode } from 'react';
+import { renderToString } from 'react-dom/server';
 
 register('./tsx-loader.mjs', import.meta.url);
 const { App } = await import('../src/App.tsx');
+
+test('las preguntas entregan sus respuestas en el HTML inicial y comunican cuál está abierta', async () => {
+  const { FAQSection } = await import('../src/components/FAQSection.tsx');
+  const markup = renderToString(createElement(FAQSection));
+  const dom = new JSDOM(`<div id="faq-test">${markup}</div>`, { url: 'https://millergreiseland.com/' });
+  Object.assign(globalThis, { window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement, IS_REACT_ACT_ENVIRONMENT: true });
+  let root;
+  try {
+    const container = document.querySelector('#faq-test');
+    const triggers = [...container.querySelectorAll('button')];
+    const answers = triggers.map(button => {
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      assert.ok(answer, 'Cada respuesta debe estar disponible antes de JavaScript');
+      assert.ok(answer.textContent.trim().length > 0);
+      assert.equal(answer.hidden, button.getAttribute('aria-expanded') !== 'true');
+      return answer;
+    });
+    const { hydrateRoot } = await import('react-dom/client');
+    await act(() => { root = hydrateRoot(container, createElement(FAQSection)); });
+    await act(() => triggers[1].click());
+    assert.equal(triggers[1].getAttribute('aria-expanded'), 'true');
+    assert.equal(answers[1].hidden, false);
+    assert.equal(answers[0].hidden, true);
+    await act(() => triggers[1].click());
+    assert.equal(triggers[1].getAttribute('aria-expanded'), 'false');
+    assert.equal(answers[1].hidden, true);
+    assert.equal(document.getElementById(answers[1].id), answers[1]);
+  } finally {
+    if (root) await act(() => root.unmount());
+    dom.window.close();
+    delete globalThis.window; delete globalThis.document; delete globalThis.HTMLElement;
+  }
+});
 
 test('la portada entrega contenido y valoración utilizables sin esperar a JavaScript', () => {
   const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');

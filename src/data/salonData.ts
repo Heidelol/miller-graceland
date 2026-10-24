@@ -1,12 +1,13 @@
 import type { ServiceItem } from '../types/salon';
 import { STUDIO_PHOTOS } from './studioPhotos';
+import { EXTENSIONS_PATH } from './extensionsPage';
 
 export const SALON_INFO = {
   name: 'Miller Greiseland Studio',
   tagline: 'COLOR · BLONDES · HAIR CARE · EXTENSIONS',
-  heroSubtitle: 'Colorimetría y extensiones de cabello 100% humano en Chetumal. Formación internacional y atención personalizada para diseñar tu próximo cambio.',
-  description: 'Especialistas en colorimetría y extensiones de cabello 100% humano en Chetumal. Nuestra formación en más de 20 países nos permite incorporar técnicas de coloración, decoloración y extensiones a una atención personalizada.',
-  servicesIntro: 'Una selección de servicios de colorimetría, rubios, extensiones y diseño capilar diseñados para preservar la salud del cabello con atención personalizada.',
+  heroSubtitle: 'Tu salón de belleza en Chetumal, especializado en colorimetría, rubios y extensiones de cabello 100 % humano. Formación internacional y atención personalizada para diseñar tu próximo cambio.',
+  description: 'Salón de belleza en Chetumal especializado en colorimetría, balayage y extensiones de cabello humano. Solicita tu valoración con Miller Greiseland.',
+  servicesIntro: 'Coloración, balayage, morena iluminada, tratamientos capilares y mantenimiento de extensiones. Conoce nuestros servicios y solicita una valoración para encontrar la propuesta adecuada para tu cabello.',
   manifesto: 'Cada servicio es diseñado de manera personalizada de acuerdo con la condición, historial químico, densidad, textura y necesidades de cada cabello.\n\nEl resultado comienza con un cabello sano.\nEl lujo está en cada detalle.',
   footerAbout: 'Especialistas en colorimetría y extensiones de cabello 100% humano. Formación en más de 20 países, preservación de la fibra capilar y atención personalizada.',
   phone: '983 137 3038',
@@ -344,10 +345,26 @@ export const TESTIMONIALS_DEV_PREVIEW = [
 
 export const TESTIMONIALS = TESTIMONIALS_DEV_PREVIEW;
 
-export const FAQS = [
+type FAQItem = {
+  question: string;
+  answer: string;
+  link?: { href: string; label: string; external?: boolean };
+};
+
+export const FAQS: FAQItem[] = [
   {
     question: '¿Cómo funcionan las reservas de citas y las formas de pago?',
     answer: 'Pulsa «Solicitar valoración» para escribirle a Miller por WhatsApp y acordar una visita al salón. No necesitas elegir un servicio ni completar un formulario en la web. Durante la valoración, Miller te orienta sobre el servicio y confirma el precio final. Para reservar los servicios del catálogo se requiere un anticipo del 50% sobre el precio mínimo publicado, que se descuenta del importe acordado. Aceptamos efectivo, transferencia bancaria y terminal bancaria en el salón; los datos para transferencia se comparten por WhatsApp.'
+  },
+  {
+    question: '¿Dónde está Miller Greiseland Studio?',
+    answer: `${SALON_INFO.address} ${SALON_INFO.schedule} Te atendemos con cita previa.`,
+    link: { href: SALON_INFO.googleMapsUrl, label: 'Cómo llegar al estudio', external: true },
+  },
+  {
+    question: '¿Qué servicios ofrece el salón?',
+    answer: 'Ofrecemos colorimetría, tintes, rubios, balayage, morena iluminada, tratamientos capilares y extensiones de cabello 100 % humano. También realizamos mantenimiento y retiro de extensiones. La valoración permite definir la propuesta y el precio final según tu cabello.',
+    link: { href: EXTENSIONS_PATH, label: 'Conoce las extensiones de cabello en Chetumal' },
   },
   {
     question: '¿Qué es el Ritual K18 incluido en los servicios de Signature Blondes?',
