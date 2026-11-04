@@ -49,7 +49,7 @@ export const EXTENSION_PAGE_PHOTOS = {
 
 // Selecciones visibles en el contenido, además de los ángulos navegables de cada familia.
 export const HOME_RESULTS_PHOTOS = [colorPhotos[1], colorPhotos[2], colorPhotos[3], colorPhotos[4], colorPhotos[7], colorPhotos[10]];
-export const EXTENSION_GALLERY_PHOTOS = [brownExtensionPhotos[1], brownExtensionPhotos[3], brownExtensionPhotos[7], darkExtensionPhotos[1], darkExtensionPhotos[2], straightExtensionPhoto];
+export const EXTENSION_GALLERY_PHOTOS = [brownExtensionPhotos[1], brownExtensionPhotos[3], brownExtensionPhotos[7], darkExtensionPhotos[1], straightExtensionPhoto];
 
 // Material previo conservado para una futura selección editorial.
 export const COLOR_PRODUCT_PHOTOS = [

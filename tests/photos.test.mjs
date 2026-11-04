@@ -161,9 +161,9 @@ test('portada y extensiones muestran fotografías reales fuera de los carruseles
     const grid = container.querySelector('[data-studio-photo-grid]');
     assert.ok(grid,'Cada página debe tener fotografías visibles integradas en el contenido');
     const images = [...grid.querySelectorAll('img')];
-    assert.equal(images.length,6);
+    assert.equal(images.length,component === ServicesSection ? 6 : 5);
     for(const img of images) { visible.add(img.getAttribute('src'));assert.ok(img.alt.trim()); }
     assert.equal(grid.querySelectorAll('[aria-roledescription="carrusel"]').length,0,'Las fotos de la galería se ven sin navegar diapositivas');
   }
-  assert.equal(visible.size,12);
+  assert.equal(visible.size,11);
 });
