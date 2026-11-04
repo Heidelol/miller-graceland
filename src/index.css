@@ -242,12 +242,8 @@
   .photo-carousel-fade[data-ready="true"] { animation: none; opacity: 1; }
 }
 
-@container (max-width: 340px) {
-  .photo-editorial-controls { align-items: flex-start; }
-  .photo-editorial-controls > div { flex: 1; min-width: 0; }
-  .photo-editorial-controls .photo-navigation { width: 100%; flex-wrap: wrap; justify-content: flex-end; }
-  .photo-editorial-controls .photo-dot-list { order: 1; flex-basis: 100%; justify-content: flex-end; }
-}
-
-/* Las familias comparten la misma base aunque tengan distintas cantidades de fotos. */
-.service-family-photo .photo-editorial-controls { min-height: 88px; }
+/* Una sola fila discreta, con zonas táctiles amplias y símbolos ligeros. */
+.photo-editorial-controls { min-height: 44px; }
+.photo-editorial-controls .photo-control svg { width: 14px; height: 14px; stroke-width: 1.5; }
+.photo-editorial-controls > div { min-width: 0; }
+.service-family-photo .photo-editorial-controls { min-height: 44px; }

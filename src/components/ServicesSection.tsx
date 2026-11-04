@@ -172,9 +172,7 @@ export const ServicesSection: React.FC = () => {
                     </span>
                     <span className="text-[10px] font-medium text-[#5C534B]">MXN</span>
                   </div>
-                  <p className="text-[11px] leading-6 text-[#5C534B] mt-1">
-                    Anticipo: ${service.depositMXN.toLocaleString('es-MX')} MXN · 50% del mínimo
-                  </p>
+
 
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-3">
                     <button

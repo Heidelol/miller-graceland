@@ -25,7 +25,7 @@ export const FAQSection: React.FC = () => {
             Todo lo que necesitas saber
           </h2>
           <p className="text-sm sm:text-base text-[#61574E]">
-            Claridad total sobre nuestros protocolos, reservas y formas de pago.
+            Conoce nuestros servicios y cómo coordinar tu visita.
           </p>
         </div>
 

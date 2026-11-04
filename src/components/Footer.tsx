@@ -111,17 +111,11 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            {/* Column 4: Reservas & Formas de Pago */}
+            {/* Atención y coordinación de citas */}
             <div className="space-y-3">
-              <h2 className="font-sans text-xs font-bold uppercase tracking-wider text-[#231E1B]">
-                Reservas & Pagos
-              </h2>
-              <ul className="space-y-1.5 text-[11px] text-[#554C44]">
-                <li>• Anticipo del 50% sobre el precio mínimo para reservar.</li>
-                <li>• Formas de pago: efectivo, transferencia bancaria y terminal en el salón.</li>
-                <li>• Solicita cambios con al menos 24 hrs de anticipación.</li>
-                <li>• Los anticipos no son reembolsables.</li>
-              </ul>
+              <h2 className="font-sans text-xs font-bold uppercase tracking-wider text-[#231E1B]">Tu próxima visita</h2>
+              <p className="text-xs leading-6">Consulta disponibilidad y acuerda los detalles de tu cita con nuestro equipo por WhatsApp.</p>
+              <ValuationLink location="footer" className="inline-flex min-h-11 items-center text-xs font-medium text-[#42502E] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">Escribir por WhatsApp</ValuationLink>
             </div>
           </div>
 

@@ -25,8 +25,8 @@ const heroShortcuts = [
     isWhatsApp: false,
   },
   {
-    title: 'Reservas',
-    description: 'Anticipos y formas de pago',
+    title: 'Tu cita',
+    description: 'Coordinamos por WhatsApp',
     href: '#pagos',
     isWhatsApp: false,
   },

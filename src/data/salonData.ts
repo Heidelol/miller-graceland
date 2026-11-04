@@ -20,7 +20,6 @@ export const SALON_INFO = {
   currency: 'MXN',
   instagram: '@millergreiseland.studio',
   instagramUrl: 'https://www.instagram.com/millergreiseland.studio/',
-  cancellationPolicy: 'Puedes solicitar un cambio de cita con al menos 24 horas de anticipación. Los anticipos no son reembolsables.',
 };
 
 export const RESERVATION_PERCENT = 50;
@@ -353,8 +352,8 @@ type FAQItem = {
 
 export const FAQS: FAQItem[] = [
   {
-    question: '¿Cómo funcionan las reservas de citas y las formas de pago?',
-    answer: 'Pulsa «Solicitar valoración» para escribirle a Miller por WhatsApp y acordar una visita al salón. No necesitas elegir un servicio ni completar un formulario en la web. Durante la valoración, Miller te orienta sobre el servicio y confirma el precio final. Para reservar los servicios del catálogo se requiere un anticipo del 50% sobre el precio mínimo publicado, que se descuenta del importe acordado. Aceptamos efectivo, transferencia bancaria y terminal bancaria en el salón; los datos para transferencia se comparten por WhatsApp.'
+    question: '¿Cómo solicito una cita?',
+    answer: 'Pulsa «Solicitar valoración» para escribirnos por WhatsApp. La persona que coordina la agenda te ayudará con la disponibilidad y los detalles de tu cita. En el salón, Miller te orienta sobre el servicio y confirma el precio final según tu cabello.'
   },
   {
     question: '¿Dónde está Miller Greiseland Studio?',
@@ -374,8 +373,5 @@ export const FAQS: FAQItem[] = [
     question: '¿La bajada de extensiones es realmente gratis?',
     answer: '¡Sí! Al adquirir el servicio de Bajada + Recolocación de Extensiones, el retiro previo no tiene costo adicional. El precio se ajusta de acuerdo con los gramos de cabello (100g, 150-200g o más).'
   },
-  {
-    question: '¿Qué política aplica para cambios de cita y anticipos?',
-    answer: 'Puedes solicitar un cambio de cita con al menos 24 horas de anticipación a través de nuestro WhatsApp oficial. Los anticipos no son reembolsables.'
-  }
+
 ];

@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
               Conóceme
             </a>
             <a href={`${sectionLinkPrefix}#pagos`} className={desktopLinkClassName}>
-              Formas de pago
+              Citas
             </a>
             <a href={`${sectionLinkPrefix}#faq`} className={desktopLinkClassName}>
               Preguntas
@@ -161,7 +161,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#95651F] transition-colors"
             >
-              Reservas y formas de pago
+              Coordina tu cita
             </a>
             <a
               href={`${sectionLinkPrefix}#faq`}

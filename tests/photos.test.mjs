@@ -124,16 +124,16 @@ test('Sobre mí muestra el retrato y las tres fotos de formación sin abrir la h
   }
 });
 
-test('las colecciones públicas permiten recorrer las 23 fotos únicas entregadas', async () => {
+test('las colecciones públicas muestran una selección sin series repetidas', async () => {
   const { STUDIO_PHOTOS, EXTENSION_PAGE_PHOTOS } = await import('../src/data/studioPhotos.ts');
   const { existsSync, readFileSync } = await import('node:fs');
   const manifest = JSON.parse(readFileSync(new URL('../docs/media/2026-11-04-cabello.json', import.meta.url), 'utf8'));
   const images = [...STUDIO_PHOTOS.color, ...STUDIO_PHOTOS.extensions];
-  assert.equal(new Set(images.map(p => p.src)).size, 23);
+  assert.equal(new Set(images.map(p => p.src)).size, 7);
   assert.equal(new Set(manifest.map(p => p.original)).size, 23);
   assert.equal(manifest.some(p => p.original.includes('(1)')),false);
-  assert.equal(STUDIO_PHOTOS.color.length, 11);
-  assert.equal(STUDIO_PHOTOS.extensions.length, 12);
+  assert.equal(STUDIO_PHOTOS.color.length, 4);
+  assert.equal(STUDIO_PHOTOS.extensions.length, 3);
   assert.deepEqual(new Set([EXTENSION_PAGE_PHOTOS.hero.src,...EXTENSION_PAGE_PHOTOS.details.map(p=>p.src)]),new Set(STUDIO_PHOTOS.extensions.map(p=>p.src)));
   for (const image of images) {
     assert.ok(image.alt.trim());
@@ -149,7 +149,7 @@ test('las colecciones públicas permiten recorrer las 23 fotos únicas entregada
     }
     assert.deepEqual(seen,collection.map(p=>p.src));
     assert.equal(shown(),collection[0].src);
-    assert.equal(container.querySelectorAll('.photo-dot').length,0,'Una colección amplia no llena la pantalla de puntos');
+    assert.equal(container.querySelectorAll('.photo-dot').length,0,'Los controles inferiores se mantienen uniformes y discretos');
   }
 });
 
@@ -161,9 +161,9 @@ test('portada y extensiones muestran fotografías reales fuera de los carruseles
     const grid = container.querySelector('[data-studio-photo-grid]');
     assert.ok(grid,'Cada página debe tener fotografías visibles integradas en el contenido');
     const images = [...grid.querySelectorAll('img')];
-    assert.equal(images.length,component === ServicesSection ? 6 : 5);
+    assert.equal(images.length,component === ServicesSection ? 4 : 3);
     for(const img of images) { visible.add(img.getAttribute('src'));assert.ok(img.alt.trim()); }
     assert.equal(grid.querySelectorAll('[aria-roledescription="carrusel"]').length,0,'Las fotos de la galería se ven sin navegar diapositivas');
   }
-  assert.equal(visible.size,11);
+  assert.equal(visible.size,7);
 });

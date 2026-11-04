@@ -106,3 +106,13 @@ test('extensiones conserva su contenido y ofrece el mismo contacto sin cuestiona
   assert.equal(container.querySelector('input, textarea, [role="dialog"]'), null);
   assert.deepEqual(commands.map(command => command[1]), ['whatsapp_click']);
 });
+
+test('las condiciones de pago y cancelación se coordinan fuera del contenido público', async () => {
+  for (const path of ['/', '/extensiones-cabello-chetumal']) {
+    window.history.replaceState(null,'',path);
+    await render();
+    await act(() => window.dispatchEvent(new window.PopStateEvent('popstate')));
+    assert.doesNotMatch(container.textContent, /anticipo|50\s*%|reembols|24\s*(horas|hrs)|formas de pago|terminal bancaria/i);
+    assert.ok(container.querySelector('a[href^="https://wa.me/"]'));
+  }
+});

@@ -207,3 +207,7 @@ No usar las previsualizaciones para producción: son copias reducidas de anális
 - Browser: ambas rutas revisadas a390px y1280px; header medido a320px y controles a768px. Sin desbordamiento observado. Escape cierra primero submenú y después menú; foco vuelve al disparador. No se enviaron mensajes ni se publicó en producción.
 - Se conserva el material anterior y los nueve servicios. Las técnicas de cada foto no confirmadas y los videos quedan en reserva según este plan.
 - Capturas: `outputs/miller-fotos-2026-11-04/catalogo-desktop.png`, `extensiones-desktop.png`, `inicio-mobile.png`, bajo el workspace de esta conversación.
+
+## 9. Instrucciones posteriores que prevalecen
+
+Tras revisar el resultado, el usuario pidió controles más discretos y uniformes, una sola foto representativa de cada secuencia repetida, y retirar las reglas de pago de la web para coordinarlas por WhatsApp. La selección vigente está documentada en `docs/media/2026-11-04-ampliacion-fotografias.md`, sección «Selección vigente». No reintroducir porcentajes, anticipos ni políticas de cancelación siguiendo las secciones antiguas de este plan.

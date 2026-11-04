@@ -44,12 +44,12 @@ const colorPhotos = [
 
 export const EXTENSION_PAGE_PHOTOS = {
   hero: brownExtensionPhotos[0],
-  details: [darkExtensionPhotos[0], ...brownExtensionPhotos.slice(1), ...darkExtensionPhotos.slice(1), straightExtensionPhoto],
+  details: [darkExtensionPhotos[1], straightExtensionPhoto],
 };
 
 // Selecciones visibles en el contenido, además de los ángulos navegables de cada familia.
-export const HOME_RESULTS_PHOTOS = [colorPhotos[1], colorPhotos[2], colorPhotos[3], colorPhotos[4], colorPhotos[7], colorPhotos[10]];
-export const EXTENSION_GALLERY_PHOTOS = [brownExtensionPhotos[1], brownExtensionPhotos[3], brownExtensionPhotos[7], darkExtensionPhotos[1], straightExtensionPhoto];
+export const HOME_RESULTS_PHOTOS = [colorPhotos[1], colorPhotos[2], colorPhotos[0], colorPhotos[7]];
+export const EXTENSION_GALLERY_PHOTOS = [brownExtensionPhotos[7], darkExtensionPhotos[1], straightExtensionPhoto];
 
 // Material previo conservado para una futura selección editorial.
 export const COLOR_PRODUCT_PHOTOS = [
@@ -62,8 +62,8 @@ export const STUDIO_PHOTOS = {
     photo('tratamientos-1', 'Productos Lendan PlexForte para el cuidado capilar', 'center 48%'),
     photo('tratamientos-2', 'Productos de la línea Brazilian Blowout', 'center 48%'),
   ],
-  color: colorPhotos,
-  extensions: [...brownExtensionPhotos, ...darkExtensionPhotos, straightExtensionPhoto],
+  color: [colorPhotos[0], colorPhotos[1], colorPhotos[2], colorPhotos[7]],
+  extensions: [brownExtensionPhotos[0], darkExtensionPhotos[1], straightExtensionPhoto],
   avyna: [
     photo('avyna-1', 'Selección de productos Avyna sobre un carrito dorado', 'center 58%'),
     photo('avyna-2', 'Detalle de productos y sérum Avyna', 'center 58%'),

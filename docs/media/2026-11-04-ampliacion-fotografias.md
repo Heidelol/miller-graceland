@@ -17,3 +17,15 @@ El manifiesto `2026-11-04-cabello.json` registra69 derivados WebP (480/768/1200p
 Los textos describen lo visible. No se atribuyeron nuevas técnicas ni se presentaron montajes de antes/después. Las fotografías de los servicios concretos conservan su clasificación vigente hasta confirmar a qué técnica corresponde cada nuevo trabajo.
 
 Verificación: 32 pruebas de interacción/medición, 17 de contenido inicial/SEO y 4 de HTTP local, además de compilación y linter. Revisión visual local en ambas rutas, incluido móvil390px. Los cambios se guardan en un commit independiente del anterior y no se publican sin encargo del usuario.
+
+## Selección vigente tras la revisión del usuario
+
+Las instrucciones posteriores sustituyen la selección amplia descrita arriba:
+
+- Coloración: cuatro fotografías; la secuencia4–11 se reduce a una sola toma representativa de cabello oscuro. Se mantienen las tres primeras vistas distintas.
+- Extensiones de cabello humano: tres fotografías, una de piezas castañas onduladas, una de piezas oscuras y una de cabello liso. Se retiran ángulos repetidos de las colecciones públicas.
+- Galerías visibles: cuatro fotografías en portada y tres en extensiones. Los originales y derivados se conservan como material de reserva.
+- Controles inferiores uniformes: una sola fila de44px, símbolos de14px y contador. Sin puntos ni segunda fila; los botones conservan zonas táctiles44×44.
+- No mostrar reglas de pago, anticipos, porcentajes ni política de cancelación. La sección antes dedicada a pagos pasa a coordinar la visita por WhatsApp; se retiran las menciones de fichas, navegación, FAQ y footer. Los importes publicados de los servicios se conservan.
+
+Estas decisiones prevalecen sobre las indicaciones anteriores del plan. Verificación actual:33 pruebas de interacción/medición y17 de SEO/hidratación pasan; build y lint pasan. Revisión visual de controles44px y contenido sin reglas de pago en ambas rutas; móvil390px sin desbordamiento observado.
