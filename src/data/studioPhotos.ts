@@ -18,14 +18,38 @@ function hairPhoto(slug: string, alt: string, height = 2133, objectPosition = 'c
   return { src: `/images/studio/${slug}.webp`, smallSrc: `/images/studio/${slug}-480.webp`, mediumSrc: `/images/studio/${slug}-768.webp`, alt, width: 1200, height, objectPosition };
 }
 
+const brownExtensionPhotos = [
+  hairPhoto('extensiones-castanas-presentacion', 'Piezas de cabello castaño ondulado junto a una caja negra sobre un carrito dorado', 1600),
+  hairPhoto('extensiones-castanas-ondas', 'Piezas castañas con ondas dispuestas sobre el carrito dorado', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-tonos', 'Tonos claros y castaños en piezas de cabello ondulado', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-angulo', 'Piezas de cabello castaño ondulado vistas desde un lateral', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-textura', 'Textura ondulada de piezas castañas junto a una caja negra', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-longitud', 'Vista de la longitud de las piezas de cabello castaño', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-acabado', 'Ondas y puntas de piezas castañas sobre el carrito dorado', 2133, 'center 75%'),
+  hairPhoto('extensiones-castanas-detalle', 'Detalle de ondas y tonos claros en piezas de cabello castaño', 2133, 'center 75%'),
+];
+const darkExtensionPhotos = [
+  hairPhoto('extensiones-oscuras-presentacion', 'Piezas de cabello oscuro ondulado junto a cajas negras', 2133, 'center 85%'),
+  hairPhoto('extensiones-oscuras-ondas', 'Ondas de piezas de cabello oscuro presentadas en el estudio', 2133, 'center 85%'),
+  hairPhoto('extensiones-oscuras-detalle', 'Detalle de piezas oscuras onduladas sobre un carrito dorado', 2133, 'center 85%'),
+];
+const straightExtensionPhoto = hairPhoto('extensiones-castanas-lisas', 'Pieza larga de cabello castaño liso sobre una superficie clara', 2133, 'center 75%');
+const colorPhotos = [
+  hairPhoto('cabello-castano-ondas', 'Cabello castaño con ondas visto de espalda en el salón', 2133, 'center 65%'),
+  hairPhoto('cabello-rubio-liso', 'Cabello rubio liso visto de espalda en el salón', 2133, 'center 65%'),
+  hairPhoto('cabello-castano-retrato', 'Retrato con cabello castaño largo peinado con ondas', 2133, 'center 70%'),
+  hairPhoto('cabello-castano-ondas-otra-vista', 'Otra vista del cabello castaño peinado con ondas en el salón', 2133, 'center 65%'),
+  ...[1,2,3,4,5,6,7].map((number) => hairPhoto(`cabello-oscuro-liso-${number}`, `Cabello oscuro liso en el estudio · Vista ${number}`, 2133, 'center 70%')),
+];
+
 export const EXTENSION_PAGE_PHOTOS = {
-  hero: hairPhoto('extensiones-castanas-presentacion', 'Piezas de cabello castaño ondulado junto a una caja negra sobre un carrito dorado', 1600),
-  details: [
-    hairPhoto('extensiones-oscuras-presentacion', 'Piezas de cabello oscuro ondulado junto a cajas negras', 2133, 'center 85%'),
-    hairPhoto('extensiones-castanas-angulo', 'Piezas de cabello castaño ondulado vistas desde un lateral'),
-    hairPhoto('extensiones-castanas-detalle', 'Detalle de ondas y tonos claros en piezas de cabello castaño'),
-  ],
+  hero: brownExtensionPhotos[0],
+  details: [darkExtensionPhotos[0], ...brownExtensionPhotos.slice(1), ...darkExtensionPhotos.slice(1), straightExtensionPhoto],
 };
+
+// Selecciones visibles en el contenido, además de los ángulos navegables de cada familia.
+export const HOME_RESULTS_PHOTOS = [colorPhotos[1], colorPhotos[2], colorPhotos[3], colorPhotos[4], colorPhotos[7], colorPhotos[10]];
+export const EXTENSION_GALLERY_PHOTOS = [brownExtensionPhotos[1], brownExtensionPhotos[3], brownExtensionPhotos[7], darkExtensionPhotos[1], darkExtensionPhotos[2], straightExtensionPhoto];
 
 // Material previo conservado para una futura selección editorial.
 export const COLOR_PRODUCT_PHOTOS = [
@@ -38,12 +62,8 @@ export const STUDIO_PHOTOS = {
     photo('tratamientos-1', 'Productos Lendan PlexForte para el cuidado capilar', 'center 48%'),
     photo('tratamientos-2', 'Productos de la línea Brazilian Blowout', 'center 48%'),
   ],
-  color: [
-    hairPhoto('cabello-castano-ondas', 'Cabello castaño con ondas visto de espalda en el salón', 2133, 'center 65%'),
-    hairPhoto('cabello-rubio-liso', 'Cabello rubio liso visto de espalda en el salón', 2133, 'center 65%'),
-    hairPhoto('cabello-castano-retrato', 'Retrato con cabello castaño largo peinado con ondas', 2133, 'center 70%'),
-  ],
-  extensions: [EXTENSION_PAGE_PHOTOS.hero, EXTENSION_PAGE_PHOTOS.details[0], EXTENSION_PAGE_PHOTOS.details[2]],
+  color: colorPhotos,
+  extensions: [...brownExtensionPhotos, ...darkExtensionPhotos, straightExtensionPhoto],
   avyna: [
     photo('avyna-1', 'Selección de productos Avyna sobre un carrito dorado', 'center 58%'),
     photo('avyna-2', 'Detalle de productos y sérum Avyna', 'center 58%'),

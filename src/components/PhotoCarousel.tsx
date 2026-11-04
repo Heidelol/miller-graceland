@@ -84,6 +84,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const current = images[index] ?? images[0];
   const multiple = images.length > 1;
+  const compactPagination = images.length > 5;
   const controlsBelow = controlsPosition === 'below';
   const frameBackground = current?.fit === 'contain' ? '#F8F5EE' : undefined;
   const selectImage = (position: number) => {
@@ -172,7 +173,7 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         style={{ objectPosition: current.objectPosition ?? 'center', objectFit: current.fit ?? 'cover' }}
         className={`photo-carousel-image absolute inset-0 w-full h-full${fade ? ' photo-carousel-fade' : ''}`}
       />
-      {multiple && <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#F8F5EE]/95 text-[#231E1B] rounded-full text-[11px] tabular-nums" aria-hidden="true">{index + 1} / {images.length}</span>}
+      {multiple && !(controlsBelow && compactPagination) && <span className="absolute top-3 right-3 px-2.5 py-1 bg-[#F8F5EE]/95 text-[#231E1B] rounded-full text-[11px] tabular-nums" aria-hidden="true">{index + 1} / {images.length}</span>}
       {current.caption && <p className="photo-caption absolute top-3 left-3 right-16 rounded-lg bg-[#F8F5EE]/95 px-2 py-1 text-xs text-[#231E1B]">{current.caption}</p>}
       </div>
       <div className={controlsBelow ? 'photo-editorial-controls mt-1 flex min-h-11 items-center justify-between gap-1' : 'contents'}>
@@ -181,13 +182,13 @@ export function PhotoCarousel({ images, label, className = '', frameClassName = 
         {multiple && (
           <div className={`photo-navigation flex items-center pointer-events-auto ${controlsBelow ? '' : 'gap-1 rounded-full bg-[#F8F5EE]/95 p-1'}`}>
             <button type="button" className="photo-control photo-control-flat" aria-label={`Fotografía anterior de ${label}`} onClick={() => move(-1)}><ChevronLeft size={18} aria-hidden="true" /></button>
-            <div className="photo-dot-list flex items-center">
+            {compactPagination ? <span className="min-w-14 text-center text-xs tabular-nums text-[#5C534B]" aria-hidden="true">{index + 1} / {images.length}</span> : <div className="photo-dot-list flex items-center">
               {images.map((image, position) => (
                 <button key={image.src} type="button" className="photo-dot" aria-label={`Ver fotografía ${position + 1} de ${label}`} aria-current={index === position ? 'true' : undefined} onClick={() => selectImage(position)}>
                   <span className={`block w-1.5 h-1.5 rounded-full ${index === position ? 'bg-[#68794E]' : 'bg-[#99745A]/40'}`} />
                 </button>
               ))}
-            </div>
+            </div>}
             <button type="button" className="photo-control photo-control-flat" aria-label={`Siguiente fotografía de ${label}`} onClick={() => move(1)}><ChevronRight size={18} aria-hidden="true" /></button>
           </div>
         )}

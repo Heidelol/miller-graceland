@@ -123,3 +123,47 @@ test('Sobre mí muestra el retrato y las tres fotos de formación sin abrir la h
     assert.equal(container.querySelector('details').open, false);
   }
 });
+
+test('las colecciones públicas permiten recorrer las 23 fotos únicas entregadas', async () => {
+  const { STUDIO_PHOTOS, EXTENSION_PAGE_PHOTOS } = await import('../src/data/studioPhotos.ts');
+  const { existsSync, readFileSync } = await import('node:fs');
+  const manifest = JSON.parse(readFileSync(new URL('../docs/media/2026-11-04-cabello.json', import.meta.url), 'utf8'));
+  const images = [...STUDIO_PHOTOS.color, ...STUDIO_PHOTOS.extensions];
+  assert.equal(new Set(images.map(p => p.src)).size, 23);
+  assert.equal(new Set(manifest.map(p => p.original)).size, 23);
+  assert.equal(manifest.some(p => p.original.includes('(1)')),false);
+  assert.equal(STUDIO_PHOTOS.color.length, 11);
+  assert.equal(STUDIO_PHOTOS.extensions.length, 12);
+  assert.deepEqual(new Set([EXTENSION_PAGE_PHOTOS.hero.src,...EXTENSION_PAGE_PHOTOS.details.map(p=>p.src)]),new Set(STUDIO_PHOTOS.extensions.map(p=>p.src)));
+  for (const image of images) {
+    assert.ok(image.alt.trim());
+    assert.ok(manifest.some(m => '/images/studio/'+m.file === image.src));
+    for (const src of [image.src,image.smallSrc,image.mediumSrc]) assert.ok(existsSync(new URL('../public'+src,import.meta.url)),src);
+  }
+  for (const [label, collection] of [['Cabello',STUDIO_PHOTOS.color],['Piezas',STUDIO_PHOTOS.extensions]]) {
+    await render({images:collection,label,controlsPosition:'below'});
+    const seen=[];
+    for (let i=0;i<collection.length;i++) {
+      seen.push(shown());
+      await click(button(`Siguiente fotografía de ${label}`));
+    }
+    assert.deepEqual(seen,collection.map(p=>p.src));
+    assert.equal(shown(),collection[0].src);
+    assert.equal(container.querySelectorAll('.photo-dot').length,0,'Una colección amplia no llena la pantalla de puntos');
+  }
+});
+
+test('portada y extensiones muestran fotografías reales fuera de los carruseles de familias', async () => {
+  const { ExtensionsPage } = await import('../src/pages/ExtensionsPage.tsx');
+  const visible = new Set();
+  for (const component of [ServicesSection, ExtensionsPage]) {
+    await act(() => root.render(createElement(component)));
+    const grid = container.querySelector('[data-studio-photo-grid]');
+    assert.ok(grid,'Cada página debe tener fotografías visibles integradas en el contenido');
+    const images = [...grid.querySelectorAll('img')];
+    assert.equal(images.length,6);
+    for(const img of images) { visible.add(img.getAttribute('src'));assert.ok(img.alt.trim()); }
+    assert.equal(grid.querySelectorAll('[aria-roledescription="carrusel"]').length,0,'Las fotos de la galería se ven sin navegar diapositivas');
+  }
+  assert.equal(visible.size,12);
+});

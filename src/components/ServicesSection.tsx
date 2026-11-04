@@ -3,7 +3,8 @@ import { Clock, Check, ArrowRight, ArrowUpRight, Tag, ChevronDown } from 'lucide
 import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory } from '../types/salon';
 import { PhotoCarousel } from './PhotoCarousel';
-import { STUDIO_PHOTOS } from '../data/studioPhotos';
+import { StudioPhotoGrid } from './StudioPhotoGrid';
+import { STUDIO_PHOTOS, HOME_RESULTS_PHOTOS } from '../data/studioPhotos';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
 import { ValuationLink } from './ValuationLink';
 
@@ -59,7 +60,7 @@ export const ServicesSection: React.FC = () => {
             { title: 'Extensiones de Cabello Humano', images: STUDIO_PHOTOS.extensions, description: '100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.', action: 'Ver Extensiones', category: 'extensions' as const },
           ].map((priority) => (
             <article key={priority.title} className="flex flex-col min-w-0">
-              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/5] rounded-xl" controlsPosition="below" />
+              <PhotoCarousel className="service-family-photo" images={priority.images} label={priority.title} frameClassName="aspect-[4/5] rounded-xl" controlsPosition="below" />
               <div className="pt-5 flex flex-col flex-1 items-start">
                 <h3 className="font-serif-luxury text-2xl font-semibold leading-tight text-[#231E1B] mb-3">{priority.title}</h3>
                 <p className="text-[13px] text-[#5C534B] leading-6 mb-3">{priority.description}</p>
@@ -80,6 +81,14 @@ export const ServicesSection: React.FC = () => {
             </article>
           ))}
         </div>
+
+        <section aria-labelledby="studio-results-title" className="my-14 sm:my-20 pt-9 border-t border-[#99745A]/25">
+          <div className="max-w-2xl mb-7">
+            <h3 id="studio-results-title" className="scroll-mt-28 font-serif-luxury text-3xl sm:text-4xl font-medium leading-tight text-[#231E1B]">Cabello y acabados <em className="font-normal text-[#A87428]">del estudio.</em></h3>
+            <p className="mt-3 text-sm leading-7 text-[#5C534B]">Una selección de fotografías tomadas en el salón. Descubre los tonos, las texturas y los acabados de nuestro trabajo.</p>
+          </div>
+          <StudioPhotoGrid images={HOME_RESULTS_PHOTOS} label="Trabajos del estudio" />
+        </section>
 
         <h3 id="catalogo-servicios" ref={catalogRef} tabIndex={-1} className="scroll-mt-28 font-serif-luxury text-2xl text-center text-[#231E1B] mb-4 focus-visible:outline-2 focus-visible:outline-offset-4">Explora nuestros servicios</h3>
         <div role="group" aria-label="Filtrar servicios" className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-7 gap-y-1 mb-9">

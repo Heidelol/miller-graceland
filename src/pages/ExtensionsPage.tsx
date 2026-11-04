@@ -5,7 +5,8 @@ import { SALON_INFO } from '../data/salonData';
 import { EXTENSIONS_QUESTIONS } from '../data/extensionsPage';
 import { trackDirectionsClick } from '../lib/analytics';
 import { PhotoCarousel } from '../components/PhotoCarousel';
-import { EXTENSION_PAGE_PHOTOS } from '../data/studioPhotos';
+import { StudioPhotoGrid } from '../components/StudioPhotoGrid';
+import { EXTENSION_PAGE_PHOTOS, EXTENSION_GALLERY_PHOTOS } from '../data/studioPhotos';
 import { ValuationLink } from '../components/ValuationLink';
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4';
@@ -75,6 +76,14 @@ export const ExtensionsPage: React.FC = () => (
             <a href="/#conoceme" className={`${textLink} mt-5`}>Conoce a Miller<ArrowUpRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" /></a>
           </div>
         </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24" aria-labelledby="extension-pieces-title">
+        <div className="max-w-2xl mb-8">
+          <h2 id="extension-pieces-title" className="scroll-mt-28 font-serif-luxury text-4xl sm:text-5xl font-medium leading-tight text-[#231E1B]">Nuestras piezas, <em className="font-normal text-[#A87428]">en detalle.</em></h2>
+          <p className="mt-4 text-sm leading-7 text-[#5C534B]">Fotografías del cabello presentado en el estudio: tonos castaños y oscuros, texturas lisas y ondas. La propuesta de color, largo y volumen se prepara contigo durante la valoración.</p>
+        </div>
+        <StudioPhotoGrid images={EXTENSION_GALLERY_PHOTOS} label="Piezas de cabello del estudio" />
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24" aria-labelledby="sistemas-extensiones">
