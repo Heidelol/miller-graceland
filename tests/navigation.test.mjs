@@ -95,3 +95,16 @@ test('Solicitar valoración mantiene el enlace a WhatsApp después de usar Servi
   assert.equal(url.pathname, '/529831373038');
   assert.match(url.searchParams.get('text'), /valoración en el salón/);
 });
+
+test('Escape cierra primero Servicios y después la navegación móvil con foco restaurado', async () => {
+  await render(); const menu = container.querySelector('#mobile-menu-trigger');
+  await click(menu); await click(trigger('mobile'));
+  const link = panel('mobile').querySelector('a'); await act(() => link.focus());
+  await act(() => link.dispatchEvent(new window.KeyboardEvent('keydown', {key:'Escape',bubbles:true})));
+  assert.equal(panel('mobile').hidden, true);
+  assert.ok(container.querySelector('#mobile-menu-drawer'));
+  assert.equal(document.activeElement, trigger('mobile'));
+  await act(() => trigger('mobile').dispatchEvent(new window.KeyboardEvent('keydown', {key:'Escape',bubbles:true})));
+  assert.equal(container.querySelector('#mobile-menu-drawer'), null);
+  assert.equal(document.activeElement, menu);
+});

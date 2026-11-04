@@ -79,18 +79,22 @@ test('la inversión se presenta por valoración sin inventar precios ni anticipo
   assert.match(url.searchParams.get('text'), /valoración en el salón/i);
 });
 
-test('las dos imágenes generadas conservan identificación visible, alt, dimensiones y archivos locales', () => {
-  const figures = [...document.querySelectorAll('figure[data-ai-illustration]')];
-  assert.equal(figures.length, 2);
-  for (const figure of figures) {
-    assert.match(figure.querySelector('figcaption')?.textContent || '', /Imagen ilustrativa generada con IA/);
-    const image = figure.querySelector('img');
-    assert.match(image.alt, /ilustrativa.*IA/i);
-    assert.ok(Number(image.getAttribute('width')) > 0);
-    assert.ok(Number(image.getAttribute('height')) > 0);
+test('extensiones presenta producto real, hero responsive y metadatos coherentes', () => {
+  assert.equal(document.querySelectorAll('[data-ai-illustration]').length, 0);
+  assert.doesNotMatch(document.querySelector('main').textContent, /generada con IA/);
+  const hero = document.querySelector('main img');
+  assert.match(hero.src, /extensiones-castanas-presentacion.webp$/);
+  assert.match(hero.srcset, /480w.*768w.*1200w/);
+  assert.equal(hero.getAttribute('fetchpriority'), 'high');
+  assert.equal(hero.getAttribute('loading'), null);
+  assert.equal(document.querySelector('meta[property="og:image"]').content, 'https://millergreiseland.com'+hero.getAttribute('src'));
+  assert.equal(document.querySelector('meta[property="og:image:width"]').content,hero.getAttribute('width'));
+  assert.equal(document.querySelector('meta[property="og:image:height"]').content,hero.getAttribute('height'));
+  for (const image of document.querySelectorAll('main img')) {
+    assert.ok(image.alt.trim());
     assert.ok(existsSync(new URL(`../public${image.getAttribute('src')}`, import.meta.url)));
   }
-  assert.doesNotMatch(document.querySelector('main')?.textContent || '', /antes y después|clientas satisfechas/i);
+  assert.doesNotMatch(document.querySelector('main').textContent, /antes y después|clientas satisfechas/i);
 });
 
 test('la navegación de la página interna vuelve a las secciones de la portada y permite volver al inicio', () => {

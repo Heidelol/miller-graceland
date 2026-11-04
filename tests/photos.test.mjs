@@ -83,16 +83,18 @@ test('dos carruseles conservan su selección de forma independiente', async () =
   assert.deepEqual([...container.querySelectorAll('img')].map(image => image.getAttribute('src')), ['/dos.webp', '/uno.webp']);
 });
 
-test('el acceso de Tintes incluye Color y Signature Blondes y conserva el filtro individual', async () => {
+test('el catálogo ofrece cuatro filtros y el acceso Coloración lleva al resultado con foco', async () => {
   await act(() => root.render(createElement(ServicesSection)));
-  const findButton = text => [...container.querySelectorAll('button')].find(b => b.textContent.includes(text));
-  await click(findButton('Ver color y rubios'));
-  assert.equal(container.querySelectorAll('[data-service-id]').length, 6);
-  assert.ok(container.querySelector('[data-service-id="balayage-rubio"]'));
-  assert.ok(container.querySelector('[data-service-id="color-completo"]'));
-  await click([...container.querySelectorAll('button')].find(b => b.textContent === 'Color'));
-  assert.equal(container.querySelectorAll('[data-service-id]').length, 3);
-  assert.equal(container.querySelector('[data-service-id="balayage-rubio"]'), null);
+  const filters = () => [...container.querySelectorAll('[aria-label="Filtrar servicios"] button')];
+  assert.deepEqual(filters().map(b => b.textContent), ['Todos','Coloración','Rubios','Extensiones']);
+  const { PUBLIC_SERVICES } = await import('../src/data/salonData.ts');
+  for (const [label, category] of [['Todos','todos'],['Coloración','color'],['Rubios','blondes'],['Extensiones','extensions']]) {
+    await click(filters().find(b => b.textContent === label));
+    assert.deepEqual([...container.querySelectorAll('[data-service-id]')].map(el=>el.dataset.serviceId), PUBLIC_SERVICES.filter(s=>category==='todos'||s.category===category).map(s=>s.id));
+  }
+  await click([...container.querySelectorAll('button')].find(b => b.textContent.includes('Ver coloración')));
+  assert.equal(document.activeElement, container.querySelector('#catalogo-servicios'));
+  assert.equal(container.querySelector('[data-service-id="balayage-rubio"]'),null);
 });
 
 test('los cortes retirados no se ofrecen en el catálogo público', () => {

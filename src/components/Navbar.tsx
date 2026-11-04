@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { ServicesNav } from './ServicesNav';
 import { ValuationLink } from './ValuationLink';
 
 interface NavbarProps {
   sectionLinkPrefix?: '' | '/';
+  valuationInterest?: string;
   valuationLocation?: 'navbar_valuation' | 'extensions_navbar';
 }
 
 const desktopLinkClassName = "relative inline-flex min-h-11 items-center py-3 transition-colors hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4 after:absolute after:bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-[#A87428] after:transition-transform after:duration-200 after:content-[''] hover:after:scale-x-100 focus-visible:after:scale-x-100";
 
-export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuationLocation = 'navbar_valuation' }) => {
+export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuationLocation = 'navbar_valuation', valuationInterest }) => {
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -24,6 +26,13 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
 
   return (
     <header
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && mobileMenuOpen) {
+          event.preventDefault();
+          setMobileMenuOpen(false);
+          menuTriggerRef.current?.focus();
+        }
+      }}
       className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md transition-[background-color,border-color,padding] duration-200 ${
         scrolled
           ? 'bg-[#F9F6F0] border-[#99745A]/20 py-3'
@@ -49,8 +58,8 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
             </div>
             <div className="flex flex-col shrink-0">
               <span className="flex items-baseline gap-1 sm:gap-2 leading-none whitespace-nowrap">
-                <span className="font-serif-luxury text-[14px] min-[375px]:text-base sm:text-xl font-medium tracking-[0.06em] text-[#231E1B]">MILLER</span>{' '}
-                <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-[17px] min-[375px]:text-xl sm:text-[27px] italic font-normal text-[#95651F] sm:text-[#A87428]">Greiseland</span>
+                <span className="font-serif-luxury text-[12px] min-[375px]:text-base sm:text-xl font-medium tracking-[0.06em] text-[#231E1B]">MILLER</span>{' '}
+                <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-[14px] min-[375px]:text-xl sm:text-[27px] italic font-normal text-[#95651F] sm:text-[#A87428]">Greiseland</span>
               </span>
               <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#42502E] uppercase font-medium mt-1.5">
                 Studio
@@ -78,6 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
           {/* Right Action Buttons */}
           <div className="hidden xl:flex items-center gap-5 shrink-0">
             <ValuationLink
+              interest={valuationInterest}
               location="navbar_desktop"
               className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-[#42502E] hover:text-[#95651F] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
             >
@@ -86,6 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
             </ValuationLink>
 
             <ValuationLink
+              interest={valuationInterest}
               location={valuationLocation}
               className="gold-button min-h-11 flex items-center gap-2 px-4 py-3 rounded-lg text-xs font-semibold cursor-pointer"
             >
@@ -97,17 +108,19 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
           {/* Mobile & Tablet Compact Menu Trigger */}
           <div className="flex xl:hidden items-center gap-1 sm:gap-2 shrink-0">
             <ValuationLink
+              interest={valuationInterest}
               location="navbar_mobile_valuation"
               aria-label="Solicitar valoración"
               className="gold-button min-h-11 min-w-11 px-2 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Calendar className="hidden sm:block w-3.5 h-3.5" aria-hidden="true" />
               <span className="hidden sm:inline">Solicitar valoración</span>
-              <span className="sm:hidden">Cita</span>
+              <span className="sm:hidden">Valoración</span>
             </ValuationLink>
             <button
               type="button"
               id="mobile-menu-trigger"
+              ref={menuTriggerRef}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="min-h-11 min-w-11 flex items-center justify-center text-[#231E1B] hover:text-[#95651F] transition-colors rounded-lg cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"
               aria-expanded={mobileMenuOpen}
@@ -161,6 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
 
           <div className="pt-4 border-t border-[#99745A]/15 flex flex-col gap-3">
             <ValuationLink
+              interest={valuationInterest}
               location="navbar_mobile_valuation"
               onNavigate={() => setMobileMenuOpen(false)}
               className="gold-button min-h-11 w-full py-3 rounded-lg text-center text-sm font-semibold flex items-center justify-center gap-2"
@@ -169,6 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
               <span>Solicitar valoración</span>
             </ValuationLink>
             <ValuationLink
+              interest={valuationInterest}
               location="navbar_mobile"
               onNavigate={() => setMobileMenuOpen(false)}
               className="min-h-11 w-full py-2.5 text-sm font-medium text-[#42502E] hover:text-[#95651F] flex items-center justify-center gap-2 transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-2"

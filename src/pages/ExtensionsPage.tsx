@@ -4,6 +4,8 @@ import { Footer } from '../components/Footer';
 import { SALON_INFO } from '../data/salonData';
 import { EXTENSIONS_QUESTIONS } from '../data/extensionsPage';
 import { trackDirectionsClick } from '../lib/analytics';
+import { PhotoCarousel } from '../components/PhotoCarousel';
+import { EXTENSION_PAGE_PHOTOS } from '../data/studioPhotos';
 import { ValuationLink } from '../components/ValuationLink';
 
 const focus = 'focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4';
@@ -16,7 +18,7 @@ function AppointmentLink({ location, className = '', children = 'Solicitar valor
   children?: React.ReactNode;
 }) {
   return (
-    <ValuationLink location={location}
+    <ValuationLink location={location} interest="extensiones de cabello"
       className={`gold-button min-h-11 inline-flex items-center justify-center gap-3 rounded-lg px-5 py-3 text-sm font-semibold ${focus} ${className}`}>
       {children}<ArrowUpRight className="h-4 w-4" aria-hidden="true" />
     </ValuationLink>
@@ -25,7 +27,7 @@ function AppointmentLink({ location, className = '', children = 'Solicitar valor
 
 export const ExtensionsPage: React.FC = () => (
   <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B]">
-    <Navbar sectionLinkPrefix="/" valuationLocation="extensions_navbar" />
+    <Navbar sectionLinkPrefix="/" valuationLocation="extensions_navbar" valuationInterest="extensiones de cabello" />
     <main id="contenido-extensiones" className="pt-28 sm:pt-32">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         <nav aria-label="Ruta de navegación" className="flex items-center gap-3 text-xs text-[#5C534B] mb-8 sm:mb-10">
@@ -46,31 +48,30 @@ export const ExtensionsPage: React.FC = () => (
               <AppointmentLink location="extensions_hero" />
               <a href="#personalizacion" className={textLink}>Conoce la propuesta<ArrowDown className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" /></a>
             </div>
-            <p className="mt-4 text-xs leading-6 text-[#5C534B]">Precio sujeto a valoración personalizada.</p>
+            <p className="mt-4 text-xs leading-6 text-[#5C534B]">Por WhatsApp · coordinamos tu visita al salón. Precio sujeto a valoración personalizada.</p>
           </div>
-          <figure data-ai-illustration className="hero-enter hero-enter-photo w-full max-w-lg mx-auto lg:mr-0">
-            <img src="/images/extensions/cabello-ondulado-ia.webp" width={1122} height={1402}
-              alt="Referencia ilustrativa de cabello largo ondulado en tonos castaños, generada con IA"
-              fetchPriority="high" decoding="async" className="w-full h-auto aspect-[4/5] object-cover rounded-xl" />
-            <figcaption className="text-[11px] leading-5 text-[#5C534B] mt-3">Imagen ilustrativa generada con IA.</figcaption>
+          <figure className="hero-enter hero-enter-photo w-full max-w-lg mx-auto lg:mr-0">
+            <img src={EXTENSION_PAGE_PHOTOS.hero.src}
+              srcSet={`${EXTENSION_PAGE_PHOTOS.hero.smallSrc} 480w, ${EXTENSION_PAGE_PHOTOS.hero.mediumSrc} 768w, ${EXTENSION_PAGE_PHOTOS.hero.src} 1200w`}
+              sizes="(min-width: 1024px) 45vw, (min-width: 640px) 512px, calc(100vw - 32px)"
+              width={EXTENSION_PAGE_PHOTOS.hero.width} height={EXTENSION_PAGE_PHOTOS.hero.height}
+              alt={EXTENSION_PAGE_PHOTOS.hero.alt} fetchPriority="high" decoding="async" className="w-full h-auto rounded-xl" />
+            <figcaption className="text-xs leading-6 text-[#5C534B] mt-3">Piezas de cabello del estudio.</figcaption>
           </figure>
         </div>
       </section>
 
       <section id="personalizacion" className="scroll-mt-28 bg-[#F2EDE3] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 items-center gap-10 lg:gap-20">
-          <figure data-ai-illustration>
-            <img src="/images/extensions/detalle-extensiones-ia.webp" width={1200} height={900} loading="lazy" decoding="async"
-              alt="Composición ilustrativa de mechones de extensiones castañas y un peine, generada con IA"
-              className="w-full h-auto aspect-[4/3] object-cover rounded-xl" />
-            <figcaption className="text-[11px] leading-5 text-[#5C534B] mt-3">Imagen ilustrativa generada con IA. No representa un producto específico del estudio.</figcaption>
+          <figure className="w-full max-w-md mx-auto">
+            <PhotoCarousel images={EXTENSION_PAGE_PHOTOS.details} label="Piezas de cabello del estudio" frameClassName="aspect-[4/5] rounded-xl" controlsPosition="below" />
+            <figcaption className="text-xs leading-6 text-[#5C534B] mt-3">Detalles de las piezas de cabello del estudio.</figcaption>
           </figure>
           <div>
             <p className={eyebrow}>Fabricación artesanal · Cabello 100 % humano</p>
-            <h2 className="font-serif-luxury font-medium text-4xl sm:text-5xl leading-tight mt-4 mb-6">El detalle está en <span className="italic text-[#A87428]">la integración.</span></h2>
+            <h2 className="font-serif-luxury font-medium text-4xl sm:text-5xl leading-tight mt-4 mb-6">Una propuesta <span className="italic text-[#A87428]">a tu medida.</span></h2>
             <p className="text-sm leading-7 text-[#5C534B]">El punto de partida es tu cabello: su tono, densidad, textura y el resultado que deseas. La valoración nos permite diseñar contigo una propuesta de largo y volumen, además de orientarte sobre su mantenimiento.</p>
             <p className="text-sm leading-7 text-[#5C534B] mt-4">Con ocho años de experiencia en la fabricación artesanal de extensiones, Miller combina su trabajo en colorimetría con la creación de piezas de cabello 100 % humano. En el estudio elaboramos coletas personalizadas, desde cabello virgen hasta diseños con efectos balayage.</p>
-            <p className="text-sm leading-7 text-[#5C534B] mt-4">La propuesta se prepara para cada persona: buscamos que el color, el largo y el volumen acompañen su estilo y el movimiento de su cabello.</p>
             <a href="/#conoceme" className={`${textLink} mt-5`}>Conoce a Miller<ArrowUpRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" /></a>
           </div>
         </div>

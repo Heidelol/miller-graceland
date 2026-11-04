@@ -3,13 +3,13 @@ import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
 import { ValuationLink } from './ValuationLink';
-import { VALUATION_WHATSAPP_URL } from '../data/valuation';
+import { buildValuationUrl } from '../data/valuation';
 
 const heroShortcuts = [
   {
     title: 'Tratamientos',
     description: 'Valoración por WhatsApp',
-    href: VALUATION_WHATSAPP_URL,
+    href: buildValuationUrl('tratamientos capilares'),
     isWhatsApp: true,
   },
   {
@@ -76,6 +76,7 @@ export const Hero: React.FC = () => {
                 <ArrowUpRight className="w-4 h-4 text-[#A87428]" aria-hidden="true" />
               </a>
             </div>
+            <p className="mt-3 text-xs leading-6 text-[#5C534B]">Por WhatsApp · coordinamos tu visita al salón</p>
 
           </div>
 

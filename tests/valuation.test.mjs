@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client';
 
 register('./tsx-loader.mjs', import.meta.url);
 const { App } = await import('../src/App.tsx');
+const valuation = await import('../src/data/valuation.ts');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://millergreiseland.com/' });
 Object.assign(globalThis, {
   window: dom.window, document: dom.window.document, HTMLElement: dom.window.HTMLElement,
@@ -25,12 +26,12 @@ beforeEach(() => {
 afterEach(async () => { await act(() => root.unmount()); container.remove(); });
 async function render() { await act(() => root.render(createElement(App))); }
 function valuationLinks(scope) { return [...scope.querySelectorAll('a')].filter(a => a.textContent.includes('Solicitar valoración')); }
-function checkDestination(link) {
+function checkDestination(link, interest) {
   assert.ok(link, 'La valoración debe ser un enlace directo');
   const url = new URL(link.href);
   assert.equal(url.origin, 'https://wa.me');
   assert.equal(url.pathname, '/529831373038');
-  assert.equal(url.searchParams.get('text'), message);
+  assert.equal(url.searchParams.get('text'), interest ? `Hola, Miller. Me interesa ${interest} y quisiera solicitar una valoración en el salón. ¿Qué disponibilidad tienes?` : message);
   assert.equal(link.target, '_blank');
   assert.match(link.rel, /noopener/);
 }
@@ -52,22 +53,33 @@ test('la portada abre una valoración en un clic sin formulario, reserva local n
   }]]);
 });
 
-test('los nueve servicios permiten pedir la misma valoración sin preseleccionar un tratamiento', async () => {
+test('los nueve servicios permiten pedir valoración con contexto sin exigir una selección', async () => {
   await render();
   const services = [...container.querySelectorAll('[data-service-id]')];
   assert.equal(services.length, 9);
   for (const service of services) {
     const links = valuationLinks(service);
     assert.equal(links.length, 1);
-    checkDestination(links[0]);
+    checkDestination(links[0], service.querySelector('h3').textContent);
   }
 });
 
-test('todos los accesos públicos a WhatsApp comparten el mensaje de valoración', async () => {
+test('el mensaje genérico y los intereses conservan acentos y parámetros seguros', () => {
+  for (const interest of [undefined, '', '   ']) assert.equal(valuation.buildValuationUrl(interest), valuation.VALUATION_WHATSAPP_URL);
+  for (const interest of ['Balayage Rubio', 'Coloración & rubios']) {
+    const url = new URL(valuation.buildValuationUrl(interest));
+    assert.equal(url.searchParams.get('text'), `Hola, Miller. Me interesa ${interest} y quisiera solicitar una valoración en el salón. ¿Qué disponibilidad tienes?`);
+    assert.equal([...url.searchParams.keys()].length, 1);
+  }
+});
+
+test('el contexto de servicio registra solo un evento con el interés del catálogo', async () => {
   await render();
-  const links = [...container.querySelectorAll('a[href^="https://wa.me/"]')];
-  assert.ok(links.length > 0);
-  links.forEach(checkDestination);
+  const card = container.querySelector('[data-service-id="balayage-rubio"]');
+  await click(valuationLinks(card)[0]);
+  assert.deepEqual(commands, [['event', 'whatsapp_click', {
+    click_location: 'services_valuation', service_name: 'Balayage Rubio', contact_intent: 'inquiry',
+  }]]);
 });
 
 test('la valoración móvil cierra el menú y registra un solo clic de contacto', async () => {
@@ -84,10 +96,12 @@ test('extensiones conserva su contenido y ofrece el mismo contacto sin cuestiona
   window.history.replaceState(null, '', '/extensiones-cabello-chetumal');
   await render();
   assert.match(container.querySelector('h1').textContent, /Extensiones de cabello en Chetumal/);
-  assert.equal(container.querySelectorAll('figure[data-ai-illustration]').length, 2);
+  assert.equal(container.querySelectorAll('figure[data-ai-illustration]').length, 0);
+  assert.match(container.querySelector('main img').src, /extensiones-castanas-presentacion/);
   const links = valuationLinks(container.querySelector('main'));
   assert.equal(links.length, 3);
-  links.forEach(checkDestination);
+  links.forEach(link => checkDestination(link, 'extensiones de cabello'));
+  checkDestination(container.querySelector('header a[aria-label="Solicitar valoración"]'), 'extensiones de cabello');
   await click(links[0]);
   assert.equal(container.querySelector('input, textarea, [role="dialog"]'), null);
   assert.deepEqual(commands.map(command => command[1]), ['whatsapp_click']);

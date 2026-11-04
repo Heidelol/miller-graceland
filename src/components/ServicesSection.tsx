@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Clock, Check, ArrowRight, ArrowUpRight, Tag, ChevronDown } from 'lucide-react';
 import { PUBLIC_SERVICES, SALON_INFO } from '../data/salonData';
 import type { ServiceCategory } from '../types/salon';
@@ -8,15 +8,23 @@ import { EXTENSIONS_PATH } from '../data/extensionsPage';
 import { ValuationLink } from './ValuationLink';
 
 export const ServicesSection: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<ServiceCategory | 'color-family'>('todos');
+  const [activeCategory, setActiveCategory] = useState<ServiceCategory>('todos');
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({});
 
-  const categories: { key: ServiceCategory | 'color-family'; label: string }[] = [
+  const catalogRef = useRef<HTMLHeadingElement>(null);
+
+  const showColor = () => {
+    setActiveCategory('color');
+    catalogRef.current?.focus({ preventScroll: true });
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    catalogRef.current?.scrollIntoView?.({ behavior: reduced ? 'instant' : 'smooth', block: 'start' });
+  };
+
+  const categories: { key: ServiceCategory; label: string }[] = [
     { key: 'todos', label: 'Todos' },
-    { key: 'color-family', label: 'Color y rubios' },
-    { key: 'color', label: 'Color' },
-    { key: 'blondes', label: 'Signature Blondes' },
-    { key: 'extensions', label: 'Extensions' },
+    { key: 'color', label: 'Coloración' },
+    { key: 'blondes', label: 'Rubios' },
+    { key: 'extensions', label: 'Extensiones' },
   ];
 
   const toggleDetails = (serviceId: string) => {
@@ -28,9 +36,7 @@ export const ServicesSection: React.FC = () => {
 
   const filteredServices = activeCategory === 'todos'
     ? PUBLIC_SERVICES
-    : PUBLIC_SERVICES.filter((s) => activeCategory === 'color-family'
-      ? s.category === 'color' || s.category === 'blondes'
-      : s.category === activeCategory);
+    : PUBLIC_SERVICES.filter((s) => s.category === activeCategory);
 
   return (
     <section id="servicios" className="py-24 bg-[#F2EDE3] relative">
@@ -38,24 +44,8 @@ export const ServicesSection: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-block max-w-full px-3.5 py-1 rounded-full bg-white border border-[#68794E]/30 mb-4 shadow-xs">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider sm:tracking-widest text-[#42502E]">
-              {SALON_INFO.tagline}
-            </span>
-          </div>
-          <h2 className="flex flex-col items-center text-[#231E1B] mb-5">
-            <span className="flex flex-col sm:flex-row items-center justify-center gap-y-1 gap-x-4">
-              <span className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-medium tracking-[0.04em] leading-tight">
-                MILLER
-              </span>
-              <span style={{ fontFamily: "'Playfair Display', serif" }} className="text-4xl sm:text-[2.75rem] lg:text-[3.5rem] italic font-normal leading-tight text-[#A87428]">
-                Greiseland
-              </span>
-            </span>
-            <span className="mt-3 font-sans text-[10px] sm:text-[11px] font-medium tracking-[0.4em] leading-6">
-              STUDIO
-            </span>
-          </h2>
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#42502E] mb-4">Servicios</p>
+          <h2 className="font-serif-luxury text-4xl sm:text-5xl font-medium text-[#231E1B] leading-tight mb-5">Un servicio pensado para <em className="font-normal text-[#A87428]">tu cabello.</em></h2>
           <p className="text-sm sm:text-base text-[#5C534B] leading-relaxed">
             {SALON_INFO.servicesIntro}
           </p>
@@ -65,11 +55,11 @@ export const ServicesSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 lg:gap-x-8 gap-y-10 max-w-5xl mx-auto mb-14">
           {[
             { title: 'Tratamientos Capilares', images: STUDIO_PHOTOS.treatments, description: 'Protocolos reconstructivos y nutrición profunda adaptados al estado de tu cabello.', action: 'Consultar Tratamientos', category: null },
-            { title: 'Tintes y Coloración', images: STUDIO_PHOTOS.color, description: 'Diseño de color, retoques y rubios personalizados según tu cabello y el resultado que buscas.', action: 'Ver color y rubios', category: 'color-family' as const },
+            { title: 'Tintes y Coloración', images: STUDIO_PHOTOS.color, description: 'Diseño de color, retoques y rubios personalizados según tu cabello y el resultado que buscas.', action: 'Ver coloración', category: 'color' as const },
             { title: 'Extensiones de Cabello Humano', images: STUDIO_PHOTOS.extensions, description: '100% cabello humano seleccionado. Aplicación, recolocación y retiro profesional.', action: 'Ver Extensiones', category: 'extensions' as const },
           ].map((priority) => (
             <article key={priority.title} className="flex flex-col min-w-0">
-              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/3] rounded-xl" />
+              <PhotoCarousel images={priority.images} label={priority.title} frameClassName="aspect-[4/5] rounded-xl" controlsPosition="below" />
               <div className="pt-5 flex flex-col flex-1 items-start">
                 <h3 className="font-serif-luxury text-2xl font-semibold leading-tight text-[#231E1B] mb-3">{priority.title}</h3>
                 <p className="text-[13px] text-[#5C534B] leading-6 mb-3">{priority.description}</p>
@@ -78,11 +68,11 @@ export const ServicesSection: React.FC = () => {
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </a>
                 ) : priority.category ? (
-                  <button type="button" onClick={() => setActiveCategory(priority.category)} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                  <button type="button" onClick={showColor} className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </button>
                 ) : (
-                  <ValuationLink location="services_card_tratamientos" className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
+                  <ValuationLink location="services_card_tratamientos" interest="tratamientos capilares" className="mt-auto min-h-11 py-2 text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/40 hover:text-[#A87428] hover:decoration-[#A87428] inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4">
                     {priority.action}<ArrowRight className="w-3.5 h-3.5 text-[#A87428]" aria-hidden="true" />
                   </ValuationLink>
                 )}
@@ -91,6 +81,7 @@ export const ServicesSection: React.FC = () => {
           ))}
         </div>
 
+        <h3 id="catalogo-servicios" ref={catalogRef} tabIndex={-1} className="scroll-mt-28 font-serif-luxury text-2xl text-center text-[#231E1B] mb-4 focus-visible:outline-2 focus-visible:outline-offset-4">Explora nuestros servicios</h3>
         <div role="group" aria-label="Filtrar servicios" className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-7 gap-y-1 mb-9">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.key;
@@ -195,7 +186,7 @@ export const ServicesSection: React.FC = () => {
                       />
                     </button>
                     <ValuationLink
-                      location="services_valuation"
+                      location="services_valuation" interest={service.name}
                       className="gold-button min-h-11 px-4 py-2 rounded-lg text-xs font-semibold inline-flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
                     >
                       <span>Solicitar valoración</span>

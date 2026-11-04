@@ -5,6 +5,7 @@ import { renderToString } from 'react-dom/server';
 
 register('./tsx-loader.mjs', import.meta.url);
 const { ExtensionsPage } = await import('../src/pages/ExtensionsPage.tsx');
+const { EXTENSION_PAGE_PHOTOS } = await import('../src/data/studioPhotos.ts');
 const { App } = await import('../src/App.tsx');
 const { EXTENSIONS_PATH, EXTENSIONS_CANONICAL, EXTENSIONS_SEO } = await import('../src/data/extensionsPage.ts');
 const template = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
@@ -32,9 +33,9 @@ const structuredData = {
 const markup = renderToString(createElement(ExtensionsPage));
 const html = withOpenGraph(template, {
   title: EXTENSIONS_SEO.title, description: EXTENSIONS_SEO.description, url: EXTENSIONS_CANONICAL,
-  image: 'https://millergreiseland.com/images/extensions/cabello-ondulado-ia.webp',
-  imageAlt: 'Imagen ilustrativa de cabello ondulado generada con IA',
-  width: 1122, height: 1402, imageType: 'image/webp',
+  image: `https://millergreiseland.com${EXTENSION_PAGE_PHOTOS.hero.src}`,
+  imageAlt: EXTENSION_PAGE_PHOTOS.hero.alt,
+  width: EXTENSION_PAGE_PHOTOS.hero.width, height: EXTENSION_PAGE_PHOTOS.hero.height, imageType: 'image/webp',
 })
   .replace(/<title>[^<]*<\/title>/, `<title>${attribute(EXTENSIONS_SEO.title)}</title>`)
   .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${attribute(EXTENSIONS_SEO.description)}" />`)

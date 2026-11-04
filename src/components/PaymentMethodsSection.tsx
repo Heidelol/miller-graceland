@@ -27,12 +27,7 @@ export const PaymentMethodsSection: React.FC = () => {
               >
                 Solicitar valoración
               </ValuationLink>
-              <ValuationLink
-                location="payment_methods"
-                className="text-sm font-medium text-[#42502E] underline underline-offset-4 decoration-[#68794E]/50 hover:decoration-[#42502E] transition-colors focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4"
-              >
-                Consultar por WhatsApp
-              </ValuationLink>
+
             </div>
           </div>
 
@@ -43,10 +38,10 @@ export const PaymentMethodsSection: React.FC = () => {
               </p>
               <div className="max-w-60">
                 <h3 className="font-serif-luxury text-2xl font-semibold text-[#231E1B]">
-                  Anticipo para reservar
+                  Anticipo del servicio
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-[#5C534B]">
-                  Sobre el precio mínimo publicado del servicio.
+                  Para reservar tu servicio, sobre su precio mínimo publicado.
                 </p>
               </div>
             </div>
