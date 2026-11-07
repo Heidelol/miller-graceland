@@ -9,6 +9,8 @@ import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { ExtensionsPage } from './pages/ExtensionsPage';
 import { EXTENSIONS_PATH } from './data/extensionsPage';
+import { getGiftCardByPath } from './data/giftCards';
+import { GiftCardNotFound, GiftCardPage } from './pages/GiftCardPage';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState(
@@ -25,6 +27,11 @@ export function App() {
 
   if (currentPath === EXTENSIONS_PATH || currentPath === `${EXTENSIONS_PATH}/`) {
     return <ExtensionsPage />;
+  }
+
+  if (currentPath === '/regalos' || currentPath.startsWith('/regalos/')) {
+    const card = getGiftCardByPath(currentPath);
+    return card ? <GiftCardPage card={card} /> : <GiftCardNotFound />;
   }
 
   return (

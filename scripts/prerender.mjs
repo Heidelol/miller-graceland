@@ -7,6 +7,8 @@ register('./tsx-loader.mjs', import.meta.url);
 const { ExtensionsPage } = await import('../src/pages/ExtensionsPage.tsx');
 const { EXTENSION_PAGE_PHOTOS } = await import('../src/data/studioPhotos.ts');
 const { App } = await import('../src/App.tsx');
+const { GiftCardPage } = await import('../src/pages/GiftCardPage.tsx');
+const { GIFT_CARDS, getGiftCardPath } = await import('../src/data/giftCards.ts');
 const { EXTENSIONS_PATH, EXTENSIONS_CANONICAL, EXTENSIONS_SEO } = await import('../src/data/extensionsPage.ts');
 const template = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
 if (!template.includes('<div id="root"></div>')) throw new Error('El HTML base no contiene el punto de montaje esperado.');
@@ -61,3 +63,26 @@ await writeFile(new URL('../dist/index.html', import.meta.url), homeTemplate.rep
   '<div id="root"></div>', () => `<div id="root" data-ssr-path="/">${homeMarkup}</div>`
 ));
 console.log('HTML de portada generado con contenido y enlaces utilizables sin JavaScript.');
+
+for (const card of GIFT_CARDS) {
+  const path = getGiftCardPath(card);
+  const title = `Gift Card · ${card.name} | Miller Greiseland Studio`;
+  const description = 'Una experiencia especialmente para ti en Miller Greiseland Studio. Conoce tu regalo y coordina tu visita por WhatsApp.';
+  const url = `https://millergreiseland.com${path}`;
+  const markup = renderToString(createElement(GiftCardPage, { card }));
+  const giftHtml = withOpenGraph(template, {
+    title, description, url, image: 'https://millergreiseland.com/logo-miller.jpeg',
+    imageAlt: 'Monograma dorado oficial de Miller Greiseland Studio',
+    width: 1225, height: 1284, imageType: 'image/jpeg',
+  })
+    .replace('<html lang="es"', '<html lang="es-MX"')
+    .replace(/<title>[^<]*<\/title>/, `<title>${attribute(title)}</title>`)
+    .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${attribute(description)}" />`)
+    .replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${url}" />`)
+    .replace('</head>', '<meta name="robots" content="noindex, follow" />\n</head>')
+    .replace('<div id="root"></div>', () => `<div id="root" data-ssr-path="${path}">${markup}</div>`);
+  const directory = new URL(`../dist${path}/`, import.meta.url);
+  await mkdir(directory, { recursive: true });
+  await writeFile(new URL('index.html', directory), giftHtml);
+  console.log(`HTML de gift card generado: ${path}`);
+}

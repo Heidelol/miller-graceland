@@ -74,7 +74,8 @@ export function trackWhatsAppClick(
     | 'extensions_hero'
     | 'extensions_valuation'
     | 'extensions_location'
-    | 'extensions_navbar',
+    | 'extensions_navbar'
+    | 'gift_card',
   details?: {
     serviceName?: string;
   }
