@@ -6,14 +6,14 @@ const textLink = 'inline-flex min-h-11 items-center gap-2 underline decoration-[
 
 function MenuEntries({ items }: { items: typeof FOOD_MENU }) {
   return (
-    <ul className="divide-y divide-[#99745A]/25">
+    <ul className="space-y-6">
       {items.map(({ name, price, description }) => (
-        <li key={name} className="py-3.5 first:pt-0 last:pb-0">
+        <li key={name}>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4">
             <h3 className="text-[1.375rem] leading-tight font-semibold sm:text-2xl">{name}</h3>
-            <span className="text-sm font-semibold tabular-nums text-[#42502E]">${price}</span>
+            <span className="text-sm font-medium tabular-nums text-[#5C534B]">${price}</span>
           </div>
-          {description && <p className="mt-1.5 text-sm leading-relaxed text-[#5C534B]">{description}</p>}
+          {description && <p className="mt-2 max-w-[48ch] text-sm leading-7 text-[#5C534B]">{description}</p>}
         </li>
       ))}
     </ul>
@@ -25,32 +25,29 @@ export function StudioMenuPage() {
     <div className="min-h-screen bg-[#F9F6F0] text-[#231E1B] selection:bg-[#C8933E]/20">
       <Navbar sectionLinkPrefix="/" menuCurrent />
       <main className="mx-auto max-w-6xl px-5 pt-27 pb-12 sm:px-8 sm:pt-32 lg:pb-16">
-        <header className="mx-auto mb-7 max-w-xl text-center sm:mb-10">
-          <div aria-hidden="true" className="mx-auto mb-4 flex h-16 w-13 items-center justify-center rounded-t-full border border-[#C6AF8D] bg-[#F1ECE2]">
-            <img src="/logo-miller-small.webp" width={137} height={144} alt="" className="h-auto w-8" />
-          </div>
+        <header className="mb-9 border-b border-[#99745A]/25 pb-7 sm:mb-12 sm:pb-10">
           <h1 className="text-[clamp(3rem,8vw,5.25rem)] leading-none font-medium tracking-[-0.025em]">Menú del estudio</h1>
-          <p className="mx-auto mt-3 max-w-[45ch] text-sm leading-relaxed text-[#5C534B] sm:text-base">
+          <p className="mt-4 max-w-[45ch] text-sm leading-relaxed text-[#5C534B] sm:text-base">
             Algo para disfrutar durante tu visita a Miller Greiseland Studio.
           </p>
-          <nav aria-label="Secciones del menú" className="mt-3 flex justify-center gap-6 text-sm font-semibold text-[#42502E] md:hidden">
+          <nav aria-label="Secciones del menú" className="mt-3 flex gap-6 text-sm font-semibold text-[#42502E] md:hidden">
             <a className={textLink} href="#alimentos">Alimentos</a>
             <a className={textLink} href="#bebidas">Bebidas</a>
           </nav>
         </header>
 
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] md:items-start">
-          <section id="alimentos" aria-labelledby="alimentos-title" className="scroll-mt-26 border-t-2 border-[#68794E] bg-[#EDEEE4] px-5 pt-5 pb-6 sm:px-8 sm:pt-7 sm:pb-8">
-            <h2 id="alimentos-title" className="mb-5 text-4xl font-medium text-[#42502E] sm:mb-6">Alimentos</h2>
+        <div className="grid gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] md:items-start md:gap-14 lg:gap-20">
+          <section id="alimentos" aria-labelledby="alimentos-title" className="scroll-mt-26">
+            <h2 id="alimentos-title" className="mb-7 text-4xl font-normal italic text-[#42502E]">Alimentos</h2>
             <MenuEntries items={FOOD_MENU} />
           </section>
-          <section id="bebidas" aria-labelledby="bebidas-title" className="scroll-mt-26 border-t-2 border-[#99745A] bg-[#F1ECE2] px-5 pt-5 pb-6 sm:px-8 sm:pt-7 sm:pb-8">
-            <h2 id="bebidas-title" className="mb-5 text-4xl font-medium text-[#5C534B] sm:mb-6">Bebidas</h2>
+          <section id="bebidas" aria-labelledby="bebidas-title" className="scroll-mt-26 border-t border-[#99745A]/25 pt-7 md:border-t-0 md:border-l md:pt-0 md:pl-10 lg:pl-14">
+            <h2 id="bebidas-title" className="mb-7 text-4xl font-normal italic text-[#80571F]">Bebidas</h2>
             <MenuEntries items={DRINKS_MENU} />
           </section>
         </div>
 
-        <footer className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-sm text-[#5C534B]">
+        <footer className="mt-10 border-t border-[#99745A]/25 pt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-sm text-[#5C534B]">
           <p>Precios en pesos mexicanos (MXN).</p>
           <details className="text-[#42502E]">
             <summary className="min-h-11 cursor-pointer py-3 font-semibold focus-visible:outline-2 focus-visible:outline-offset-4">
