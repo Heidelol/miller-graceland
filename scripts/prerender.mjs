@@ -7,6 +7,8 @@ register('./tsx-loader.mjs', import.meta.url);
 const { ExtensionsPage } = await import('../src/pages/ExtensionsPage.tsx');
 const { EXTENSION_PAGE_PHOTOS } = await import('../src/data/studioPhotos.ts');
 const { App } = await import('../src/App.tsx');
+const { StudioMenuPage } = await import('../src/pages/StudioMenuPage.tsx');
+const { STUDIO_MENU_PATH, STUDIO_MENU_CANONICAL, STUDIO_MENU_SEO } = await import('../src/data/studioMenu.ts');
 const { GiftCardPage } = await import('../src/pages/GiftCardPage.tsx');
 const { GIFT_CARDS, getGiftCardPath } = await import('../src/data/giftCards.ts');
 const { EXTENSIONS_PATH, EXTENSIONS_CANONICAL, EXTENSIONS_SEO } = await import('../src/data/extensionsPage.ts');
@@ -63,6 +65,21 @@ await writeFile(new URL('../dist/index.html', import.meta.url), homeTemplate.rep
   '<div id="root"></div>', () => `<div id="root" data-ssr-path="/">${homeMarkup}</div>`
 ));
 console.log('HTML de portada generado con contenido y enlaces utilizables sin JavaScript.');
+
+const menuMarkup = renderToString(createElement(StudioMenuPage));
+const menuHtml = withOpenGraph(template, {
+  ...STUDIO_MENU_SEO, url: STUDIO_MENU_CANONICAL, image: 'https://millergreiseland.com/logo-miller.jpeg',
+  imageAlt: 'Monograma dorado oficial de Miller Greiseland Studio',
+  width: 1225, height: 1284, imageType: 'image/jpeg',
+})
+  .replace(/<title>[^<]*<\/title>/, `<title>${attribute(STUDIO_MENU_SEO.title)}</title>`)
+  .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${attribute(STUDIO_MENU_SEO.description)}" />`)
+  .replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${STUDIO_MENU_CANONICAL}" />`)
+  .replace('<div id="root"></div>', () => `<div id="root" data-ssr-path="${STUDIO_MENU_PATH}">${menuMarkup}</div>`);
+const menuDirectory = new URL(`../dist${STUDIO_MENU_PATH}/`, import.meta.url);
+await mkdir(menuDirectory, { recursive: true });
+await writeFile(new URL('index.html', menuDirectory), menuHtml);
+console.log(`HTML de menú generado: ${STUDIO_MENU_PATH}`);
 
 for (const card of GIFT_CARDS) {
   const path = getGiftCardPath(card);

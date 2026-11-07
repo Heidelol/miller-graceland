@@ -11,6 +11,8 @@ import { ExtensionsPage } from './pages/ExtensionsPage';
 import { EXTENSIONS_PATH } from './data/extensionsPage';
 import { getGiftCardByPath } from './data/giftCards';
 import { GiftCardNotFound, GiftCardPage } from './pages/GiftCardPage';
+import { StudioMenuPage } from './pages/StudioMenuPage';
+import { STUDIO_MENU_PATH } from './data/studioMenu';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState(
@@ -27,6 +29,10 @@ export function App() {
 
   if (currentPath === EXTENSIONS_PATH || currentPath === `${EXTENSIONS_PATH}/`) {
     return <ExtensionsPage />;
+  }
+
+  if (currentPath === STUDIO_MENU_PATH || currentPath === `${STUDIO_MENU_PATH}/`) {
+    return <StudioMenuPage />;
   }
 
   if (currentPath === '/regalos' || currentPath.startsWith('/regalos/')) {

@@ -5,6 +5,7 @@ import { register } from 'node:module';
 
 register('./tsx-loader.mjs', import.meta.url);
 const { GIFT_CARDS, getGiftCardPath } = await import('../src/data/giftCards.ts');
+const { STUDIO_MENU_PATH } = await import('../src/data/studioMenu.ts');
 
 const output = new URL('../.vercel/output/', import.meta.url);
 await mkdir(output, { recursive: true });
@@ -40,10 +41,13 @@ await writeFile(new URL('config.json', output), JSON.stringify({
     { src: '/extensiones-cabello-chetumal/index.html', headers: { Location: '/extensiones-cabello-chetumal' }, status: 308 },
     { src: '/extensiones-cabello-chetumal/', headers: { Location: '/extensiones-cabello-chetumal' }, status: 308 },
     { src: '/extensiones-cabello-chetumal', dest: '/extensiones-cabello-chetumal/index.html' },
+    { src: `${STUDIO_MENU_PATH}/index\\.html`, headers: { Location: STUDIO_MENU_PATH }, status: 308 },
+    { src: `${STUDIO_MENU_PATH}/`, headers: { Location: STUDIO_MENU_PATH }, status: 308 },
+    { src: STUDIO_MENU_PATH, dest: `${STUDIO_MENU_PATH}/index.html` },
     ...giftRoutes,
     ...cacheRoutes,
     { handle: 'filesystem' },
     { src: '/.*', dest: '/404.html', status: 404 },
   ],
 }, null, 2));
-console.log('Salida estática de Vercel preparada con extensiones, gift cards y 404.');
+console.log('Salida estática de Vercel preparada con extensiones, menú, gift cards y 404.');

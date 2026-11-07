@@ -2,16 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { ServicesNav } from './ServicesNav';
 import { ValuationLink } from './ValuationLink';
+import { STUDIO_MENU_PATH } from '../data/studioMenu';
 
 interface NavbarProps {
   sectionLinkPrefix?: '' | '/';
   valuationInterest?: string;
   valuationLocation?: 'navbar_valuation' | 'extensions_navbar';
+  menuCurrent?: boolean;
 }
 
 const desktopLinkClassName = "relative inline-flex min-h-11 items-center py-3 transition-colors hover:text-[#95651F] focus-visible:outline-2 focus-visible:outline-[#231E1B] focus-visible:outline-offset-4 after:absolute after:bottom-2 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-[#A87428] after:transition-transform after:duration-200 after:content-[''] hover:after:scale-x-100 focus-visible:after:scale-x-100";
 
-export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuationLocation = 'navbar_valuation', valuationInterest }) => {
+export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuationLocation = 'navbar_valuation', valuationInterest, menuCurrent = false }) => {
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,6 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
             <ServicesNav sectionLinkPrefix={sectionLinkPrefix} triggerClassName={desktopLinkClassName} />
             <a href={`${sectionLinkPrefix}#experiencia`} className={desktopLinkClassName}>
               Experiencia
+            </a>
+            <a href={STUDIO_MENU_PATH} aria-current={menuCurrent ? 'page' : undefined} className={`${desktopLinkClassName} aria-[current=page]:text-[#42502E] aria-[current=page]:after:scale-x-100`}>
+              Menú
             </a>
             <a href={`${sectionLinkPrefix}#conoceme`} className={desktopLinkClassName}>
               Conóceme
@@ -148,6 +153,14 @@ export const Navbar: React.FC<NavbarProps> = ({ sectionLinkPrefix = '', valuatio
               className="py-1 hover:text-[#95651F] transition-colors"
             >
               Experiencia Miller Greiseland
+            </a>
+            <a
+              href={STUDIO_MENU_PATH}
+              aria-current={menuCurrent ? 'page' : undefined}
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 hover:text-[#95651F] aria-[current=page]:text-[#42502E] aria-[current=page]:underline transition-colors"
+            >
+              Menú
             </a>
             <a
               href={`${sectionLinkPrefix}#conoceme`}

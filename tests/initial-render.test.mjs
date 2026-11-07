@@ -52,10 +52,36 @@ test('la portada entrega contenido y valoración utilizables sin esperar a JavaS
   assert.ok(valuation, 'La valoración debe funcionar desde el HTML inicial');
   assert.equal(new URL(valuation.href).pathname, '/529831373038');
   assert.ok(document.querySelector('main img[fetchpriority="high"]'));
+  assert.equal(document.querySelector('header nav a[href="/menu"]')?.textContent.trim(), 'Menú');
 });
 
+test('la carta entrega los precios corregidos y la URL canónica en el HTML inicial', () => {
+  const dom = new JSDOM(readFileSync(new URL('../dist/menu/index.html', import.meta.url), 'utf8'));
+  try {
+    const { document } = dom.window;
+    assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://millergreiseland.com/menu');
+    assert.equal(document.querySelector('header nav a[aria-current="page"]').getAttribute('href'), '/menu');
+    const prices = Object.fromEntries([...document.querySelectorAll('#bebidas li')].map(row => [
+      row.querySelector('h3').textContent, row.querySelector('span').textContent,
+    ]));
+    assert.equal(prices['Agua purificada 330 ml'], '$20');
+    assert.equal(prices.Capuccino, '$45');
+    assert.equal(document.querySelectorAll('#alimentos li').length, 4);
+    for (const link of document.querySelectorAll('details a')) {
+      assert.ok(readFileSync(new URL(`../dist${link.getAttribute('href')}`, import.meta.url)).length > 0);
+    }
+    const { routes } = JSON.parse(readFileSync(new URL('../.vercel/output/config.json', import.meta.url), 'utf8'));
+    assert.equal(routes.find(route => route.src === '/menu').dest, '/menu/index.html');
+  } finally {
+    dom.window.close();
+  }
+});
 
-for (const [path, heading] of [['/', /El arte de sublimar/], ['/extensiones-cabello-chetumal', /Extensiones de cabello en Chetumal/]]) {
+for (const [path, heading] of [
+  ['/', /El arte de sublimar/],
+  ['/extensiones-cabello-chetumal', /Extensiones de cabello en Chetumal/],
+  ['/menu', /Menú del estudio/],
+]) {
   test(`hidratar ${path} conserva el contenido inicial y activa el menú sin errores`, async () => {
     const file = path === '/' ? '../dist/index.html' : `../dist${path}/index.html`;
     const dom = new JSDOM(readFileSync(new URL(file, import.meta.url), 'utf8'), { url: `https://millergreiseland.com${path}` });
@@ -78,6 +104,7 @@ for (const [path, heading] of [['/', /El arte de sublimar/], ['/extensiones-cabe
       await act(() => menu.click());
       assert.equal(menu.getAttribute('aria-expanded'), 'true');
       assert.ok(container.querySelector('#mobile-menu-drawer'));
+      assert.equal(container.querySelector('#mobile-menu-drawer a[href="/menu"]')?.textContent.trim(), 'Menú');
     } finally {
       if (root) await act(() => root.unmount());
       dom.window.close();
