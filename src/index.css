@@ -252,7 +252,8 @@
   position: fixed;
   inset: 0;
   margin: auto;
-  width: min(calc(100% - 24px), 420px);
+  /* Fit the 3:4 artwork and the toolbar in a single view. */
+  width: min(calc(100% - 24px), calc((100dvh - 74px) * .75), 525px);
   max-height: calc(100dvh - 24px);
   padding: 0;
   overflow: auto;
@@ -267,54 +268,12 @@
   background: rgb(35 30 27 / 64%);
 }
 
-.gran-fin-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: #f9f6f0;
-}
-
 .gran-fin-art {
-  display: grid;
-  place-items: center;
-  background: #f2ede3;
   touch-action: pan-y pinch-zoom;
 }
 
 .gran-fin-art img {
   display: block;
-  width: auto;
+  width: 100%;
   height: auto;
-  max-width: 100%;
-  max-height: min(49dvh, 520px);
-  object-fit: contain;
-}
-
-.gran-fin-details {
-  padding: 15px 16px 12px;
-}
-
-@media (min-width: 768px) {
-  .gran-fin-dialog {
-    width: min(calc(100% - 48px), 820px);
-    max-height: calc(100dvh - 48px);
-  }
-
-  .gran-fin-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  }
-
-  .gran-fin-header {
-    grid-column: 1 / -1;
-  }
-
-  .gran-fin-art img {
-    max-height: min(68dvh, 580px);
-  }
-
-  .gran-fin-details {
-    align-self: center;
-    padding: 28px;
-  }
 }

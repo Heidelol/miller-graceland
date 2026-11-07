@@ -59,7 +59,9 @@ test('abre con portada, conserva orden y condiciones, y se puede reabrir sin rep
     const dialog = document.querySelector('dialog[open]');
     assert.ok(dialog);
     assert.match(dialog.querySelector('img').src, /01-portada/);
-    await act(() => findButton(dialog, 'Ver promociones').click());
+    assert.match(dialog.querySelector('img').alt, /13 al 17 de noviembre/);
+    assert.equal(dialog.textContent.trim(), '1/5');
+    await act(() => findButton(dialog, 'Siguiente promoción').click());
 
     for (const [i, name, detail] of [
       [2, 'Extensiones de 18 pulgadas', /\$6,000/],
@@ -67,10 +69,11 @@ test('abre con portada, conserva orden y condiciones, y se puede reabrir sin rep
       [4, 'Tinte + ampolleta', /9:00 a 11:00 a\. m\./],
       [5, 'Corte + hidratación', /\$400.*clientas frecuentes/],
     ]) {
-      const link = [...dialog.querySelectorAll('a')].find(a => a.textContent.includes('Consultar por WhatsApp'));
+      const link = dialog.querySelector('a[aria-label="Consultar por WhatsApp"]');
       const message = new URL(link.href).searchParams.get('text');
       assert.ok(message.includes(name));
-      assert.match(dialog.textContent, detail);
+      assert.match(dialog.querySelector('img').alt, detail);
+      assert.equal(dialog.textContent.trim(), `${i}/5`);
       assert.match(dialog.querySelector('img').src, new RegExp(`0${i}-`));
       if (i < 5) await act(() => findButton(dialog, 'Siguiente promoción').click());
     }
