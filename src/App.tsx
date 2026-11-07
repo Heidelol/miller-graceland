@@ -47,7 +47,7 @@ export function App() {
 
       {/* Main Landing Sections */}
       <main className="flex-1">
-        <Hero />
+        <Hero showGranFin={currentPath === '/'} />
         <ServicesSection />
         <ExperienceSection />
         <ConocemeSection />

@@ -2,6 +2,7 @@ import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
 import { EXTENSIONS_PATH } from '../data/extensionsPage';
+import { GranFinCampaign } from './GranFinCampaign';
 import { ValuationLink } from './ValuationLink';
 import { buildValuationUrl } from '../data/valuation';
 
@@ -32,7 +33,7 @@ const heroShortcuts = [
   },
 ];
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC<{ showGranFin?: boolean }> = ({ showGranFin = false }) => {
   return (
     <section className="relative min-h-[88vh] flex items-center justify-center pt-28 lg:pt-32 pb-16 overflow-hidden bg-[#F9F6F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -77,6 +78,7 @@ export const Hero: React.FC = () => {
               </a>
             </div>
             <p className="mt-3 text-xs leading-6 text-[#5C534B]">Por WhatsApp · coordinamos tu visita al salón</p>
+            {showGranFin && <GranFinCampaign />}
 
           </div>
 
