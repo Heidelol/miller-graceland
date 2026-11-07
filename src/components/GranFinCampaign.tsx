@@ -90,8 +90,8 @@ function GranFinDialog({ onClose }: { onClose: () => void }) {
         />
       </div>
 
-      <div className="grid min-h-12 grid-cols-[1fr_auto_1fr] items-center border-t border-[#99745A]/25 px-2" role="group" aria-label="Controles de promociones">
-        <div className="col-start-2 flex items-center text-[#5C534B]">
+      <div className="gran-fin-toolbar grid min-h-12 grid-cols-[1fr_auto_1fr] items-center border-t border-[#99745A]/25 px-2" role="group" aria-label="Controles de promociones">
+        <div className="gran-fin-arrows col-start-2 flex items-center text-[#5C534B]">
           <button type="button" aria-label="Promoción anterior" disabled={slide === 0} className={controlClass} onClick={() => move(-1)}>
             <ChevronLeft size={19} aria-hidden="true" />
           </button>
@@ -101,6 +101,20 @@ function GranFinDialog({ onClose }: { onClose: () => void }) {
           <button type="button" aria-label="Siguiente promoción" disabled={slide === slideCount - 1} className={controlClass} onClick={() => move(1)}>
             <ChevronRight size={19} aria-hidden="true" />
           </button>
+        </div>
+        <div className="gran-fin-touch-pagination col-start-2" role="group" aria-label="Elegir imagen">
+          {Array.from({ length: slideCount }, (_, index) => (
+            <button
+              key={index}
+              type="button"
+              className="gran-fin-dot inline-flex min-h-11 min-w-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-[#42502E]"
+              aria-label={`Ver imagen ${index + 1} de ${slideCount}`}
+              aria-current={index === slide ? 'true' : undefined}
+              onClick={() => setSlide(index)}
+            >
+              <span aria-hidden="true" />
+            </button>
+          ))}
         </div>
         {offer && (
           <a

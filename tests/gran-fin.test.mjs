@@ -86,3 +86,33 @@ test('abre con portada, conserva orden y condiciones, y se puede reabrir sin rep
     assert.match(document.querySelector('dialog[open] img').src, /01-portada/);
   });
 });
+
+test('en móvil se puede deslizar en ambos sentidos y tocar un indicador', async () => {
+  window.sessionStorage.clear();
+  await visit(opening, '/', async () => {
+    const dialog = document.querySelector('dialog[open]');
+    const art = dialog.querySelector('.gran-fin-art');
+    const image = art.querySelector('img');
+    const swipe = (x, y) => act(() => {
+      art.dispatchEvent(new window.TouchEvent('touchstart', {
+        bubbles: true, touches: [{ clientX: 160, clientY: 160 }],
+      }));
+      art.dispatchEvent(new window.TouchEvent('touchend', {
+        bubbles: true, changedTouches: [{ clientX: x, clientY: y }],
+      }));
+    });
+
+    await swipe(70, 164);
+    assert.match(image.src, /02-extensiones/);
+    await swipe(154, 65);
+    assert.match(image.src, /02-extensiones/);
+    await swipe(248, 160);
+    assert.match(image.src, /01-portada/);
+
+    const last = findButton(dialog, 'Ver imagen 5 de 5');
+    assert.ok(last);
+    await act(() => last.click());
+    assert.match(image.src, /05-corte-hidratacion/);
+    assert.equal(last.getAttribute('aria-current'), 'true');
+  });
+});
