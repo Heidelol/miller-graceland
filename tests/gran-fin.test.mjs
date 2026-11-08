@@ -32,14 +32,14 @@ async function visit(at, path, verify) {
   }
 }
 
-const opening = '2026-11-13T00:00:00-05:00';
+const opening = '2026-11-08T00:00:00-05:00';
 const findButton = (root, label) => [...root.querySelectorAll('button')].find(
   button => button.textContent.trim() === label || button.getAttribute('aria-label') === label,
 );
 
-test('solo aparece en la portada y dentro de la vigencia local, incluida la última noche', async () => {
+test('el aviso aparece en la portada desde el día 8 y se retira después del 17', async () => {
   for (const [date, path] of [
-    ['2026-11-12T23:59:59-05:00', '/'],
+    ['2026-11-07T23:59:59-05:00', '/'],
     [opening, '/menu'],
     ['2026-11-18T00:00:00-05:00', '/'],
   ]) {

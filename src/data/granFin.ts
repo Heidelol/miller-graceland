@@ -1,5 +1,5 @@
-// The artwork uses Chetumal dates. Quintana Roo is UTC−05:00.
-export const GRAN_FIN_START = Date.parse('2026-11-13T00:00:00-05:00');
+// Announce the campaign before the offers begin on November 13. Chetumal is UTC−05:00.
+export const GRAN_FIN_START = Date.parse('2026-11-08T00:00:00-05:00');
 export const GRAN_FIN_END = Date.parse('2026-11-18T00:00:00-05:00');
 export const GRAN_FIN_DATES = 'Del 13 al 17 de noviembre';
 export const GRAN_FIN_COVER = '/images/gran-fin/01-portada.webp';

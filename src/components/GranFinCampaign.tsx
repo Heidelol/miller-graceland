@@ -141,6 +141,8 @@ export function GranFinCampaign() {
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (typeof window.HTMLDialogElement?.prototype.showModal !== 'function') return;
+
     let timer: number | undefined;
     const sync = () => {
       window.clearTimeout(timer);
