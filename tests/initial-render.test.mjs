@@ -67,7 +67,7 @@ test('la carta entrega los precios corregidos y la URL canónica en el HTML inic
     assert.equal(prices['Agua purificada 330 ml'], '$20');
     assert.equal(prices.Capuccino, '$45');
     const foodPrices = Object.fromEntries([...document.querySelectorAll('#alimentos li')].map(row => [
-      row.querySelector('h3').textContent, row.querySelector('span').textContent,
+      row.querySelector('h3').firstChild.textContent, row.querySelector('h3 + span').textContent,
     ]));
     assert.deepEqual(foodPrices, {
       'Bowl Spicy Piña': '$220',

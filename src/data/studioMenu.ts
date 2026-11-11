@@ -10,12 +10,16 @@ type MenuItem = {
   name: string;
   price: number;
   description?: string;
+  recommended?: boolean;
+  spicy?: boolean;
 };
 
 export const FOOD_MENU: readonly MenuItem[] = [
   {
     name: 'Bowl Spicy Piña',
     price: 220,
+    recommended: true,
+    spicy: true,
     description: 'Base de arroz jazmín o quinoa, pollo spicy, piña rostizada, pepino, zanahoria, edamame, aguacate y ajonjolí, acompañado de aderezo cremoso de sriracha.',
   },
   {

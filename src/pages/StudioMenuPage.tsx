@@ -1,3 +1,4 @@
+import { Star } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { DRINKS_MENU, FOOD_MENU } from '../data/studioMenu';
 
@@ -6,10 +7,46 @@ const textLink = 'inline-flex min-h-11 items-center gap-2 underline decoration-[
 function MenuEntries({ items }: { items: typeof FOOD_MENU }) {
   return (
     <ul className="space-y-6">
-      {items.map(({ name, price, description }) => (
+      {items.map(({ name, price, description, recommended, spicy }) => (
         <li key={name}>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-4">
-            <h3 className="text-[1.375rem] leading-tight font-semibold sm:text-2xl">{name}</h3>
+            <h3 className="text-[1.375rem] leading-tight font-semibold sm:text-2xl">
+              {name}
+              {(recommended || spicy) && (
+                <span className="ml-2 inline-flex items-center gap-1.5 align-baseline">
+                  {recommended && (
+                    <Star
+                      role="img"
+                      aria-label="Recomendado por el estudio"
+                      size={16}
+                      strokeWidth={1.6}
+                      className="fill-[#E9D4AD] text-[#80571F]"
+                    >
+                      <title>Recomendado por el estudio</title>
+                    </Star>
+                  )}
+                  {spicy && (
+                    <svg
+                      role="img"
+                      aria-label="Picante"
+                      width={17}
+                      height={17}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.7}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-[#A43B31]"
+                    >
+                      <title>Picante</title>
+                      <path d="M16.5 7.5c-2.4-1.2-4.7-.1-5.7 2.8-1.3 3.8-3.7 6.1-7.6 7.4-.6.2-.6.9 0 1.1 6.8 2 12.9-1.3 15.1-6.1.9-2.1.3-4-1.8-5.2Z" />
+                      <path d="M16.5 7.5c.1-2.5 1.3-3.8 3.6-4.2" />
+                    </svg>
+                  )}
+                </span>
+              )}
+            </h3>
             <span className="text-sm font-medium tabular-nums text-[#5C534B]">${price}</span>
           </div>
           {description && <p className="mt-2 max-w-[48ch] text-sm leading-7 text-[#5C534B]">{description}</p>}
