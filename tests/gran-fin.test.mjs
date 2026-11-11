@@ -65,16 +65,16 @@ test('abre con portada, conserva orden y condiciones, y se puede reabrir sin rep
 
     for (const [i, name, detail] of [
       [2, 'Extensiones de 18 pulgadas', /\$6,000/],
-      [3, 'Brazilian Blowout + retoque de tinte', /\$1,500.*\$1,600/],
+      [3, 'Brazilian Blowout', /retoque de tinte.*\$1,500.*clientas del salón.*\$1,600.*clientas nuevas.*\$2,200/],
       [4, 'Tinte + ampolleta', /9:00 a 11:00 a\. m\./],
-      [5, 'Corte + hidratación', /\$400.*clientas frecuentes/],
+      [5, 'Corte + hidratación', /\$400.*clientas frecuentes.*13 al 17 de noviembre/],
     ]) {
       const link = dialog.querySelector('a[aria-label="Consultar por WhatsApp"]');
       const message = new URL(link.href).searchParams.get('text');
       assert.ok(message.includes(name));
       assert.match(dialog.querySelector('img').alt, detail);
       assert.equal(dialog.textContent.trim(), `${i}/5`);
-      assert.match(dialog.querySelector('img').src, new RegExp(`0${i}-`));
+      assert.match(dialog.querySelector('img').src, new RegExp(`0${i}-.*-v2\\.webp$`));
       if (i < 5) await act(() => findButton(dialog, 'Siguiente promoción').click());
     }
     await act(() => findButton(dialog, 'Cerrar promociones').click());
