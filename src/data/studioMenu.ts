@@ -41,8 +41,8 @@ export const FOOD_MENU: readonly MenuItem[] = [
 
 export const DRINKS_MENU: readonly MenuItem[] = [
   { name: 'Agua purificada 330 ml', price: 20 },
-  { name: 'Frappuccino', price: 80 },
-  { name: 'Capuccino', price: 45 },
+  { name: 'Frappuccino Mocha', price: 80, recommended: true },
+  { name: 'Cappuccino', price: 45, recommended: true },
   { name: 'Café lungo', price: 35 },
   { name: 'Café americano', price: 30 },
   { name: 'Coca-Cola', price: 20 },

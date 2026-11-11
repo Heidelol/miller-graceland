@@ -61,11 +61,15 @@ test('la carta entrega los precios corregidos y la URL canónica en el HTML inic
     const { document } = dom.window;
     assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://millergreiseland.com/menu');
     assert.equal(document.querySelector('header nav a[aria-current="page"]').getAttribute('href'), '/menu');
-    const prices = Object.fromEntries([...document.querySelectorAll('#bebidas li')].map(row => [
-      row.querySelector('h3').textContent, row.querySelector('span').textContent,
+    const drinks = [...document.querySelectorAll('#bebidas li')];
+    const prices = Object.fromEntries(drinks.map(row => [
+      row.querySelector('h3').firstChild.textContent, row.querySelector('h3 + span').textContent,
     ]));
     assert.equal(prices['Agua purificada 330 ml'], '$20');
-    assert.equal(prices.Capuccino, '$45');
+    assert.equal(prices.Cappuccino, '$45');
+    assert.equal(prices['Frappuccino Mocha'], '$80');
+    assert.deepEqual(drinks.filter(row => row.querySelector('svg[aria-label="Recomendado por el estudio"]'))
+      .map(row => row.querySelector('h3').firstChild.textContent), ['Frappuccino Mocha', 'Cappuccino']);
     const foodPrices = Object.fromEntries([...document.querySelectorAll('#alimentos li')].map(row => [
       row.querySelector('h3').firstChild.textContent, row.querySelector('h3 + span').textContent,
     ]));
