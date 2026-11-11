@@ -85,6 +85,21 @@ export function StudioMenuPage() {
 
         <footer className="mt-10 border-t border-[#99745A]/25 pt-5 text-sm text-[#5C534B]">
           <p>Precios en pesos mexicanos (MXN).</p>
+          <section aria-labelledby="horario-alimentos" className="mt-5">
+            <h2 id="horario-alimentos" className="font-serif-luxury text-xl font-semibold text-[#42502E]">
+              Horario de atención para alimentos
+            </h2>
+            <ul className="mt-2 space-y-1 leading-6">
+              <li>
+                <strong className="font-semibold text-[#231E1B]">Lunes a viernes.</strong>{' '}
+                De 8:00 a. m. a 3:00 p. m. Último pedido a las 3:00 p. m.
+              </li>
+              <li>
+                <strong className="font-semibold text-[#231E1B]">Sábado.</strong>{' '}
+                De 8:00 a. m. a 2:00 p. m. Último pedido a las 2:00 p. m.
+              </li>
+            </ul>
+          </section>
         </footer>
       </main>
     </div>
