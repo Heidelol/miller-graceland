@@ -44,6 +44,7 @@ await writeFile(new URL('config.json', output), JSON.stringify({
     { src: `${STUDIO_MENU_PATH}/index\\.html`, headers: { Location: STUDIO_MENU_PATH }, status: 308 },
     { src: `${STUDIO_MENU_PATH}/`, headers: { Location: STUDIO_MENU_PATH }, status: 308 },
     { src: STUDIO_MENU_PATH, dest: `${STUDIO_MENU_PATH}/index.html` },
+    { src: '/images/menu/(?:alimentos|bebidas)\\.png', headers: { Location: STUDIO_MENU_PATH }, status: 308 },
     ...giftRoutes,
     ...cacheRoutes,
     { handle: 'filesystem' },

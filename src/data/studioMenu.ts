@@ -15,22 +15,22 @@ type MenuItem = {
 export const FOOD_MENU: readonly MenuItem[] = [
   {
     name: 'Bowl Spicy Piña',
-    price: 185,
+    price: 220,
     description: 'Base de arroz jazmín o quinoa, pollo spicy, piña rostizada, pepino, zanahoria, edamame, aguacate y ajonjolí, acompañado de aderezo cremoso de sriracha.',
   },
   {
     name: 'Ensalada Glow',
-    price: 175,
+    price: 210,
     description: 'Mix de hojas verdes, pera, queso de cabra, nuez caramelizada, arándanos y pollo a la plancha, acompañada de vinagreta balsámica.',
   },
   {
     name: 'Bagel Caprese Serrano',
-    price: 165,
+    price: 200,
     description: 'Bagel tostado con jamón serrano, queso panela, tomates cherry marinados en vinagre balsámico y pesto de albahaca, espinaca fresca y reducción balsámica.',
   },
   {
     name: 'Sándwich Mediterráneo',
-    price: 175,
+    price: 220,
     description: 'Pan de masa madre con pollo, queso mozzarella, pesto de albahaca, tomates rostizados, aceituna negra, mix de lechugas y un toque de reducción balsámica.',
   },
 ];

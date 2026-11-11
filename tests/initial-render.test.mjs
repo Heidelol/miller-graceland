@@ -66,12 +66,23 @@ test('la carta entrega los precios corregidos y la URL canónica en el HTML inic
     ]));
     assert.equal(prices['Agua purificada 330 ml'], '$20');
     assert.equal(prices.Capuccino, '$45');
-    assert.equal(document.querySelectorAll('#alimentos li').length, 4);
-    for (const link of document.querySelectorAll('details a')) {
-      assert.ok(readFileSync(new URL(`../dist${link.getAttribute('href')}`, import.meta.url)).length > 0);
-    }
+    const foodPrices = Object.fromEntries([...document.querySelectorAll('#alimentos li')].map(row => [
+      row.querySelector('h3').textContent, row.querySelector('span').textContent,
+    ]));
+    assert.deepEqual(foodPrices, {
+      'Bowl Spicy Piña': '$220',
+      'Ensalada Glow': '$210',
+      'Bagel Caprese Serrano': '$200',
+      'Sándwich Mediterráneo': '$220',
+    });
+    assert.equal(document.querySelector('main a[href^="/images/menu/"]'), null);
     const { routes } = JSON.parse(readFileSync(new URL('../.vercel/output/config.json', import.meta.url), 'utf8'));
     assert.equal(routes.find(route => route.src === '/menu').dest, '/menu/index.html');
+    for (const path of ['/images/menu/alimentos.png', '/images/menu/bebidas.png']) {
+      const redirect = routes.find(route => route.src && new RegExp(`^(?:${route.src})$`).test(path));
+      assert.equal(redirect?.status, 308);
+      assert.equal(redirect?.headers.Location, '/menu');
+    }
   } finally {
     dom.window.close();
   }

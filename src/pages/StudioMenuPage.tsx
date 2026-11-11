@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { DRINKS_MENU, FOOD_MENU } from '../data/studioMenu';
 
@@ -47,17 +46,8 @@ export function StudioMenuPage() {
           </section>
         </div>
 
-        <footer className="mt-10 border-t border-[#99745A]/25 pt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-sm text-[#5C534B]">
+        <footer className="mt-10 border-t border-[#99745A]/25 pt-5 text-sm text-[#5C534B]">
           <p>Precios en pesos mexicanos (MXN).</p>
-          <details className="text-[#42502E]">
-            <summary className="min-h-11 cursor-pointer py-3 font-semibold focus-visible:outline-2 focus-visible:outline-offset-4">
-              Ver carta impresa
-            </summary>
-            <ul className="pl-4">
-              <li><a className={textLink} href="/images/menu/alimentos.png">Carta de alimentos <ArrowUpRight size={14} aria-hidden="true" /></a></li>
-              <li><a className={textLink} href="/images/menu/bebidas.png">Carta de bebidas <ArrowUpRight size={14} aria-hidden="true" /></a></li>
-            </ul>
-          </details>
         </footer>
       </main>
     </div>
