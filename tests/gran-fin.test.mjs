@@ -82,7 +82,10 @@ test('abre con portada, conserva orden y condiciones, y se puede reabrir sin rep
   });
   await visit(opening, '/', async (page) => {
     assert.equal(document.querySelector('dialog[open]'), null);
-    await act(() => findButton(page, 'Ver promociones del Gran Fin').click());
+    const banner = findButton(page, 'Ver promociones del Gran Fin');
+    assert.match(banner.textContent, /Gran Fin.*Aprovecha las ofertas.*13 al 17 de noviembre/);
+    assert.equal(page.querySelector('main > section').firstElementChild, banner);
+    await act(() => banner.click());
     assert.match(document.querySelector('dialog[open] img').src, /01-portada/);
   });
 });

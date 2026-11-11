@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, MessageCircle, X } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, X } from 'lucide-react';
 import { GRAN_FIN_COVER, GRAN_FIN_DATES, GRAN_FIN_END, GRAN_FIN_OFFERS, GRAN_FIN_START } from '../data/granFin';
 import { SALON_INFO } from '../data/salonData';
 import { trackWhatsAppClick } from '../lib/analytics';
@@ -181,10 +181,19 @@ export function GranFinCampaign() {
         ref={triggerRef}
         type="button"
         aria-haspopup="dialog"
-        className="inline-flex min-h-11 items-center text-sm font-semibold text-[#42502E] underline underline-offset-4 decoration-[#68794E]/50 hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#42502E]"
+        aria-label="Ver promociones del Gran Fin"
+        aria-describedby="gran-fin-fechas"
+        className="-mt-7 mb-8 flex min-h-12 w-full cursor-pointer items-center justify-center gap-x-3 border-y border-[#A85147] bg-[#8D2828] px-4 py-2 text-[#FFF8EC] hover:bg-[#792121] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[#FFF8EC] sm:-mt-4 sm:mb-10 lg:-mt-8"
         onClick={() => setOpen(true)}
       >
-        Ver promociones del Gran Fin
+        <span className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
+          <span className="font-serif-luxury text-[1.35rem] leading-none font-semibold">Gran Fin</span>
+          <span className="text-xs leading-5 font-semibold sm:text-sm">Aprovecha las ofertas</span>
+          <span id="gran-fin-fechas" className="text-[11px] leading-5 text-[#F6DDAE] sm:border-l sm:border-[#F6DDAE]/45 sm:pl-3 sm:text-xs">
+            {GRAN_FIN_DATES}
+          </span>
+        </span>
+        <ArrowRight size={16} strokeWidth={1.6} className="shrink-0 text-[#F6DDAE]" aria-hidden="true" />
       </button>
       {open && (
         <GranFinDialog onClose={() => {
